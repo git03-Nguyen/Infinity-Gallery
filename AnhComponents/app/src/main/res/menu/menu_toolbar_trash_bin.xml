@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item
+        android:title="Restore all"
+        android:id="@+id/menuTrashBinRestoreAll"
+        android:icon="@drawable/ic_trash_restore_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menuTrashBinSelect"
+        android:title="Select" />
+
+    <item
+        android:id="@+id/menuTrashBinRestore"
+        android:title="Restore"/>
+
+    <item
+        android:id="@+id/menuTrashBinEmpty"
+        android:title="Empty trash" />
+
+    <item
+        android:id="@+id/menuTrashBinSettings"
+        android:title="Settings" />
+
+</menu>
