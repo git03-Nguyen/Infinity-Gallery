@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  
+
+
+    <item
+        android:id="@+id/menuPhotosCamera"
+        android:title="Camera" />
+
+    <item
+        android:id="@+id/menuPhotosSelect"
+        android:title="Select" />
+
+    <item
+        android:id="@+id/menuPhotosCollege"
+        android:title="College" />
+
+    <item
+        android:id="@+id/menuPhotosColumns"
+        android:title="Columns" >
+        <menu>
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menuPhotosCreateVideo"
+        android:title="Create video" />
+
+    <item
+        android:id="@+id/menuPhotosSlideshow"
+        android:title="Slideshow" />
+
+    <item
+        android:id="@+id/menuPhotosSettings"
+        android:title="Settings" />
+
 </menu>

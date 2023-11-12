@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity" >
 
     <FrameLayout
         android:id="@+id/fragmentHolder"
@@ -17,11 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:paddingVertical="8dp"
         app:itemIconSize="28dp"
+        app:itemPaddingTop="7dp"
+        app:itemPaddingBottom="7dp"
         app:itemIconTint="@drawable/sl_nav_selected_icon"
-        app:itemTextColor="?attr/colorOnSecondary"
-        app:labelVisibilityMode="selected"
-        android:background="#EEE"
-        app:menu="@menu/menu_main_bottom"/>
+        app:itemTextColor="@drawable/sl_nav_selected_icon"
+        app:itemTextAppearanceActiveBoldEnabled="false"
+        app:labelVisibilityMode="labeled"
+        android:background="@color/gray_trans"
+        app:menu="@menu/menu_main_bottom" />
 
 </RelativeLayout>

@@ -17,7 +17,6 @@ import edu.team08.infinitegallery.albums.AlbumsFragment;
 import edu.team08.infinitegallery.more.MoreFragment;
 import edu.team08.infinitegallery.photos.PhotosFragment;
 import edu.team08.infinitegallery.search.SearchFragment;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private static final int PERMISSION_REQUEST_CODE = 123;
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private AlbumsFragment albumsFragment;
     private SearchFragment searchFragment;
     private MoreFragment moreFragment;
-    private TrashBinActivity trashBinActivity;
     private BottomNavigationView bottomNavigationView;
     private Fragment currentFragment;
 

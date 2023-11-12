@@ -27,6 +27,8 @@
         <item name="android:statusBarColor">?attr/colorOnPrimary</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+
+        <item name="android:textColorSecondary">@color/black</item>
     </style>
 
     <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">

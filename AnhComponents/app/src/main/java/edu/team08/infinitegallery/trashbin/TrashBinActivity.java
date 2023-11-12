@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
 
@@ -28,12 +29,23 @@ public class TrashBinActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        final int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) {
+            this.finish();
+        } else if (itemId == R.id.menuTrashBinRestoreAll) {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.menuTrashBinSelect) {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.menuTrashBinRestore) {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.menuTrashBinEmpty) {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.menuTrashBinSettings) {
+            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 }

@@ -71,7 +71,7 @@ public class SinglePhotoOption extends AppCompatActivity {
         }
     }
 
-    private void initApp(){
+    private void initApp() {
         this.getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         this.getSupportActionBar().setDisplayShowCustomEnabled(true);
         this.getSupportActionBar().setCustomView(R.layout.custom_action_bar);
