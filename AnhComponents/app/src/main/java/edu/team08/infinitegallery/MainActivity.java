@@ -105,17 +105,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
         switch(sender) {
-            case "ALBUM-REQUEST": {
-                try {
-                    photosFragment = PhotosFragment.newInstance(MainActivity.this);
-                    currentFragment = photosFragment;
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentHolder, currentFragment).commit();
-                }
-                catch (Exception e) {
-                    Toast.makeText(MainActivity.this, "Can't call photos fragment!", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
+
 
             default: break;
         }

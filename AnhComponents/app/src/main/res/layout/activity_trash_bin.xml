@@ -29,11 +29,17 @@
             android:layout_marginVertical="5dp"
             android:paddingStart="10dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewTrashBin"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#cfe1ff" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recViewTrash"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F7F9EE" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -1,6 +1,9 @@
 package edu.team08.infinitegallery.photos;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.SparseBooleanArray;
@@ -27,6 +30,8 @@ import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
+import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
     private final Context context;
@@ -88,9 +93,17 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, photo.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                // TODO: start fullScreenPhoto activity, sending the photo's File or photo's absolutePath.
+                Toast.makeText(context, position + ": " + photo.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
                 // TODO: (!) remember to check if it's exist or not
+                String[] photoPaths = new String[allPhotos.size()];
+                for (int i = 0; i < photoPaths.length; i++) {
+                    photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                }
+                Intent myIntent = new Intent(context, SinglePhotoActivity.class);
+                myIntent.putExtra("photoPaths", photoPaths);
+                myIntent.putExtra("currentPosition", position);
+                startActivity(context, myIntent, null);
             }
         });
 

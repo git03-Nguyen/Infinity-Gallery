@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -85,34 +86,32 @@ public class PhotosFragment extends Fragment {
     private void readAllImages() {
         // TODO: maybe other thread, and only reload if have some changes in files
         photoFiles = new ArrayList<>();
-        addImagesFrom(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)));
-        addImagesFrom(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
-        addImagesFrom(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)));
-        // TODO: default sorting
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+            }
+
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            while (cursor.moveToNext()) {
+                String photoPath = cursor.getString(columnIndex);
+                photoFiles.add(new File(photoPath));
+            }
+        } finally {
+            // Close the cursor to avoid memory leaks
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        }
+        // TODO: default sorting, maybe by time created
         showAllPictures();
     }
 
-    private void addImagesFrom(String dirPath){
-        final File dir = new File(dirPath);
-        final FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File file, String s) {
-                return !s.toLowerCase(Locale.ROOT).startsWith(".trashed") &&
-                        !s.toLowerCase(Locale.ROOT).startsWith(".hide") &&
-                        (s.toLowerCase().endsWith(".png") || s.toLowerCase(Locale.ROOT).endsWith(".jpg")
-                        || s.toLowerCase().endsWith(".jpeg") || s.toLowerCase().endsWith(".gif"));
-            }
-        };
-
-        File[] files = dir.listFiles(filter);
-        for(File file : files){
-            photoFiles.add(file);
-        }
-    }
-
     void showAllPictures() {
-        // Send a string path to the adapter. The adapter will create everything from the provided path
-        // This implementation is not permanent
         photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));

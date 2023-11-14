@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <item
+        android:id="@+id/hide"
+        android:icon="@drawable/ic_photo_hide_24"
+        android:title="Hide"/>
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_photo_delete_24"
+        android:title="Delete"/>
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/ic_photo_edit_24"
+        android:title="Edit"/>
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_photo_share_24"
+        android:title="Share"/>
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_photo_more_24"
+        android:title="More">
+<!--        <menu>-->
+<!--            <item-->
+<!--                android:id="@+id/collage"-->
+<!--                android:title="Collage" />-->
+<!--            <item-->
+<!--                android:id="@+id/copy"-->
+<!--                android:title="Copy to" />-->
+<!--        </menu>-->
+    </item>
+</menu>

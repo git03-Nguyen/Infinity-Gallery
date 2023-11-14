@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 /**
@@ -80,7 +81,6 @@ public class MoreFragment extends Fragment {
         btnTrashBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Opening trash bin", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(getActivity(), TrashBinActivity.class);
                 startActivity(myIntent);
             }
