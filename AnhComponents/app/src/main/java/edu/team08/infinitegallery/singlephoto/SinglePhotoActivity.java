@@ -54,12 +54,19 @@ public class SinglePhotoActivity extends AppCompatActivity {
             if (itemId == R.id.delete) {
                 // get the photo and delete it
                 // TODO: confirm to delete
+                finish();
                 try {
                     new TrashBinManager(this).moveToTrash(new File(photoPaths[currentPosition]));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 Toast.makeText(this, "Deleted: " + photoPaths[currentPosition], Toast.LENGTH_SHORT).show();
+                List<String> newPhotoPaths = new ArrayList<>();
+                for (String path : photoPaths) {
+                    if (!path.equalsIgnoreCase(photoPaths[currentPosition])) {
+                        newPhotoPaths.add(path);
+                    }
+                }
                 finish();
             } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();

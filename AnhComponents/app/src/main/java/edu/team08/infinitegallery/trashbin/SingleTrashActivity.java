@@ -72,7 +72,6 @@ public class SingleTrashActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 // File restored successfully, update UI or perform other actions
-                Toast.makeText(this, "Image restored to Pictures", Toast.LENGTH_SHORT).show();
                 finish();
             }
 

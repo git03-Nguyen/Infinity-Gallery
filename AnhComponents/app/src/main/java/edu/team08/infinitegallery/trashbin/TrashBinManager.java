@@ -1,17 +1,21 @@
 package edu.team08.infinitegallery.trashbin;
 
 import static androidx.core.app.ActivityCompat.startIntentSenderForResult;
+import static androidx.core.content.ContextCompat.startActivity;
 
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,12 +59,7 @@ public class TrashBinManager {
         try
         {
             inChannel.transferTo(0, inChannel.size(), outChannel);
-            deleteFile(src);
-            if (src.exists()) {
-                Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
-            }
+
         }
         finally
         {
@@ -69,42 +68,14 @@ public class TrashBinManager {
             if (outChannel != null)
                 outChannel.close();
         }
-    }
+        src.delete();
+        // TODO: đại loại ở file đã làm đc rồi, tuy nhiên cần thêm db để check
 
-    private void deleteFile(@NonNull File file) {
-        if (!file.exists()) return;
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {//SDK>=30
-                int id;
-                String[] projection = {MediaStore.Images.Media._ID};
-                Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
-                }
-                Cursor cursor=context.getContentResolver().query(uri, projection,"_data=?",new String[] {file.getAbsolutePath()},null);
-                if (cursor.getCount()>0){
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
-                    id = cursor.getInt(columnIndex);
-                }else id = 0;
-                Uri request = ContentUris.withAppendedId(uri, id);
-                try {
-                    final int REQUEST_PERM_DELETE = 8;
-                    List<Uri> list = new ArrayList<>();
-                    list.add(request);
-                    PendingIntent editPendingIntent = MediaStore.createDeleteRequest(context.getContentResolver(), list);
-                    startIntentSenderForResult((Activity) context, editPendingIntent.getIntentSender(), REQUEST_PERM_DELETE, null, 0, 0, 0, null);
-                } catch (IntentSender.SendIntentException e) {
-                    Log.i("zakaria_mediaD","   requestDeletePermission error:\n"+e.getMessage());
-
-                }
-            } else {//SDK<=29
-                if (!file.delete()) throw new Exception("Cannot delete, I don't know");
-            }
-        } catch (Exception e) {
-            Log.i("DeleteError", e.getMessage());
+        if (src.exists()) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public String getTrashBinPath() {

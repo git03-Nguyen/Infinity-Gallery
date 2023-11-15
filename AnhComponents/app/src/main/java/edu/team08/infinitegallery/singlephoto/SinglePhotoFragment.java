@@ -85,54 +85,5 @@ public class SinglePhotoFragment extends Fragment {
         return fragmentView;
     }
 
-    public void moveToTrash() {
-        Toast.makeText(context, "Del: " + photoFiles[currentPosition].getName(), Toast.LENGTH_SHORT).show();
-        File currentPhoto = photoFiles[currentPosition];
 
-        List<File> newPhotoFiles = new ArrayList<>(Arrays.asList(photoFiles));
-        newPhotoFiles.remove(currentPhoto);
-        photoFiles = newPhotoFiles.toArray(new File[0]);
-
-        moveToTrashHelper(currentPhoto);
-
-//        viewPager.removeAllViews();
-        adapter.updateData(photoFiles);
-//        int cur = currentPosition;
-//        viewPager.setCurrentItem(0);
-//
-//        if (photoFiles.length == 0) {
-//            // TODO: after deleting, it will return to MainActivity and Photos tab
-//
-//
-//        } else if (photoFiles.length > 0) {
-//            // TODO: after deleting, it will return to SinglePhotoActivity of previous photo
-//            cur--;
-//            viewPager.setCurrentItem(cur, true);
-//        }
-
-        Intent myIntent = new Intent(context, MainActivity.class);
-        startActivity(myIntent, null);
-
-
-    }
-
-    private void moveToTrashHelper(File photo) {
-        File internalStorage = context.getFilesDir();
-        File trashBinDir = new File(internalStorage, "trash_bin");
-
-        File destinationFile = new File(trashBinDir, photo.getName());
-        ContentValues contentValues = new ContentValues();
-        String extension = MimeTypeMap.getFileExtensionFromUrl(photo.getAbsolutePath());
-        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
-        contentValues.put(MediaStore.Images.Media.DATA, destinationFile.getAbsolutePath());
-        contentValues.put(MediaStore.Images.Media.MIME_TYPE, mimeType);
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-        // Notify the media scanner that a new file has been added
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(destinationFile)));
-
-        if (photo.delete()) {
-        }
-        Toast.makeText(context, "Deleted: "+photo.getName(), Toast.LENGTH_SHORT).show();
-    }
 }

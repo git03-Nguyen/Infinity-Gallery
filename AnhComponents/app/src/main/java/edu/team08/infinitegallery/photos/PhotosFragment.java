@@ -54,6 +54,7 @@ public class PhotosFragment extends Fragment {
     PhotosAdapter photosAdapter;
 
     public PhotosFragment(Context context) {
+
         this.context = context;
     }
 
@@ -77,12 +78,17 @@ public class PhotosFragment extends Fragment {
             Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             return true;
         });
+
         
-        readAllImages();
-        // TODO: default sorting, maybe by time created
-        showAllPictures();
 
         return photosFragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        readAllImages();
+        showAllPictures();
     }
 
     private void readAllImages() {
