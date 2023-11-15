@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         String readImagePermission = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) ?
                 android.Manifest.permission.READ_MEDIA_IMAGES : Manifest.permission.READ_EXTERNAL_STORAGE;
 
-        String writeImagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String manageExternalPermission = Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 
         if (ContextCompat.checkSelfPermission(this, readImagePermission) == PackageManager.PERMISSION_GRANTED){
             initApp();
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         } else {
             ActivityCompat.requestPermissions(
                     MainActivity.this,
-                    new String[] {readImagePermission, writeImagePermission},
+                    new String[] {readImagePermission, manageExternalPermission},
                     PERMISSION_REQUEST_CODE
             );
         }

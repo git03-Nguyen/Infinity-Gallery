@@ -1,16 +1,25 @@
 package edu.team08.infinitegallery.trashbin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.Arrays;
+
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.photos.PhotosAdapter;
 
 public class TrashBinActivity extends AppCompatActivity {
-
+    private int spanCount = 4;
+    private TrashBinManager trashBinManager;
+    PhotosAdapter photosAdapter;
+    RecyclerView photosRecView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +27,19 @@ public class TrashBinActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.toolbarTrashBin));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        trashBinManager = new TrashBinManager(this);
+        photosRecView = findViewById(R.id.recViewTrash);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(this, "Trash bin at: " + trashBinManager.getTrashBinPath(), Toast.LENGTH_SHORT).show();
+        File[] trashFiles = trashBinManager.getTrashFiles();
+        photosAdapter = new PhotosAdapter(this, Arrays.asList(trashFiles), spanCount);
+        photosRecView.setAdapter(photosAdapter);
+        photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
     }
 

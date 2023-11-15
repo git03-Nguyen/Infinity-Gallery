@@ -2,10 +2,12 @@ package edu.team08.infinitegallery.photos;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import java.util.Locale;
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
+import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
@@ -38,6 +41,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private SparseBooleanArray selectedItemsIds;
     private List<File> allPhotos;
     private final int spanCount;
+    private boolean isTrash;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -65,6 +69,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         this.allPhotos = allPhotos;
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
+        this.isTrash = context.toString().contains("TrashBinActivity");
     }
 
     @NonNull
@@ -81,26 +86,28 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
         File photo = allPhotos.get(position);
+        Log.e("onBind", photo.getAbsolutePath());
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
                 .load(photo)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageItem);
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, position + ": " + photo.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, position + ": " + photo.getName(), Toast.LENGTH_SHORT).show();
                 // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
                 // TODO: (!) remember to check if it's exist or not
                 String[] photoPaths = new String[allPhotos.size()];
                 for (int i = 0; i < photoPaths.length; i++) {
                     photoPaths[i] = allPhotos.get(i).getAbsolutePath();
                 }
-                Intent myIntent = new Intent(context, SinglePhotoActivity.class);
+                Intent myIntent;
+                if (isTrash) myIntent = new Intent(context, SingleTrashActivity.class);
+                else myIntent = new Intent(context, SinglePhotoActivity.class);
                 myIntent.putExtra("photoPaths", photoPaths);
                 myIntent.putExtra("currentPosition", position);
                 startActivity(context, myIntent, null);
@@ -109,7 +116,11 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
-        ((MainActivity)context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        if (this.isTrash) {
+            ((TrashBinActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else {
+            ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        }
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {
             int size = displaymetrics.widthPixels / spanCount;

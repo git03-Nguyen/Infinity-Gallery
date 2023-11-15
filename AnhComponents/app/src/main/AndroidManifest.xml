@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".trashbin.SingleTrashActivity"
+            android:exported="false" />
         <activity
             android:name=".singlephoto.SinglePhotoActivity"
             android:exported="false" />

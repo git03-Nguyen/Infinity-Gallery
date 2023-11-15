@@ -75,4 +75,10 @@ public class ViewPagerAdapter extends PagerAdapter {
         imageView = ((View)object).findViewById(R.id.zoomableImageView);
         imageView.setImageDrawable(getDrawable(photoFiles[position].getAbsolutePath()));
     }
+
+    public void updateData(File[] newPhotoFiles) {
+        cache.clear();
+        this.photoFiles = newPhotoFiles;
+        notifyDataSetChanged();
+    }
 }

@@ -79,6 +79,8 @@ public class PhotosFragment extends Fragment {
         });
         
         readAllImages();
+        // TODO: default sorting, maybe by time created
+        showAllPictures();
 
         return photosFragment;
     }
@@ -107,8 +109,8 @@ public class PhotosFragment extends Fragment {
             }
 
         }
-        // TODO: default sorting, maybe by time created
-        showAllPictures();
+        Toast.makeText(context, "Number of photos: " + photoFiles.size(), Toast.LENGTH_SHORT).show();
+
     }
 
     void showAllPictures() {
