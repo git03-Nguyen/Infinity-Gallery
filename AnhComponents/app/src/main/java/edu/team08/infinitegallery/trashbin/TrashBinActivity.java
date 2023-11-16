@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.photos.PhotosAdapter;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;
@@ -63,7 +65,8 @@ public class TrashBinActivity extends AppCompatActivity {
         } else if (itemId == R.id.menuTrashBinEmpty) {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.menuTrashBinSettings) {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(TrashBinActivity.this, SettingsActivity.class);
+            startActivity(myIntent, null);
         } else {
             return super.onOptionsItemSelected(item);
         }

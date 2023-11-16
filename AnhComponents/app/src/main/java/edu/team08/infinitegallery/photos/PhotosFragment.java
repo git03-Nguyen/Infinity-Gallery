@@ -42,6 +42,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +77,13 @@ public class PhotosFragment extends Fragment {
         // TODO: update functionalities in toolbar
         Toolbar toolbar = photosFragment.findViewById(R.id.toolbarPhotos);
         toolbar.setOnMenuItemClickListener(item -> {
-            Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            int itemId = item.getItemId();
+            if (itemId == R.id.menuPhotosSettings) {
+                Intent myIntent = new Intent(context, SettingsActivity.class);
+                startActivity(myIntent, null);
+            } else {
+                Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            }
             return true;
         });
 

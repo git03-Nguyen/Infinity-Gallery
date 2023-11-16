@@ -51,6 +51,7 @@ public class SinglePhotoActivity extends AppCompatActivity {
 
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.moveTrash) {
