@@ -32,6 +32,7 @@ import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.albums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
@@ -89,7 +90,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
         File photo = allPhotos.get(position);
-        Log.e("onBind", photo.getAbsolutePath());
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
@@ -115,10 +115,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
-        if (this.isTrash) {
+        if (context instanceof TrashBinActivity) {
             ((TrashBinActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        } else {
+        } else if (context instanceof MainActivity) {
             ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else if (context instanceof SingleAlbumActivity) {
+            ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         }
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {

@@ -11,20 +11,115 @@
         android:id="@+id/toolbarMore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorOnPrimary"
         app:titleMarginStart="10dp"
         app:menu="@menu/menu_toolbar_more" />
 
-    <FrameLayout
+    <GridLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#faffde">
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:padding="5dp">
 
-        <Button
-            android:id="@+id/btnOpenTrashBin"
-            android:layout_width="match_parent"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:text="Trash bin" />
+            android:layout_width="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical" >
 
-    </FrameLayout>
+            <edu.team08.infinitegallery.helpers.SquareImageButton
+                android:id="@+id/btn_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sl_bg_button_favorites_album"
+                android:src="@drawable/ic_album_favorites"
+                android:padding="15dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Favorites"
+                android:paddingStart="5dp"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <TextView
+                android:id="@+id/txtFavPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
+                android:paddingStart="5dp"
+                android:text="0 photos" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical" >
+
+            <edu.team08.infinitegallery.helpers.SquareImageButton
+                android:id="@+id/btn_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sl_bg_button_private_album"
+                android:src="@drawable/ic_album_private"
+                android:padding="15dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Privacy"
+                android:paddingStart="5dp"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <TextView
+                android:id="@+id/txtPrivacyPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0 photos"
+                android:paddingStart="5dp"
+                style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical" >
+
+            <edu.team08.infinitegallery.helpers.SquareImageButton
+                android:id="@+id/btn_trash_bin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sl_bg_button_trash_bin_album"
+                android:src="@drawable/ic_album_trash"
+                android:padding="15dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trash Bin"
+                android:paddingStart="5dp"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+
+            <TextView
+                android:id="@+id/txtTrashBinPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
+                android:paddingStart="5dp"
+                android:text="0 photos" />
+
+        </LinearLayout>
+
+
+    </GridLayout>
+
+
 </LinearLayout>

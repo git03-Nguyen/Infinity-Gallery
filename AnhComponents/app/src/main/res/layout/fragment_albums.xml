@@ -12,7 +12,6 @@
         android:id="@+id/toolbarAlbums"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorOnPrimary"
         app:titleTextColor="?attr/colorSecondary"
         app:menu="@menu/menu_toolbar_albums" />
 
@@ -20,13 +19,18 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#cfe1ff">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewAlbums"
+        <Button
+            android:id="@+id/btnTestDB"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:background="#F55"
+            android:text="Test database favorites" />
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/recViewAlbums"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"/>-->
 
     </FrameLayout>
 

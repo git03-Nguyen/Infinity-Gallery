@@ -1,5 +1,7 @@
 package edu.team08.infinitegallery.more;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.albums.SingleAlbumActivity;
+import edu.team08.infinitegallery.helpers.SquareImageButton;
 import edu.team08.infinitegallery.settings.SettingsActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
@@ -22,7 +26,8 @@ import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 public class MoreFragment extends Fragment {
     private static final int SETTINGS_REQUEST_CODE = 1;
     private Context context;
-    private Button btnTrashBin;
+    private SquareImageButton btnTrashBin;
+    private SquareImageButton btnFavorite;
 
     public MoreFragment(Context context) {
         this.context = context;
@@ -57,12 +62,22 @@ public class MoreFragment extends Fragment {
             return true;
         });
 
-        btnTrashBin = rootView.findViewById(R.id.btnOpenTrashBin);
+        btnTrashBin = rootView.findViewById(R.id.btn_trash_bin);
         btnTrashBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(context, TrashBinActivity.class);
                 startActivity(myIntent);
+            }
+        });
+
+        btnFavorite = rootView.findViewById(R.id.btn_favorites);
+        btnFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(context, SingleAlbumActivity.class);
+                myIntent.putExtra("albumType", "favorite");
+                startActivity(myIntent, null);
             }
         });
 
