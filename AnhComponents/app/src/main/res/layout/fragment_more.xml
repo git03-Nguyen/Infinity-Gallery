@@ -12,13 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorOnPrimary"
-        app:title="More"
-        app:titleMarginStart="30dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:titleMarginStart="10dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:menu="@menu/menu_toolbar_more" />
 
-    <Button
-        android:id="@+id/button2"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Trash bin" />
+        android:layout_height="match_parent"
+        android:background="#faffde">
+
+        <Button
+            android:id="@+id/btnOpenTrashBin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trash bin" />
+
+    </FrameLayout>
 </LinearLayout>

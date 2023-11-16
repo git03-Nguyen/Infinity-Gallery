@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 /**
@@ -69,18 +70,22 @@ public class MoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View moreFragment = inflater.inflate(R.layout.fragment_more, container, false);
-        btnTrashBin = moreFragment.findViewById(R.id.button2);
+        View rootView = inflater.inflate(R.layout.fragment_more, container, false);
+        Toolbar toolbar = rootView.findViewById(R.id.toolbarMore);
+        toolbar.setOnMenuItemClickListener(item -> {
+            Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        });
 
+        btnTrashBin = rootView.findViewById(R.id.btnOpenTrashBin);
         btnTrashBin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Opening trash bin", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(getActivity(), TrashBinActivity.class);
                 startActivity(myIntent);
             }
         });
 
-        return moreFragment;
+        return rootView;
     }
 }

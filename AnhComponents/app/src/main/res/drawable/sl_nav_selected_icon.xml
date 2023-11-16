@@ -3,6 +3,6 @@
 
     <item android:color="?attr/colorOnSecondary" android:state_checked="true"/>
 
-    <item android:color="#DDDDDD" android:state_checked="false"/>
+    <item android:color="#777" android:state_checked="false"/>
 
 </selector>

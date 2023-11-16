@@ -1,12 +1,45 @@
 package edu.team08.infinitegallery.photos;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.MergeCursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import android.provider.MediaStore;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.SortedSet;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import edu.team08.infinitegallery.R;
 
@@ -16,51 +49,79 @@ import edu.team08.infinitegallery.R;
  * create an instance of this fragment.
  */
 public class PhotosFragment extends Fragment {
+    int spanCount = 4;
+    Context context;
+    List<File> photoFiles;
+    RecyclerView photosRecView;
+    PhotosAdapter photosAdapter;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PhotosFragment() {
-        // Required empty public constructor
+    public PhotosFragment(Context context) {
+        this.context = context;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PhotosFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PhotosFragment newInstance(String param1, String param2) {
-        PhotosFragment fragment = new PhotosFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static PhotosFragment newInstance(Context context) {
+        return new PhotosFragment(context);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_photos, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View photosFragment = inflater.inflate(R.layout.fragment_photos, container, false);
+        photosRecView = photosFragment.findViewById(R.id.recViewPhotos);
+
+        // TODO: update functionalities in toolbar
+        Toolbar toolbar = photosFragment.findViewById(R.id.toolbarPhotos);
+        toolbar.setOnMenuItemClickListener(item -> {
+            Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            return true;
+        });
+
+        return photosFragment;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        readAllImages();
+        showAllPictures();
+    }
+
+    private void readAllImages() {
+        // TODO: maybe other thread, and only reload if have some changes in files
+        photoFiles = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
+            }
+
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            while (cursor.moveToNext()) {
+                String photoPath = cursor.getString(columnIndex);
+                photoFiles.add(new File(photoPath));
+            }
+        } finally {
+            // Close the cursor to avoid memory leaks
+            if (cursor != null) {
+                cursor.close();
+            }
+
+        }
+
+    }
+
+    void showAllPictures() {
+        photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
+        photosRecView.setAdapter(photosAdapter);
+        photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+    }
+
+
 }
