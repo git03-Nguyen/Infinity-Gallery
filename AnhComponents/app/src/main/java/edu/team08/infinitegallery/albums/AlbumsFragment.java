@@ -1,5 +1,6 @@
 package edu.team08.infinitegallery.albums;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +71,11 @@ public class AlbumsFragment extends Fragment {
 
         toolbar.setOnMenuItemClickListener(item -> {
             Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            int itemId = item.getItemId();
+            if (itemId == R.id.menuAlbumsSettings) {
+                Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(myIntent, null);
+            }
             return true;
         });
 

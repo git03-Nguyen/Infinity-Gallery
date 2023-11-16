@@ -41,12 +41,12 @@
         android:layout_height="wrap_content"
         android:paddingVertical="8dp"
         app:itemIconSize="28dp"
-        app:itemIconTint="@color/black"
         app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemPaddingBottom="7dp"
         app:itemPaddingTop="7dp"
-        app:itemTextColor="@color/black"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_photo_bottom" />
+        app:menu="@menu/menu_photo_bottom"
+        style="@style/BottomNavPhotoStyle"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
 </LinearLayout>

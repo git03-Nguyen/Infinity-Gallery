@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorOnPrimary"
         app:titleMarginStart="10dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:menu="@menu/menu_toolbar_more" />
 
     <FrameLayout

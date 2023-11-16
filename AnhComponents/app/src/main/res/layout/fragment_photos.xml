@@ -15,7 +15,6 @@
         android:background="#00000000"
         app:title="November 09, 2023"
         app:titleMarginStart="10dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:menu="@menu/menu_toolbar_photos" />
 
     <FrameLayout

@@ -10,18 +10,21 @@ import static android.os.Build.VERSION_CODES;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,10 +35,12 @@ import edu.team08.infinitegallery.albums.AlbumsFragment;
 import edu.team08.infinitegallery.more.MoreFragment;
 import edu.team08.infinitegallery.photos.PhotosFragment;
 import edu.team08.infinitegallery.search.SearchFragment;
+import edu.team08.infinitegallery.settings.AppConfig;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private final int PERMISSIONS_REQUEST_CODE_1  = 100;
     private final int PERMISSIONS_REQUEST_CODE_2 = 2296;
+    private static final int SETTINGS_REQUEST_CODE = 1;
     private PhotosFragment photosFragment;
     private AlbumsFragment albumsFragment;
     private SearchFragment searchFragment;
@@ -45,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         requestPermissions();
@@ -135,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
         photosFragment = PhotosFragment.newInstance(MainActivity.this);
         albumsFragment = AlbumsFragment.newInstance("", "");
-        searchFragment = SearchFragment.newInstance("", "");
-        moreFragment = MoreFragment.newInstance("", "");
+        searchFragment = SearchFragment.newInstance(MainActivity.this);
+        moreFragment = MoreFragment.newInstance(MainActivity.this);
         currentFragment = photosFragment;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -165,6 +175,20 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         });
 
 
+    }
+
+    private void changeTheme(boolean isChecked) {
+        if (isChecked) {
+            setTheme(R.style.Theme_MyTheme);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            AppConfig.getInstance(this).setNightMode(true);
+
+        }
+        else {
+            setTheme(R.style.Theme_MyTheme);
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            AppConfig.getInstance(this).setNightMode(false);
+        }
     }
 
     @Override
