@@ -98,7 +98,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, position + ": " + photo.getName(), Toast.LENGTH_SHORT).show();
                 // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
                 // TODO: (!) remember to check if it's exist or not
                 String[] photoPaths = new String[allPhotos.size()];

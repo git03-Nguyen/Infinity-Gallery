@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
+
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,7 +25,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     Context context;
     File[] photoFiles;
     LayoutInflater inflater;
-    ZoomImageView imageView;
+    PhotoView zoomViewImage;
     static HashMap<String, Drawable> cache = new HashMap<String, Drawable>();
 
     public ViewPagerAdapter(Context context, File[] photoFiles){
@@ -43,12 +46,12 @@ public class ViewPagerAdapter extends PagerAdapter {
         return cache.get(key);
     }
 
-    public ZoomImageView getImageView(){ return imageView; }
+    public PhotoView getZoomViewImage(){ return zoomViewImage; }
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View itemView = inflater.inflate(R.layout.item_pager_single_photo, container, false);
-        ZoomImageView view = itemView.findViewById(R.id.zoomableImageView);
+        PhotoView view = itemView.findViewById(R.id.photoView);
         view.setImageDrawable((getDrawable(photoFiles[position].getAbsolutePath())));
         Objects.requireNonNull(container).addView(itemView);
 
@@ -72,8 +75,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public void setPrimaryItem(ViewGroup container, int position, Object object){
         super.setPrimaryItem(container, position, object);
-        imageView = ((View)object).findViewById(R.id.zoomableImageView);
-        imageView.setImageDrawable(getDrawable(photoFiles[position].getAbsolutePath()));
+        zoomViewImage = ((View)object).findViewById(R.id.photoView);
+        zoomViewImage.setImageDrawable(getDrawable(photoFiles[position].getAbsolutePath()));
     }
 
     public void updateData(File[] newPhotoFiles) {

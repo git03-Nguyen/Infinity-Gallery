@@ -13,16 +13,10 @@ public class ZoomViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        ZoomImageView view = ((ViewPagerAdapter) getAdapter()).getImageView();
-        if(view != null) return (!view.isZooming() && super.onTouchEvent(ev));
-
         return super.onTouchEvent(ev);
     }
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        ZoomImageView view = ((ViewPagerAdapter) getAdapter()).getImageView();
-        if(view != null) return (!view.isZooming() && super.onInterceptTouchEvent(ev));
-
         return super.onInterceptTouchEvent(ev);
     }
 }

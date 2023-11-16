@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MergeCursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,7 +56,6 @@ public class PhotosFragment extends Fragment {
     PhotosAdapter photosAdapter;
 
     public PhotosFragment(Context context) {
-
         this.context = context;
     }
 
@@ -78,8 +79,6 @@ public class PhotosFragment extends Fragment {
             Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             return true;
         });
-
-        
 
         return photosFragment;
     }
@@ -115,7 +114,6 @@ public class PhotosFragment extends Fragment {
             }
 
         }
-        Toast.makeText(context, "Number of photos: " + photoFiles.size(), Toast.LENGTH_SHORT).show();
 
     }
 

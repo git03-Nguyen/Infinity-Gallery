@@ -1,9 +1,12 @@
 package edu.team08.infinitegallery;
 
-import static android.Manifest.permission.READ_CALENDAR;
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +17,13 @@ import androidx.fragment.app.Fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,9 +34,8 @@ import edu.team08.infinitegallery.photos.PhotosFragment;
 import edu.team08.infinitegallery.search.SearchFragment;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
-    private final int PERMISSION_REQUEST_READ  = 100;
-    private final int PERMISSION_REQUEST_WRITE = 101;
-    private final int PERMISSION_REQUEST_DELETE = 2296;
+    private final int PERMISSIONS_REQUEST_CODE_1  = 100;
+    private final int PERMISSIONS_REQUEST_CODE_2 = 2296;
     private PhotosFragment photosFragment;
     private AlbumsFragment albumsFragment;
     private SearchFragment searchFragment;
@@ -48,28 +52,39 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void requestPermissions() {
-        String readImagePermission = (SDK_INT >= Build.VERSION_CODES.TIRAMISU) ?
-                android.Manifest.permission.READ_MEDIA_IMAGES :
-                Manifest.permission.READ_EXTERNAL_STORAGE;
-        String writeImagePermission = WRITE_EXTERNAL_STORAGE;
-        if (ContextCompat.checkSelfPermission(this, readImagePermission) == PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(MainActivity.this, "Permission has been granted in the past!", Toast.LENGTH_SHORT).show();
-        } else {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {readImagePermission, writeImagePermission}, PERMISSION_REQUEST_READ);
+        String readPermission = (SDK_INT >= VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
+        String writePermission = WRITE_EXTERNAL_STORAGE;
+        String internetPermission = INTERNET;
+        String networkPermission = ACCESS_NETWORK_STATE;
+
+        Boolean isReadImagesAllowed = ContextCompat.checkSelfPermission(this, readPermission) == PackageManager.PERMISSION_GRANTED;
+        Boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
+        Boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
+        Boolean isNetworkStateAllowed = ContextCompat.checkSelfPermission(this, networkPermission) == PackageManager.PERMISSION_GRANTED;
+        Boolean successful = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
+        if (SDK_INT < 34) {
+            successful = successful && isWriteImagesAllowed;
         }
 
-        // Manage files permission
-        if (SDK_INT >= Build.VERSION_CODES.R) {
+        if (successful){
+            Toast.makeText(MainActivity.this, "Permissions have been granted in the past!", Toast.LENGTH_SHORT).show();
+        } else {
+            String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
+            ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSIONS_REQUEST_CODE_1);
+        }
+
+        // Permission to copy, move, delete, edit files on external storage - (!) new for Android 11+
+        if (SDK_INT >= VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()) {return;}
             try {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                 intent.addCategory("android.intent.category.DEFAULT");
                 intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
-                startActivityForResult(intent, PERMISSION_REQUEST_DELETE);
+                startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
             } catch (Exception e) {
                 Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(intent, PERMISSION_REQUEST_DELETE);
+                startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
             }
         } else {
             //below android 11 - maybe WRITE_EXTERNAL_STORAGE
@@ -80,11 +95,19 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_READ) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MainActivity.this, "Permission granted!", Toast.LENGTH_SHORT).show();
+        if (requestCode == PERMISSIONS_REQUEST_CODE_1) {
+            Boolean successful = grantResults.length > 0;
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    successful = false;
+                    break;
+                }
+            }
+            if (successful) {
+                Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "Permission denied!"  + grantResults.length + ":" + grantResults[0] + ":" + PackageManager.PERMISSION_GRANTED, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Permissions denied! Stopping app ...", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     }
@@ -92,19 +115,23 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PERMISSION_REQUEST_DELETE) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
-
-                } else {
-                    Toast.makeText(this, "The app must have access file permission!", Toast.LENGTH_SHORT).show();
+        if (requestCode == PERMISSIONS_REQUEST_CODE_2) {
+            if (SDK_INT >= VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    Toast.makeText(this, "Permission to access files has been denied! Stopping app...", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
         }
     }
 
-    private void initApp(){
+    private void initApp() {
+        MediaScannerConnection.scanFile(MainActivity.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+            }
+        });
 
         photosFragment = PhotosFragment.newInstance(MainActivity.this);
         albumsFragment = AlbumsFragment.newInstance("", "");

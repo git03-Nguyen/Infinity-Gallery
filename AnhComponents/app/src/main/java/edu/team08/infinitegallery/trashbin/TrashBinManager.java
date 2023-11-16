@@ -70,12 +70,6 @@ public class TrashBinManager {
         }
         src.delete();
         // TODO: đại loại ở file đã làm đc rồi, tuy nhiên cần thêm db để check
-
-        if (src.exists()) {
-            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public String getTrashBinPath() {

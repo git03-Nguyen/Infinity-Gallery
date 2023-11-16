@@ -35,7 +35,6 @@ public class TrashBinActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(this, "Trash bin at: " + trashBinManager.getTrashBinPath(), Toast.LENGTH_SHORT).show();
         File[] trashFiles = trashBinManager.getTrashFiles();
         photosAdapter = new PhotosAdapter(this, Arrays.asList(trashFiles), spanCount);
         photosRecView.setAdapter(photosAdapter);

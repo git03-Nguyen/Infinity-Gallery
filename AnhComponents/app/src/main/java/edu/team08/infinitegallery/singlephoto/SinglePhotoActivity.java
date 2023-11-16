@@ -1,14 +1,17 @@
 package edu.team08.infinitegallery.singlephoto;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -18,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
@@ -27,7 +29,6 @@ public class SinglePhotoActivity extends AppCompatActivity {
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
     private String[] photoPaths;
-    private int currentPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +38,12 @@ public class SinglePhotoActivity extends AppCompatActivity {
         if (intent.hasExtra("photoPaths")) {
             this.photoPaths = intent.getStringArrayExtra("photoPaths");
         }
+        int currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
-            this.currentPosition = intent.getIntExtra("currentPosition", 0);
+            currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.photoPaths, this.currentPosition);
+        singlePhotoFragment = new SinglePhotoFragment(this, this.photoPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
@@ -51,23 +53,8 @@ public class SinglePhotoActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.delete) {
-                // get the photo and delete it
-                // TODO: confirm to delete
-                finish();
-                try {
-                    new TrashBinManager(this).moveToTrash(new File(photoPaths[currentPosition]));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Toast.makeText(this, "Deleted: " + photoPaths[currentPosition], Toast.LENGTH_SHORT).show();
-                List<String> newPhotoPaths = new ArrayList<>();
-                for (String path : photoPaths) {
-                    if (!path.equalsIgnoreCase(photoPaths[currentPosition])) {
-                        newPhotoPaths.add(path);
-                    }
-                }
-                finish();
+            if (itemId == R.id.moveTrash) {
+                moveToTrash();
             } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -77,8 +64,6 @@ public class SinglePhotoActivity extends AppCompatActivity {
 
         setSupportActionBar(findViewById(R.id.topToolbarPhoto));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
     }
 
@@ -91,5 +76,92 @@ public class SinglePhotoActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void moveToTrash() {
+        // Get the current position
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+
+        // Build a confirmation dialog with a progress bar
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Deletion");
+        builder.setMessage("Are you sure to move this photo to the trash?");
+
+        // Add positive button for confirmation
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User confirmed, proceed with deletion
+                // Create a custom dialog with ProgressBar
+                Dialog progressDialog = new Dialog(SinglePhotoActivity.this);
+                progressDialog.setContentView(R.layout.dialog_progress_bar);
+                progressDialog.setTitle("Deleting...");
+                progressDialog.setCancelable(false);
+
+                ProgressBar progressBar = progressDialog.findViewById(R.id.progressBar);
+                TextView textViewMessage = progressDialog.findViewById(R.id.textViewMessage);
+
+                // Show the dialog
+                progressDialog.show();
+
+                // Simulate the deletion process
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // Record the start time
+                            long startTime = System.currentTimeMillis();
+
+                            // Move the photo to the trash
+                            new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
+
+                            // Record the end time
+                            long endTime = System.currentTimeMillis();
+
+                            // Calculate the actual time taken
+                            final long timeTaken = endTime - startTime;
+
+                            // Dismiss the progress dialog
+                            progressDialog.dismiss();
+
+                            // Finish the activity or handle further actions
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            });
+
+                            // Optionally, update UI or perform additional actions based on the actual time taken
+                            // For example, you can display a message about the deletion completion
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                }
+                            });
+
+                        } catch (IOException e) {
+                            Log.e("moveToTrash", "Cannot move photo to trash bin!");
+                            progressDialog.dismiss(); // Dismiss the progress dialog in case of an error
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        // Add negative button for cancel
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User canceled, do nothing
+            }
+        });
+
+        // Show the confirmation dialog
+        builder.show();
+    }
+
+
+
 
 }
