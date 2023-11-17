@@ -27,11 +27,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import edu.team08.infinitegallery.albumsoption.AlbumsFragment;
-import edu.team08.infinitegallery.moreoption.MoreFragment;
-import edu.team08.infinitegallery.photosoption.PhotosFragment;
-import edu.team08.infinitegallery.searchoption.SearchFragment;
-import edu.team08.infinitegallery.settingsoption.AppConfig;
+import edu.team08.infinitegallery.optionalbums.AlbumsFragment;
+import edu.team08.infinitegallery.optionmore.MoreFragment;
+import edu.team08.infinitegallery.optionphotos.PhotosFragment;
+import edu.team08.infinitegallery.optionsearch.SearchFragment;
+import edu.team08.infinitegallery.optionsettings.AppConfig;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private final int PERMISSIONS_REQUEST_CODE_1  = 100;

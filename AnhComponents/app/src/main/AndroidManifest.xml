@@ -21,10 +21,10 @@
         android:theme="@style/Theme.MyTheme"
         tools:targetApi="31">
         <activity
-            android:name=".albumsoption.SingleAlbumActivity"
+            android:name=".optionalbums.SingleAlbumActivity"
             android:exported="false" />
         <activity
-            android:name=".settingsoption.SettingsActivity"
+            android:name=".optionsettings.SettingsActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity

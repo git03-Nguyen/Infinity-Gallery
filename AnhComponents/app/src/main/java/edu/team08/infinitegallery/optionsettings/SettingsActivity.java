@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.settingsoption;
+package edu.team08.infinitegallery.optionsettings;
 
 import androidx.appcompat.app.AppCompatActivity;
 

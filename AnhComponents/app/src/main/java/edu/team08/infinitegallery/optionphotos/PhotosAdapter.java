@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.photosoption;
+package edu.team08.infinitegallery.optionphotos;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -28,7 +28,7 @@ import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.albumsoption.SingleAlbumActivity;
+import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
@@ -38,7 +38,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private SparseBooleanArray selectedItemsIds;
     private List<File> allPhotos;
     private final int spanCount;
-    private boolean isTrash;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -66,7 +65,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         this.allPhotos = allPhotos;
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
-        this.isTrash = context.toString().contains("TrashBinActivity");
     }
 
     @NonNull
@@ -100,12 +98,17 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 for (int i = 0; i < photoPaths.length; i++) {
                     photoPaths[i] = allPhotos.get(i).getAbsolutePath();
                 }
-                Intent myIntent;
-                if (isTrash) myIntent = new Intent(context, SingleTrashActivity.class);
-                else myIntent = new Intent(context, SinglePhotoActivity.class);
-                myIntent.putExtra("photoPaths", photoPaths);
-                myIntent.putExtra("currentPosition", position);
-                startActivity(context, myIntent, null);
+                Intent myIntent = null;
+                if (context instanceof TrashBinActivity) {
+                    myIntent = new Intent(context, SingleTrashActivity.class);
+                } else if (context instanceof MainActivity) {
+                    myIntent = new Intent(context, SinglePhotoActivity.class);
+                }
+                if (myIntent != null) {
+                    myIntent.putExtra("photoPaths", photoPaths);
+                    myIntent.putExtra("currentPosition", position);
+                    startActivity(context, myIntent, null);
+                }
             }
         });
 

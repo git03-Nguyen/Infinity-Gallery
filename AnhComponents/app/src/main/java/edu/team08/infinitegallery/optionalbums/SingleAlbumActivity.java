@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.albumsoption;
+package edu.team08.infinitegallery.optionalbums;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.photosoption.PhotosAdapter;
-import edu.team08.infinitegallery.settingsoption.SettingsActivity;
+import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
+import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
 public class SingleAlbumActivity extends AppCompatActivity {
     int spanCount = 4;

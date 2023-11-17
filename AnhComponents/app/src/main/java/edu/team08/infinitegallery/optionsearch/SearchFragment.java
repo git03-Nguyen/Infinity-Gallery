@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.searchoption;
+package edu.team08.infinitegallery.optionsearch;
 
 import android.content.Context;
 import android.os.Bundle;

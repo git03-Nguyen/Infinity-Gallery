@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.photosoption;
+package edu.team08.infinitegallery.optionphotos;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import edu.team08.infinitegallery.ObjectTestFavorites;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.settingsoption.SettingsActivity;
+import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
