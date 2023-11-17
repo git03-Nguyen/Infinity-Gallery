@@ -1,48 +1,30 @@
-package edu.team08.infinitegallery.photos;
+package edu.team08.infinitegallery.photosoption;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.MergeCursor;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.provider.MediaStore;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.SortedSet;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
 
+import edu.team08.infinitegallery.ObjectTestFavorites;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.settingsoption.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,6 +77,13 @@ public class PhotosFragment extends Fragment {
         super.onResume();
         readAllImages();
         showAllPictures();
+
+
+        // TODO: Warning: this object is only for testing favorites album, must be removed
+        if (photoFiles.size() > 1) {
+            ObjectTestFavorites objectTestFavorites = new ObjectTestFavorites(context, new String[] {photoFiles.get(0).getAbsolutePath(), photoFiles.get(1).getAbsolutePath()});
+        }
+
     }
 
     private void readAllImages() {

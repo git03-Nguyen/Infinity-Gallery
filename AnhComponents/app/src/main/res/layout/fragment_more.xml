@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".more.MoreFragment">
+    tools:context=".moreoption.MoreFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarMore"

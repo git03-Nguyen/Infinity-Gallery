@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".albums.AlbumsFragment">
+    tools:context=".albumsoption.AlbumsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.appcompat.widget.Toolbar
@@ -21,16 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnTestDB"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewAlbums"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#F55"
-            android:text="Test database favorites" />
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/recViewAlbums"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"/>-->
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 

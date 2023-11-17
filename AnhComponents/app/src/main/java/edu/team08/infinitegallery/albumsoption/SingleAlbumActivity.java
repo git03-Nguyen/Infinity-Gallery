@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.albums;
+package edu.team08.infinitegallery.albumsoption;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,9 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.photos.PhotosAdapter;
-import edu.team08.infinitegallery.settings.SettingsActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
+import edu.team08.infinitegallery.photosoption.PhotosAdapter;
+import edu.team08.infinitegallery.settingsoption.SettingsActivity;
 
 public class SingleAlbumActivity extends AppCompatActivity {
     int spanCount = 4;

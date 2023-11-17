@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.photos;
+package edu.team08.infinitegallery.photosoption;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +15,20 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.albums.SingleAlbumActivity;
+import edu.team08.infinitegallery.albumsoption.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;

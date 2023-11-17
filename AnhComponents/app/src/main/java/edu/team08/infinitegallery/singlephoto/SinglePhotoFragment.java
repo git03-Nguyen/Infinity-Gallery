@@ -1,34 +1,19 @@
 package edu.team08.infinitegallery.singlephoto;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
-import android.service.controls.templates.ControlTemplate;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 
 public class SinglePhotoFragment extends Fragment {
 

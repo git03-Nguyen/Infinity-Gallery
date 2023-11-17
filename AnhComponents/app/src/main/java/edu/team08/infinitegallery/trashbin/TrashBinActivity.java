@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.Arrays;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.photos.PhotosAdapter;
-import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.photosoption.PhotosAdapter;
+import edu.team08.infinitegallery.settingsoption.SettingsActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;

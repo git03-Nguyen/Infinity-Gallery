@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -17,7 +16,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 
 public class ViewPagerAdapter extends PagerAdapter {

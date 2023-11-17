@@ -15,27 +15,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import edu.team08.infinitegallery.albums.AlbumsFragment;
-import edu.team08.infinitegallery.more.MoreFragment;
-import edu.team08.infinitegallery.photos.PhotosFragment;
-import edu.team08.infinitegallery.search.SearchFragment;
-import edu.team08.infinitegallery.settings.AppConfig;
+import edu.team08.infinitegallery.albumsoption.AlbumsFragment;
+import edu.team08.infinitegallery.moreoption.MoreFragment;
+import edu.team08.infinitegallery.photosoption.PhotosFragment;
+import edu.team08.infinitegallery.searchoption.SearchFragment;
+import edu.team08.infinitegallery.settingsoption.AppConfig;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private final int PERMISSIONS_REQUEST_CODE_1  = 100;
@@ -116,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             if (successful) {
                 Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "Permissions denied! Stopping app ...", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(MainActivity.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -136,12 +131,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void initApp() {
-        MediaScannerConnection.scanFile(MainActivity.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
-            public void onScanCompleted(String path, Uri uri) {
-                Log.i("ExternalStorage", "Scanned " + path + ":");
-                Log.i("ExternalStorage", "-> uri=" + uri);
-            }
-        });
+        scanMediaOnStorage();
 
         photosFragment = PhotosFragment.newInstance(MainActivity.this);
         albumsFragment = AlbumsFragment.newInstance(MainActivity.this);
@@ -177,18 +167,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     }
 
-    private void changeTheme(boolean isChecked) {
-        if (isChecked) {
-            setTheme(R.style.Theme_MyTheme);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            AppConfig.getInstance(this).setNightMode(true);
-
-        }
-        else {
-            setTheme(R.style.Theme_MyTheme);
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            AppConfig.getInstance(this).setNightMode(false);
-        }
+    private void scanMediaOnStorage() {
+        MediaScannerConnection.scanFile(MainActivity.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+            }
+        });
     }
 
     @Override

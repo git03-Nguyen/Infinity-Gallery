@@ -1,25 +1,7 @@
 package edu.team08.infinitegallery.trashbin;
 
-import static androidx.core.app.ActivityCompat.startIntentSenderForResult;
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.database.Cursor;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;

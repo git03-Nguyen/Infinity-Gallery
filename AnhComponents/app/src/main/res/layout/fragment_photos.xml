@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".photos.PhotosFragment" >
+    tools:context=".photosoption.PhotosFragment" >
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.appcompat.widget.Toolbar

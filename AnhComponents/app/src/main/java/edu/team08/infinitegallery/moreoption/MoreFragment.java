@@ -1,6 +1,4 @@
-package edu.team08.infinitegallery.more;
-
-import static androidx.core.content.ContextCompat.startActivity;
+package edu.team08.infinitegallery.moreoption;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,14 +11,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.albums.SingleAlbumActivity;
+import edu.team08.infinitegallery.albumsoption.SingleAlbumActivity;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
-import edu.team08.infinitegallery.settings.SettingsActivity;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
+import edu.team08.infinitegallery.settingsoption.SettingsActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class MoreFragment extends Fragment {
