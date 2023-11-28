@@ -57,6 +57,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         initApp();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanMediaOnStorage();
+    }
+
     private void requestPermissions() {
         String readPermission = (SDK_INT >= VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
         String writePermission = WRITE_EXTERNAL_STORAGE;
@@ -131,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void initApp() {
-        scanMediaOnStorage();
+//        scanMediaOnStorage();
 
         photosFragment = PhotosFragment.newInstance(MainActivity.this);
         albumsFragment = AlbumsFragment.newInstance(MainActivity.this);
@@ -164,10 +170,9 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             return true;
         });
 
-
     }
 
-    private void scanMediaOnStorage() {
+    public void scanMediaOnStorage() {
         MediaScannerConnection.scanFile(MainActivity.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
             public void onScanCompleted(String path, Uri uri) {
                 Log.i("ExternalStorage", "Scanned " + path + ":");

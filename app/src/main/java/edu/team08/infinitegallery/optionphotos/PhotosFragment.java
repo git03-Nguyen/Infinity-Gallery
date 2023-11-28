@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.ObjectTestFavorites;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;

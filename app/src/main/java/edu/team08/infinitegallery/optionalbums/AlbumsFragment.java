@@ -6,17 +6,26 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
 public class AlbumsFragment extends Fragment {
-    Context context;
+    private Context context;
+    private RecyclerView albumRecView;
+    private List<String> albumPaths;
+
     public AlbumsFragment(Context context) {
         this.context = context;
     }
@@ -46,7 +55,16 @@ public class AlbumsFragment extends Fragment {
             return true;
         });
 
+        this.albumRecView = rootView.findViewById(R.id.recViewAlbums);
+        this.albumPaths = new ArrayList<>();
+
+        readFolders();
+
         return rootView;
+    }
+
+    private void readFolders() {
+
     }
 
 

@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
+import android.widget.ViewSwitcher;
 
 import java.io.File;
 import java.util.Arrays;
@@ -22,6 +25,7 @@ public class TrashBinActivity extends AppCompatActivity {
     private TrashBinManager trashBinManager;
     PhotosAdapter photosAdapter;
     RecyclerView photosRecView;
+    ViewSwitcher viewSwitcher;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +36,20 @@ public class TrashBinActivity extends AppCompatActivity {
 
         trashBinManager = new TrashBinManager(this);
         photosRecView = findViewById(R.id.recViewTrash);
+        viewSwitcher = findViewById(R.id.viewSwitcher);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         File[] trashFiles = trashBinManager.getTrashFiles();
+        if (trashFiles.length > 0) {
+            if (photosRecView.getId() == viewSwitcher.getNextView().getId()) {
+                viewSwitcher.showNext();
+            }
+        } else if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
+                viewSwitcher.showNext();
+        }
         photosAdapter = new PhotosAdapter(this, Arrays.asList(trashFiles), spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
