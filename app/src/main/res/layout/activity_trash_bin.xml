@@ -12,7 +12,6 @@
         android:id="@+id/toolbarTrashBin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorOnPrimary"
         app:title="Trash Bin"
         app:titleMarginStart="30dp" />
 
@@ -53,7 +52,7 @@
                     android:gravity="center"
                     android:text="No item"
                     android:textSize="16sp"
-                    android:textColor="?colorSecondary"/>
+                    android:textColor="?colorSecondary" />
 
                 <TextView
                     android:layout_width="match_parent"

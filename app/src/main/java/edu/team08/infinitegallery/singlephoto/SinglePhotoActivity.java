@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,9 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
+import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class SinglePhotoActivity extends AppCompatActivity {
@@ -79,86 +83,30 @@ public class SinglePhotoActivity extends AppCompatActivity {
         // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
 
-        // Build a confirmation dialog with a progress bar
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirm Deletion");
-        builder.setMessage("Are you sure to move this photo to the trash?");
-
-        // Add positive button for confirmation
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User confirmed, proceed with deletion
-                // Create a custom dialog with ProgressBar
-                Dialog progressDialog = new Dialog(SinglePhotoActivity.this);
-                progressDialog.setContentView(R.layout.dialog_progress_bar);
-                progressDialog.setTitle("Deleting...");
-                progressDialog.setCancelable(false);
-
-                ProgressBar progressBar = progressDialog.findViewById(R.id.progressBar);
-                TextView textViewMessage = progressDialog.findViewById(R.id.textViewMessage);
-
-                // Show the dialog
-                progressDialog.show();
-
-                // Simulate the deletion process
-                new Thread(new Runnable() {
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm Deletion",
+                "Are you sure to move this photo to the trash?",
+                new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            // Record the start time
-                            long startTime = System.currentTimeMillis();
-
-                            // Move the photo to the trash
-                            new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
-
-                            // Record the end time
-                            long endTime = System.currentTimeMillis();
-
-                            // Calculate the actual time taken
-                            final long timeTaken = endTime - startTime;
-
-                            // Dismiss the progress dialog
-                            progressDialog.dismiss();
-
-                            // Finish the activity or handle further actions
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SinglePhotoActivity.this, "Deleting ...", () -> {
+                                    try {
+                                        new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
                                     finish();
-                                }
-                            });
+                                });
 
-                            // Optionally, update UI or perform additional actions based on the actual time taken
-                            // For example, you can display a message about the deletion completion
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                }
-                            });
-
-                        } catch (IOException e) {
-                            Log.e("moveToTrash", "Cannot move photo to trash bin!");
-                            progressDialog.dismiss(); // Dismiss the progress dialog in case of an error
-                        }
                     }
-                }).start();
-            }
-        });
-
-        // Add negative button for cancel
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User canceled, do nothing
-            }
-        });
-
-        // Show the confirmation dialog
-        builder.show();
+                },
+                null);
     }
 
+    // ...
 
 
 

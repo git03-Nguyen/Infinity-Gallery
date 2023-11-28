@@ -87,11 +87,28 @@ public class TrashBinManager {
         moveFile(photo, trash);
     }
 
+    public void permanentDelete(File photo) {
+        // TODO: implement the db
+        photo.delete();
+    }
+
+    public void emptyTrashBin() {
+        for (File trash: getTrashFiles()) {
+            permanentDelete(trash);
+        }
+    }
+
     public void restorePhoto(File trash) throws IOException {
         // TODO: implement the db
         File destinationDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File photo = new File(destinationDirectory, trash.getName());
         moveFile(trash, photo);
+    }
+
+    public void restoreAllPhotos() throws IOException {
+        for (File trash: getTrashFiles()) {
+            restorePhoto(trash);
+        }
     }
 
 }

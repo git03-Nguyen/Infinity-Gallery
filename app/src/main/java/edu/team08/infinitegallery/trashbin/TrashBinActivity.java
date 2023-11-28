@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -14,11 +16,15 @@ import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;
@@ -69,13 +75,11 @@ public class TrashBinActivity extends AppCompatActivity {
         if (itemId == android.R.id.home) {
             this.finish();
         } else if (itemId == R.id.menuTrashBinRestoreAll) {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            this.restoreAllPhotos();
         } else if (itemId == R.id.menuTrashBinSelect) {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        } else if (itemId == R.id.menuTrashBinRestore) {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.menuTrashBinEmpty) {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            this.emptyTrashBin();
         } else if (itemId == R.id.menuTrashBinSettings) {
             Intent myIntent = new Intent(TrashBinActivity.this, SettingsActivity.class);
             startActivity(myIntent, null);
@@ -84,4 +88,50 @@ public class TrashBinActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    private void emptyTrashBin() {
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm empty trash bin",
+                "Are you sure to empty the trash bin? This action cannot be undone.",
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(TrashBinActivity.this, "Deleting ...", () -> {
+                                    trashBinManager.emptyTrashBin();
+                                },
+                                () -> {
+                                    onResume();
+                                });
+
+                    }
+                },
+                null);
+    }
+
+    private void restoreAllPhotos() {
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm Restore",
+                "Are you sure to restore all photos?",
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(TrashBinActivity.this, "Restoring ...", () -> {
+                                    try {
+                                        trashBinManager.restoreAllPhotos();
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
+                                    onResume();
+                                });
+
+                    }
+                },
+                null);
+
+    }
+
 }

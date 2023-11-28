@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
 
 public class SingleTrashActivity extends AppCompatActivity {
@@ -80,116 +82,53 @@ public class SingleTrashActivity extends AppCompatActivity {
         if (itemId == android.R.id.home) {
             this.finish();
         }
+
         return true;
     }
 
     private void restorePhoto() {
-        // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
 
-        // Create a custom dialog with ProgressBar
-        Dialog progressDialog = new Dialog(this);
-        progressDialog.setContentView(R.layout.dialog_progress_bar);
-        progressDialog.setTitle("Restoring...");
-        progressDialog.setCancelable(false);
+        // Create and show the progress dialog with the restoration logic
 
-        ProgressBar progressBar = progressDialog.findViewById(R.id.progressBar);
-        TextView textViewMessage = progressDialog.findViewById(R.id.textViewMessage);
-
-        // Show the dialog
-        progressDialog.show();
-
-        // Simulate the restoration process
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Record the start time
-                    long startTime = System.currentTimeMillis();
-
+        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(this, "Restoring...", () -> {
                     // Restore the photo from the trash
-                    new TrashBinManager(SingleTrashActivity.this).restorePhoto(new File(photoPaths[currentPosition]));
+                    try {
+                        new TrashBinManager(SingleTrashActivity.this).restorePhoto(new File(photoPaths[currentPosition]));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                () -> {
+                    Toast.makeText(SingleTrashActivity.this, "Photo restored at " + photoPaths[currentPosition], Toast.LENGTH_SHORT).show();
+                    finish();
+                });
 
-                    // Record the end time
-                    long endTime = System.currentTimeMillis();
-
-                    // Calculate the actual time taken
-                    final long timeTaken = endTime - startTime;
-
-                    // Dismiss the progress dialog
-                    progressDialog.dismiss();
-
-                    // Finish the activity or handle further actions
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    });
-
-                    // Optionally, update UI or perform additional actions based on the actual time taken
-                    // For example, you can display a message about the restoration completion
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
-
-                } catch (IOException e) {
-                    Log.e("restorePhoto", "Cannot restore photo!");
-                    progressDialog.dismiss(); // Dismiss the progress dialog in case of an error
-                }
-            }
-        }).start();
-    }
+        }
 
     private void permanentlyDeletePhoto() {
         // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
 
-        // Build a confirmation dialog for permanent deletion
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirm Permanent Deletion");
-        builder.setMessage("Are you sure to permanently delete this photo? This action cannot be undone.");
-
-        // Add positive button for confirmation
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User confirmed, proceed with permanent deletion
-                try {
-                    // Permanent deletion logic here
-                    // For example, you can use File.delete() to delete the photo
-                    File photoFile = new File(photoPaths[currentPosition]);
-                    if (photoFile.delete()) {
-                        // File deleted successfully
-                        // Optionally, you can update UI or perform additional actions
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm Permanent Deletion",
+                "Are you sure to permanently delete this photo? This action cannot be undone.",
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        File photoFile = new File(photoPaths[currentPosition]);
+                        photoFile.delete();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 finish();
                             }
                         });
-                    } else {
-                        // Failed to delete the file
-                        Log.e("permanentlyDeletePhoto", "Failed to permanently delete photo");
                     }
-                } catch (Exception e) {
-                    Log.e("permanentlyDeletePhoto", "Error during permanent deletion", e);
-                }
-            }
-        });
-
-        // Add negative button for cancel
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User canceled, do nothing
-            }
-        });
-
-        // Show the confirmation dialog
-        builder.show();
+                },
+                null
+        );
     }
 
 

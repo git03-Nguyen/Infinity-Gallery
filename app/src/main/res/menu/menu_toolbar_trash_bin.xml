@@ -13,10 +13,6 @@
         android:title="Select" />
 
     <item
-        android:id="@+id/menuTrashBinRestore"
-        android:title="Restore"/>
-
-    <item
         android:id="@+id/menuTrashBinEmpty"
         android:title="Empty trash" />
 
