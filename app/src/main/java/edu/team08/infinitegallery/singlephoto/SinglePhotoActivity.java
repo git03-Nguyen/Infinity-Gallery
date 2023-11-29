@@ -1,29 +1,18 @@
 package edu.team08.infinitegallery.singlephoto;
 
-import androidx.appcompat.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.ExifInterface;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
-import com.drew.metadata.file.FileTypeDirectory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -35,7 +24,6 @@ import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
 

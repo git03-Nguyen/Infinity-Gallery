@@ -8,13 +8,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
@@ -24,6 +17,13 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onResume() {
+        super.onResume();
         scanMediaOnStorage();
     }
 
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         }
 
         if (successful){
-            Toast.makeText(MainActivity.this, "Permissions have been granted in the past!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
         } else {
             String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
             ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSIONS_REQUEST_CODE_1);

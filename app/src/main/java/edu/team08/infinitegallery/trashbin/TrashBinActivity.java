@@ -1,9 +1,5 @@
 package edu.team08.infinitegallery.trashbin;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +8,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
-import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
