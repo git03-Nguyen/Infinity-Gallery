@@ -213,6 +213,17 @@ public class TrashBinManager {
     }
 
 
+    public void checkAndCleanTrashBin() {
+        File[] trashFiles = getTrashFiles();
 
+        int[] daysRemain = getDaysRemain(trashFiles);
 
+        for (int i = 0; i < daysRemain.length; i++) {
+            if (daysRemain[i] < 0) {
+                permanentDelete(trashFiles[i]);
+                trashFiles[i] = null;
+            }
+        }
+
+    }
 }

@@ -32,6 +32,7 @@ import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
 import edu.team08.infinitegallery.optionsettings.AppConfig;
+import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private final int PERMISSIONS_REQUEST_CODE_1  = 100;
@@ -170,6 +171,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                         .beginTransaction()
                         .replace(R.id.fragmentHolder, currentFragment)
                         .commit();
+
+            // Check to clean the trash bin
+            new TrashBinManager(this).checkAndCleanTrashBin();
+
+
             return true;
         });
 
