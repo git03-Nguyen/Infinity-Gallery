@@ -17,16 +17,47 @@
         app:titleMarginStart="10dp"
         app:menu="@menu/menu_toolbar_photos" />
 
-    <FrameLayout
+    <ViewSwitcher
+        android:id="@+id/viewSwitcher"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_marginTop="-100dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/img_image_empty" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="No item"
+                android:textSize="16sp"
+                android:textColor="?colorSecondary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="We couldn't find any photos on your device"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewPhotos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-    </FrameLayout>
+    </ViewSwitcher>
 
 
 

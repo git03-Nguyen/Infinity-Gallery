@@ -88,6 +88,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
                 .load(photo)
+                .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
