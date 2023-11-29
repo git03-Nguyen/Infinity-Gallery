@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
     <item
         android:id="@+id/delete"
-        android:icon="@drawable/ic_photo_delete_24"
+        android:icon="@drawable/ic_photo_delete_red_24"
         android:title="Delete"/>
     <item
         android:id="@+id/restore"

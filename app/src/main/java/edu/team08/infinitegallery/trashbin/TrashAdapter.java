@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.optionphotos;
+package edu.team08.infinitegallery.trashbin;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,64 +31,59 @@ import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
-public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
+public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> {
     private final Context context;
     private SparseBooleanArray selectedItemsIds;
-    private List<File> allPhotos;
+    private List<File> trashPhotos;
     private final int spanCount;
+    private TrashBinManager trashBinManager;
+    private int[] dayRemains;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
         private CheckBox checkbox;
-        private TextView txtNameImage;
-        private TextView txtSizeAndDateImage;
+        private TextView itemDaysText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             if (spanCount != 1) {
                 imageItem = itemView.findViewById(R.id.itemPhoto);
                 checkbox = itemView.findViewById(R.id.itemPhotoCheckBox);
-            }
-            else {
-                imageItem = itemView.findViewById(R.id.listItemPhoto);
-                checkbox = itemView.findViewById(R.id.checkListBox);
-                txtNameImage = itemView.findViewById(R.id.txtNamePhoto);
-                txtSizeAndDateImage = itemView.findViewById(R.id.txtSizeAndDatePhoto);
+                itemDaysText = itemView.findViewById(R.id.itemDaysText);
             }
         }
     }
 
-    public PhotosAdapter(Context context, List<File> allPhotos, int spanCount) {
+    public TrashAdapter(Context context, List<File> trashPhotos, int spanCount, TrashBinManager trashBinManager) {
         this.context = context;
-        this.allPhotos = allPhotos;
+        this.trashPhotos = trashPhotos;
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
+        this.trashBinManager = trashBinManager;
+        this.dayRemains = trashBinManager.getDaysRemain(trashPhotos.toArray(new File[0]));
     }
 
     @NonNull
     @Override
-    public PhotosAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View rootView;
+    public TrashAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View rootView = null;
         if (spanCount != 1)
-            rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo, parent, false);
-        else
-            rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_photo, parent, false);
+            rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trash, parent, false);
 
         Glide.with(context).clear(rootView);
         return new ViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull TrashAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
-        File photo = allPhotos.get(position);
+        File trash = trashPhotos.get(position);
+        int daysRemain = this.dayRemains[position];
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
-                .load(photo)
+                .load(trash)
                 .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
@@ -95,14 +91,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             public void onClick(View v) {
                 // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
                 // TODO: (!) remember to check if it's exist or not
-                String[] photoPaths = new String[allPhotos.size()];
+                String[] photoPaths = new String[trashPhotos.size()];
                 for (int i = 0; i < photoPaths.length; i++) {
-                    photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                    photoPaths[i] = trashPhotos.get(i).getAbsolutePath();
                 }
                 Intent myIntent = null;
-                if (context instanceof MainActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } 
+                myIntent = new Intent(context, SingleTrashActivity.class);
                 if (myIntent != null) {
                     myIntent.putExtra("photoPaths", photoPaths);
                     myIntent.putExtra("currentPosition", position);
@@ -113,32 +107,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        } else if (context instanceof SingleAlbumActivity) {
-            ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        }
+        ((TrashBinActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {
             int size = displaymetrics.widthPixels / spanCount;
-            holder.imageItem.setLayoutParams(new RelativeLayout.LayoutParams(size, size));
+            holder.imageItem.setLayoutParams(new FrameLayout.LayoutParams(size, size));
+            holder.itemDaysText.setText(Integer.toString(daysRemain) + " days");
         }
-        else {
-            // Set image size to display
-            int size = displaymetrics.widthPixels / 4;
-            holder.imageItem.setLayoutParams(new RelativeLayout.LayoutParams(size, size));
-
-            // Set the information of image
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ROOT);
-
-            int lastSlash = photo.getAbsolutePath().lastIndexOf('/');
-            String imageName = photo.getAbsolutePath().substring(lastSlash + 1);
-            holder.txtNameImage.setText(imageName);
-            holder.txtSizeAndDateImage.setText(Math.round(photo.length() * 1.0 / 1000) + " KB");
-            holder.txtSizeAndDateImage.append(", ");
-            holder.txtSizeAndDateImage.append(sdf.format(photo.lastModified()));
-        }
-
 
         if(selectedItemsIds.get(position)) {
             holder.itemView.setBackgroundColor(0x9934B5E4);
@@ -151,8 +126,13 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         }
     }
 
+    private void addRemainingTime() {
+        RelativeLayout customLayout = new RelativeLayout(context);
+
+    }
+
     @Override
     public int getItemCount() {
-        return allPhotos.size();
+        return trashPhotos.size();
     }
 }
