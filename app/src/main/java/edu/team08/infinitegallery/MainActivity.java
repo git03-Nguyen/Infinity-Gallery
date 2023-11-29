@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         scanMediaOnStorage();
     }
 
+
+
     private void requestPermissions() {
         String readPermission = (SDK_INT >= VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
         String writePermission = WRITE_EXTERNAL_STORAGE;
@@ -151,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
         bottomNavigationView = findViewById(R.id.bottomNavBar);
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            scanMediaOnStorage();
             int itemId = item.getItemId();
             if (itemId == R.id.nav_photos) {
                 currentFragment = photosFragment;
