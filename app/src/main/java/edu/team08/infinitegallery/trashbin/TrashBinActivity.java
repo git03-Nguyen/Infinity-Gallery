@@ -54,7 +54,7 @@ public class TrashBinActivity extends AppCompatActivity {
         } else if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
         }
-        trashAdapter = new TrashAdapter(this, Arrays.asList(trashFiles), spanCount);
+        trashAdapter = new TrashAdapter(this, Arrays.asList(trashFiles), spanCount, trashBinManager);
         photosRecView.setAdapter(trashAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
