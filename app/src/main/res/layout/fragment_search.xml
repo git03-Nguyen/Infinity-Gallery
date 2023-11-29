@@ -28,35 +28,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/emptyView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="vertical"-->
-<!--            android:gravity="center" >-->
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center" >
 
-<!--            <ImageView-->
-<!--                android:layout_marginTop="-100dp"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="250dp"-->
-<!--                android:src="@drawable/img_search_empty" />-->
+            <ImageView
+                android:layout_marginTop="-100dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/img_search_empty" />
 
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Found nothing"-->
-<!--                android:textSize="16sp"-->
-<!--                android:textColor="?colorSecondary" />-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Found nothing"
+                android:textSize="16sp"
+                android:textColor="?colorSecondary" />
 
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Sorry, we couldn't find any matches to your search"-->
-<!--                android:textSize="14sp" />-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Sorry, we couldn't find any matches to your search"
+                android:textSize="14sp" />
 
-<!--        </LinearLayout>-->
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewPhotos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 
     </ViewSwitcher>
