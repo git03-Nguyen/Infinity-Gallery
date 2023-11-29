@@ -13,6 +13,8 @@ import android.widget.FrameLayout;
 
 import java.io.File;
 
+import edu.team08.infinitegallery.MainActivity;
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 
 public class SinglePhotoFragment extends Fragment {
@@ -57,7 +59,7 @@ public class SinglePhotoFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 currentPosition = position;
-
+                ((MainCallbacks) context).onEmitMsgFromFragToMain("SinglePhotoFragment", Integer.toString(position));
             }
 
             @Override
@@ -70,6 +72,4 @@ public class SinglePhotoFragment extends Fragment {
     public int getCurrentPosition() {
         return this.currentPosition;
     }
-
-
 }
