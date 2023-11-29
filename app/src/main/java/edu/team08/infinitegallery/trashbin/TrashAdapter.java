@@ -23,14 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
 public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> {
     private final Context context;

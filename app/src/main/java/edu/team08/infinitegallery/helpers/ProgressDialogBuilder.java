@@ -7,10 +7,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
 
 public class ProgressDialogBuilder {
 

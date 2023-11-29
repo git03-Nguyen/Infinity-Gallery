@@ -30,8 +30,6 @@ import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
     private final Context context;
