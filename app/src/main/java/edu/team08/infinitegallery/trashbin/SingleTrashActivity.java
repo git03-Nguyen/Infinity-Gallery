@@ -1,22 +1,18 @@
 package edu.team08.infinitegallery.trashbin;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
@@ -27,7 +23,7 @@ public class SingleTrashActivity extends AppCompatActivity {
 
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
-    private String[] photoPaths;
+    private String[] trashPaths;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +31,14 @@ public class SingleTrashActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.hasExtra("photoPaths")) {
-            this.photoPaths = intent.getStringArrayExtra("photoPaths");
+            this.trashPaths = intent.getStringArrayExtra("photoPaths");
         }
         int currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.photoPaths, currentPosition);
+        singlePhotoFragment = new SinglePhotoFragment(this, this.trashPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
@@ -88,19 +84,21 @@ public class SingleTrashActivity extends AppCompatActivity {
 
     private void restorePhoto() {
         int currentPosition = singlePhotoFragment.getCurrentPosition();
+        AtomicReference<String> photoPath = new AtomicReference<>();
 
         // Create and show the progress dialog with the restoration logic
 
         Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(this, "Restoring...", () -> {
                     // Restore the photo from the trash
                     try {
-                        new TrashBinManager(SingleTrashActivity.this).restorePhoto(new File(photoPaths[currentPosition]));
+                        String path = new TrashBinManager(SingleTrashActivity.this).restorePhoto(new File(trashPaths[currentPosition]));
+                        photoPath.set(path);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 },
                 () -> {
-                    Toast.makeText(SingleTrashActivity.this, "Photo restored at " + photoPaths[currentPosition], Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SingleTrashActivity.this, "Photo restored at " + photoPath, Toast.LENGTH_SHORT).show();
                     finish();
                 });
 
@@ -117,8 +115,8 @@ public class SingleTrashActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        File photoFile = new File(photoPaths[currentPosition]);
-                        photoFile.delete();
+                        File photoFile = new File(trashPaths[currentPosition]);
+                        new TrashBinManager(SingleTrashActivity.this).permanentDelete(photoFile);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

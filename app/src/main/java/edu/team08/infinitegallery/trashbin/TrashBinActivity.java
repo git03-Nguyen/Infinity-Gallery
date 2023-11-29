@@ -7,27 +7,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;
+    File[] trashFiles;
     private TrashBinManager trashBinManager;
     PhotosAdapter photosAdapter;
     RecyclerView photosRecView;
@@ -41,6 +39,7 @@ public class TrashBinActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         trashBinManager = new TrashBinManager(this);
+        trashFiles = null;
         photosRecView = findViewById(R.id.recViewTrash);
         viewSwitcher = findViewById(R.id.viewSwitcher);
     }
@@ -48,7 +47,7 @@ public class TrashBinActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        File[] trashFiles = trashBinManager.getTrashFiles();
+        trashFiles = trashBinManager.getTrashFiles();
         if (trashFiles.length > 0) {
             if (photosRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
@@ -90,6 +89,11 @@ public class TrashBinActivity extends AppCompatActivity {
     }
 
     private void emptyTrashBin() {
+        trashFiles = trashBinManager.getTrashFiles();
+        if (trashFiles.length == 0) {
+            Toast.makeText(this, "Empty trash bin already", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm empty trash bin",
@@ -98,7 +102,9 @@ public class TrashBinActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(TrashBinActivity.this, "Deleting ...", () -> {
-                                    trashBinManager.emptyTrashBin();
+                                    for (File trash: trashFiles) {
+                                        trashBinManager.permanentDelete(trash);
+                                    }
                                 },
                                 () -> {
                                     onResume();
@@ -110,6 +116,11 @@ public class TrashBinActivity extends AppCompatActivity {
     }
 
     private void restoreAllPhotos() {
+        trashFiles = trashBinManager.getTrashFiles();
+        if (trashFiles.length == 0) {
+            Toast.makeText(this, "No trash to restore", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm Restore",
@@ -119,7 +130,9 @@ public class TrashBinActivity extends AppCompatActivity {
                     public void run() {
                         Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(TrashBinActivity.this, "Restoring ...", () -> {
                                     try {
-                                        trashBinManager.restoreAllPhotos();
+                                        for (File trash: trashFiles) {
+                                            trashBinManager.restorePhoto(trash);
+                                        }
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
