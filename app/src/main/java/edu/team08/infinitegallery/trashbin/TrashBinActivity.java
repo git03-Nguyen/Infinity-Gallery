@@ -46,6 +46,7 @@ public class TrashBinActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        trashBinManager.checkAndCleanTrashBin();
         trashFiles = trashBinManager.getTrashFiles();
         if (trashFiles.length > 0) {
             if (photosRecView.getId() == viewSwitcher.getNextView().getId()) {
