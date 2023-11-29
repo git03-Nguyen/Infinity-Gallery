@@ -15,19 +15,17 @@ import android.widget.ViewSwitcher;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;
     File[] trashFiles;
     private TrashBinManager trashBinManager;
-    PhotosAdapter photosAdapter;
+    TrashAdapter trashAdapter;
     RecyclerView photosRecView;
     ViewSwitcher viewSwitcher;
     @Override
@@ -55,8 +53,8 @@ public class TrashBinActivity extends AppCompatActivity {
         } else if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
         }
-        photosAdapter = new PhotosAdapter(this, Arrays.asList(trashFiles), spanCount);
-        photosRecView.setAdapter(photosAdapter);
+        trashAdapter = new TrashAdapter(this, Arrays.asList(trashFiles), spanCount);
+        photosRecView.setAdapter(trashAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
     }

@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.optionphotos;
+package edu.team08.infinitegallery.trashbin;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
@@ -30,13 +30,11 @@ import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
-public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
+public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> {
     private final Context context;
     private SparseBooleanArray selectedItemsIds;
-    private List<File> allPhotos;
+    private List<File> trashPhotos;
     private final int spanCount;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,16 +58,16 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         }
     }
 
-    public PhotosAdapter(Context context, List<File> allPhotos, int spanCount) {
+    public TrashAdapter(Context context, List<File> trashPhotos, int spanCount) {
         this.context = context;
-        this.allPhotos = allPhotos;
+        this.trashPhotos = trashPhotos;
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
     }
 
     @NonNull
     @Override
-    public PhotosAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TrashAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View rootView;
         if (spanCount != 1)
             rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photo, parent, false);
@@ -81,9 +79,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull TrashAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
-        File photo = allPhotos.get(position);
+        File photo = trashPhotos.get(position);
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
@@ -95,14 +93,12 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             public void onClick(View v) {
                 // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
                 // TODO: (!) remember to check if it's exist or not
-                String[] photoPaths = new String[allPhotos.size()];
+                String[] photoPaths = new String[trashPhotos.size()];
                 for (int i = 0; i < photoPaths.length; i++) {
-                    photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                    photoPaths[i] = trashPhotos.get(i).getAbsolutePath();
                 }
                 Intent myIntent = null;
-                if (context instanceof MainActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } 
+                myIntent = new Intent(context, SingleTrashActivity.class);
                 if (myIntent != null) {
                     myIntent.putExtra("photoPaths", photoPaths);
                     myIntent.putExtra("currentPosition", position);
@@ -113,11 +109,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        } else if (context instanceof SingleAlbumActivity) {
-            ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        }
+        ((TrashBinActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {
             int size = displaymetrics.widthPixels / spanCount;
@@ -153,6 +145,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return allPhotos.size();
+        return trashPhotos.size();
     }
 }
