@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,17 +28,14 @@ import edu.team08.infinitegallery.ObjectTestFavorites;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PhotosFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PhotosFragment extends Fragment {
     int spanCount = 4;
     Context context;
     List<File> photoFiles;
     RecyclerView photosRecView;
     PhotosAdapter photosAdapter;
+    ViewSwitcher viewSwitcher;
+    Toolbar toolbar;
 
     public PhotosFragment(Context context) {
         this.context = context;
@@ -56,9 +54,10 @@ public class PhotosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View photosFragment = inflater.inflate(R.layout.fragment_photos, container, false);
         photosRecView = photosFragment.findViewById(R.id.recViewPhotos);
+        viewSwitcher = photosFragment.findViewById(R.id.viewSwitcher);
 
         // TODO: update functionalities in toolbar
-        Toolbar toolbar = photosFragment.findViewById(R.id.toolbarPhotos);
+        toolbar = photosFragment.findViewById(R.id.toolbarPhotos);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.menuPhotosSettings) {
@@ -115,9 +114,21 @@ public class PhotosFragment extends Fragment {
     }
 
     void showAllPictures() {
-        photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
-        photosRecView.setAdapter(photosAdapter);
-        photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+        if (photoFiles.size() > 0) {
+            if (photosRecView.getId() == viewSwitcher.getNextView().getId()) {
+                viewSwitcher.showNext();
+            }
+            photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
+            photosRecView.setAdapter(photosAdapter);
+            photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+            toolbar.setTitle("November 29, 2023");
+        } else {
+            if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
+                viewSwitcher.showNext();
+            }
+            toolbar.setTitle("");
+        }
+
     }
 
 
