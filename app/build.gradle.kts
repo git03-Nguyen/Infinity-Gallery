@@ -44,5 +44,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+    implementation("com.burhanrashid52:photoeditor:3.0.1")
+    implementation("com.drewnoakes:metadata-extractor:2.19.0")
 }
 
