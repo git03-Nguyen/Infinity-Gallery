@@ -17,7 +17,6 @@ import edu.team08.infinitegallery.R;
 
 public class SinglePhotoFragment extends Fragment {
 
-    // TODO: Rename and change types of parameters
     private Context context;
     private File[] photoFiles;
     private int currentPosition;
@@ -32,7 +31,6 @@ public class SinglePhotoFragment extends Fragment {
         this.currentPosition = currentPosition;
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SinglePhotoFragment newInstance(Context context, String[] photoPaths, int currentPosition) {
         return new SinglePhotoFragment(context, photoPaths, currentPosition);
     }

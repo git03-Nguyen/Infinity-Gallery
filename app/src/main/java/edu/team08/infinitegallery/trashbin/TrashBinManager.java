@@ -1,6 +1,10 @@
 package edu.team08.infinitegallery.trashbin;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 import java.io.File;
@@ -10,12 +14,14 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TrashBinManager {
     int spanCount = 4;
     private Context context;
     private static String TRASH_BIN_PATH;
-//    private static final String METADATA_FILE = "/path/to/your/metadata.txt";
+    private static final String TRASH_BIN_DB_NAME = "trash_bin.db";
+    private static final String TRASH_BIN_TABLE_NAME = "TRASH_BIN";
 
     public TrashBinManager(Context context) {
         this.context = context;
@@ -33,82 +39,158 @@ public class TrashBinManager {
         File nomediaFile = new File(trashBinDir, ".nomedia");
         if (!nomediaFile.exists()) nomediaFile.createNewFile();
         this.TRASH_BIN_PATH = trashBinDir.getAbsolutePath();
+
+        testDatabaseOperations();
     }
 
     private void moveFile(File src, File dst) throws IOException {
+        if (dst.exists()) {
+            // If the destination file already exists, rename it with a postfix
+            dst = getUniqueDestination(dst);
+        }
+
         FileChannel inChannel = new FileInputStream(src).getChannel();
         FileChannel outChannel = new FileOutputStream(dst).getChannel();
-        try
-        {
+        try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
-
         }
-        finally
-        {
-            if (inChannel != null)
-                inChannel.close();
-            if (outChannel != null)
-                outChannel.close();
+        finally {
+            if (inChannel != null) inChannel.close();
+            if (outChannel != null) outChannel.close();
         }
         src.delete();
-        // TODO: đại loại ở file đã làm đc rồi, tuy nhiên cần thêm db để check
     }
 
-    public String getTrashBinPath() {
-        return TRASH_BIN_PATH;
+    private File getUniqueDestination(File originalDst) {
+        File dst = originalDst;
+        int postfix = 1;
+
+        // Keep incrementing the postfix until a unique destination is found
+        while (dst.exists()) {
+            String originalName = originalDst.getName();
+            String nameWithoutExtension = originalName.substring(0, originalName.lastIndexOf('.'));
+            String extension = originalName.substring(originalName.lastIndexOf('.') + 1);
+
+            String newName = nameWithoutExtension + " (" + postfix + ")." + extension;
+            dst = new File(originalDst.getParent(), newName);
+            postfix++;
+        }
+
+        return dst;
     }
 
     public File[] getTrashFiles() {
-        if (TRASH_BIN_PATH != null) {
-            File trashBinDir = new File(TRASH_BIN_PATH);
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+        String[] projection = {"TRASH_NAME"};
+        // Query the database to get all trash file names
+        Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, projection, null, null, null, null, null);
 
-            if (trashBinDir.exists() && trashBinDir.isDirectory()) {
-                File[] allFiles = trashBinDir.listFiles();
-
-                // Exclude the .nomedia file from the list
-                List<File> filteredFiles = new ArrayList<>();
-                for (File file : allFiles) {
-                    if (!file.getName().equalsIgnoreCase(".nomedia")) {
-                        filteredFiles.add(file);
-                    }
-                }
-
-                return filteredFiles.toArray(new File[0]);
-            }
+        List<String> trashFileNames = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String trashFileName = cursor.getString(cursor.getColumnIndex("TRASH_NAME"));
+                trashFileNames.add(trashFileName);
+            } while (cursor.moveToNext());
+            cursor.close();
         }
 
-        return null;
+        db.close();
+
+        // Convert file names to File objects using the trash bin directory path
+        File trashBinDir = new File(TRASH_BIN_PATH);
+        File[] trashFiles = new File[trashFileNames.size()];
+        for (int i = 0; i < trashFileNames.size(); i++) {
+            trashFiles[i] = new File(trashBinDir, trashFileNames.get(i));
+        }
+
+        return trashFiles;
     }
 
     public void moveToTrash(File photo) throws IOException {
-        // TODO: implement the db
-//        String randomFileName = UUID.randomUUID().toString();
-        File trash = new File(TRASH_BIN_PATH, photo.getName());
+        File trash = null;
+        do {
+            String trashName = UUID.randomUUID().toString();
+            trash = new File(TRASH_BIN_PATH, trashName);
+        } while (trash.exists());
+
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+        ContentValues values = new ContentValues();
+        values.put("ORIGINAL_PATH", photo.getAbsolutePath());
+        values.put("TRASH_NAME", trash.getName());
+        values.put("DELETE_DATE", System.currentTimeMillis());
+        db.insert(TRASH_BIN_TABLE_NAME, null, values);
+
         moveFile(photo, trash);
     }
 
-    public void permanentDelete(File photo) {
-        // TODO: implement the db
-        photo.delete();
+    public void permanentDelete(File trash) {
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+        db.delete(TRASH_BIN_TABLE_NAME, "TRASH_NAME = ?", new String[]{trash.getName()});
+        db.close();
+
+        if (trash == null || !trash.exists()) { return; }
+        trash.delete();
     }
 
-    public void emptyTrashBin() {
-        for (File trash: getTrashFiles()) {
-            permanentDelete(trash);
+    @SuppressLint("Range")
+    public String restorePhoto(File trash) throws IOException {
+        if (trash == null || !trash.exists()) { return ""; }
+
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+
+        Cursor cursor = db.query(
+                TRASH_BIN_TABLE_NAME,
+                new String[]{"ORIGINAL_PATH"},
+                "TRASH_NAME = ?",
+                new String[]{trash.getName()},
+                null,
+                null,
+                null
+        );
+
+        String originalPath = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            originalPath = cursor.getString(cursor.getColumnIndex("ORIGINAL_PATH"));
+            cursor.close();
         }
+
+        db.delete(TRASH_BIN_TABLE_NAME, "TRASH_NAME = ?", new String[]{trash.getName()});
+        db.close();
+
+        if (originalPath != null) {
+            File original = new File(originalPath);
+            moveFile(trash, original);
+        } else {}
+
+        return originalPath;
     }
 
-    public void restorePhoto(File trash) throws IOException {
-        // TODO: implement the db
-        File destinationDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File photo = new File(destinationDirectory, trash.getName());
-        moveFile(trash, photo);
-    }
-
-    public void restoreAllPhotos() throws IOException {
-        for (File trash: getTrashFiles()) {
-            restorePhoto(trash);
+    private boolean databaseExists(String dbName) {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase(
+                    context.getDatabasePath(dbName).getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+        } catch (Exception e) {
+            // Database does not exist
         }
+        return checkDB != null;
+    }
+
+    private void testDatabaseOperations() {
+
+        if (databaseExists(TRASH_BIN_DB_NAME)) { return; }
+
+        // Create the database
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+                context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+
+        // Create the "TRASH" table if it doesn't exist
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TRASH_BIN_TABLE_NAME
+                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, ORIGINAL_PATH TEXT, TRASH_NAME TEXT, DELETE_DATE INTEGER)");
+
+        // Close the database
+        db.close();
     }
 
 }
