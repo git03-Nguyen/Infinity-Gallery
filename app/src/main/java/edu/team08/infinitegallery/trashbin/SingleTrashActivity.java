@@ -1,9 +1,12 @@
 package edu.team08.infinitegallery.trashbin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,12 +17,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
 
-public class SingleTrashActivity extends AppCompatActivity {
+public class SingleTrashActivity extends AppCompatActivity implements MainCallbacks {
 
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
@@ -44,21 +48,15 @@ public class SingleTrashActivity extends AppCompatActivity {
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
                 .commit();
 
-        // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.delete) {
-                // TODO: permanently delete, confirm alert before moving on
                 permanentlyDeletePhoto();
 
             } else if (itemId == R.id.restore) {
                 restorePhoto();
-            }
-
-            else {
-                Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
 
             return true;
@@ -130,4 +128,8 @@ public class SingleTrashActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onEmitMsgFromFragToMain(String sender, String request) {
+
+    }
 }
