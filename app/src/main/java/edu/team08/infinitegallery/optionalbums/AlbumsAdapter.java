@@ -87,7 +87,6 @@ public class AlbumsAdapter extends BaseAdapter {
         btnAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Load " + albumFolders[position].getFolder().getName() + " " + currentFolder.getNumberOfPhotos(), Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(context, SingleAlbumActivity.class);
                 myIntent.putExtra("albumName", currentFolder.getFolder().getName());
                 String[] photosStr = new String[currentFolder.getNumberOfPhotos()];
@@ -96,6 +95,7 @@ public class AlbumsAdapter extends BaseAdapter {
                     photosStr[i] = photosFiles[i].getAbsolutePath();
                 }
                 myIntent.putExtra("photosList", photosStr);
+                myIntent.putExtra("folderPath", currentFolder.getFolder().getAbsolutePath());
                 context.startActivity(myIntent, null);
             }
         });

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.team08.infinitegallery.MainCallbacks;
@@ -29,28 +30,25 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     PhotosAdapter photosAdapter;
     Toolbar toolbar;
     String albumName;
+    String folderPath;
+    boolean firstTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_album);
 
+        this.firstTime = true;
+
         Intent intent = getIntent();
         if (intent.hasExtra("albumName")) {
             this.albumName = intent.getStringExtra("albumName");
         }
+        if (intent.hasExtra("folderPath")) {
+            this.folderPath = intent.getStringExtra("folderPath");
+        }
 
-        String[] photosPaths = null;
-        if (intent.hasExtra("photosList")) {
-            photosPaths = intent.getStringArrayExtra("photosList");
-        }
-        this.photoFiles = new ArrayList<>();
-        if (photosPaths != null) {
-            for (String path: photosPaths) {
-                this.photoFiles.add(new File(path));
-            }
-        }
-        getAllPhotosInSpecialAlbum();
+        getAllPhotos();
 
         this.toolbar = findViewById(R.id.topToolbarAlbum);
         this.toolbar.setTitle(this.albumName);
@@ -61,6 +59,50 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         photosRecView = findViewById(R.id.recViewPhotos);
         showAllPhotos();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstTime) {
+            firstTime = false;
+        } else {
+            reGetAllPhotos();
+            showAllPhotos();
+        }
+    }
+
+    private void reGetAllPhotos() {
+        if (albumName == "Favorites") {
+            getAllFavoritePhotos();
+        } else if (albumName == "Privacy") {
+
+        } else {
+            getAllPhotosOfFolder(folderPath);
+        }
+    }
+
+    private void getAllPhotosOfFolder(String folderPath) {
+        this.photoFiles = new ArrayList<File>();
+        File folder = new File(folderPath);
+        if (folder == null || !folder.isDirectory()) return;
+        this.photoFiles = filterImageFiles(folder.listFiles());
+    }
+
+    private List<File> filterImageFiles(File[] files) {
+        List<File> imageFiles = new ArrayList<>();
+        String[] validExtensions = {".jpg", ".jpeg", ".png", ".gif"};
+
+        Arrays.stream(files)
+                .filter(file -> file.isFile() && hasValidExtension(file, validExtensions))
+                .forEach(imageFiles::add);
+
+        return imageFiles;
+    }
+
+    private boolean hasValidExtension(File file, String[] validExtensions) {
+        return Arrays.stream(validExtensions)
+                .anyMatch(extension -> file.getName().toLowerCase().endsWith(extension));
     }
 
     @Override
@@ -78,7 +120,18 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         return true;
     }
 
-    private void getAllPhotosInSpecialAlbum() {
+    private void getAllPhotos() {
+        Intent intent = getIntent();
+        String[] photosPaths = null;
+        if (intent.hasExtra("photosList")) {
+            photosPaths = intent.getStringArrayExtra("photosList");
+        }
+        this.photoFiles = new ArrayList<>();
+        if (photosPaths != null) {
+            for (String path: photosPaths) {
+                this.photoFiles.add(new File(path));
+            }
+        }
         if (albumName == "Favorites") {
             getAllFavoritePhotos();
         } else if (albumName == "Privacy") {
@@ -134,6 +187,6 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
 
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
-        
+
     }
 }
