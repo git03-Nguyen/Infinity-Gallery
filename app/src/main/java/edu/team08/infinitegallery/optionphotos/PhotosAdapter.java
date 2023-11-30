@@ -100,7 +100,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 Intent myIntent = null;
                 if (context instanceof MainActivity) {
                     myIntent = new Intent(context, SinglePhotoActivity.class);
-                } 
+                } else if (context instanceof SingleAlbumActivity) {
+                    myIntent = new Intent(context, SinglePhotoActivity.class);
+                }
                 if (myIntent != null) {
                     myIntent.putExtra("photoPaths", photoPaths);
                     myIntent.putExtra("currentPosition", position);
