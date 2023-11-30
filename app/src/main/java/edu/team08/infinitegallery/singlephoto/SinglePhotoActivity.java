@@ -3,18 +3,16 @@ package edu.team08.infinitegallery.singlephoto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-
+import androidx.core.content.F
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
@@ -29,8 +27,13 @@ import java.util.Date;
 
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
+
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
+
+import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
+
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
     SinglePhotoFragment singlePhotoFragment;
@@ -120,7 +123,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             ExifSubIFDDirectory exifDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             FileSystemDirectory fileDir = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
             Date date = null;
-            if(exifDir != null){
+            if(exifDir != null) {
                 date = exifDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
             }else if(fileDir != null){
                 date = fileDir.getDate(FileSystemDirectory.TAG_FILE_MODIFIED_DATE);
@@ -175,62 +178,35 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                 // Simulate the deletion process
                 new Thread(new Runnable() {
+
+        // Get the current position
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm Deletion",
+                "Are you sure to move this photo to the trash?",
+                new Runnable() {
+
                     @Override
                     public void run() {
-                        try {
-                            // Record the start time
-                            long startTime = System.currentTimeMillis();
-
-                            // Move the photo to the trash
-                            new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
-
-                            // Record the end time
-                            long endTime = System.currentTimeMillis();
-
-                            // Calculate the actual time taken
-                            final long timeTaken = endTime - startTime;
-
-                            // Dismiss the progress dialog
-                            progressDialog.dismiss();
-
-                            // Finish the activity or handle further actions
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SinglePhotoActivity.this, "Deleting ...", () -> {
+                                    try {
+                                        new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
                                     finish();
-                                }
-                            });
+                                });
 
-                            // Optionally, update UI or perform additional actions based on the actual time taken
-                            // For example, you can display a message about the deletion completion
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                }
-                            });
-
-                        } catch (IOException e) {
-                            Log.e("moveToTrash", "Cannot move photo to trash bin!");
-                            progressDialog.dismiss(); // Dismiss the progress dialog in case of an error
-                        }
                     }
-                }).start();
-            }
-        });
-
-        // Add negative button for cancel
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User canceled, do nothing
-            }
-        });
-
-        // Show the confirmation dialog
-        builder.show();
+                },
+                null);
     }
 
+    // ...
 
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {

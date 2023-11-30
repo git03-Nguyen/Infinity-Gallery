@@ -1,7 +1,5 @@
 package edu.team08.infinitegallery.optionsettings;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +7,8 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 

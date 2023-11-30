@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/delete"
-        android:icon="@drawable/ic_photo_delete_24"
+        android:icon="@drawable/ic_photo_delete_red_24"
         android:title="Delete"/>
     <item
         android:id="@+id/restore"

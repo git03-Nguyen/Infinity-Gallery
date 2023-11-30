@@ -2,24 +2,20 @@ package edu.team08.infinitegallery.singlephoto;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import java.io.File;
 
-import edu.team08.infinitegallery.MainActivity;
-import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 
 public class SinglePhotoFragment extends Fragment {
 
-    // TODO: Rename and change types of parameters
     private Context context;
     private File[] photoFiles;
     private int currentPosition;
@@ -34,7 +30,6 @@ public class SinglePhotoFragment extends Fragment {
         this.currentPosition = currentPosition;
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SinglePhotoFragment newInstance(Context context, String[] photoPaths, int currentPosition) {
         return new SinglePhotoFragment(context, photoPaths, currentPosition);
     }
@@ -58,8 +53,8 @@ public class SinglePhotoFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
-                ((MainCallbacks) context).onEmitMsgFromFragToMain("SinglePhotoFragment", Integer.toString(position));
+//                currentPosition = position;
+//                ((MainCallbacks) context).onEmitMsgFromFragToMain("SinglePhotoFragment", Integer.toString(position));
             }
 
             @Override
