@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_photo_edit_24"
         android:title="Edit"/>
     <item
-        android:id="@+id/share"
+        android:id="@+id/imageShare"
         android:icon="@drawable/ic_photo_share_24"
         android:title="Share"/>
     <item

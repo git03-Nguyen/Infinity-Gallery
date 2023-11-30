@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,13 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
-import com.drew.metadata.file.FileTypeDirectory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -32,13 +27,14 @@ import java.util.Date;
 
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
-
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
+    private int currentPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +44,13 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         if (intent.hasExtra("photoPaths")) {
             this.photoPaths = intent.getStringArrayExtra("photoPaths");
         }
-        int currentPosition = 0;
+
+        currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.photoPaths, currentPosition);
+        singlePhotoFragment = new SinglePhotoFragment(this, photoPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
@@ -66,7 +63,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             int itemId = item.getItemId();
             if (itemId == R.id.moveTrash) {
                 moveToTrash();
-            } else {
+            } else if(itemId == R.id.edit){
+                Intent myIntent = new Intent(this, EditPhotoActivity.class);
+                myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                startActivity(myIntent);
+            }
+            else{
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
 
@@ -117,9 +119,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     }
 
     private void moveToTrash() {
-        // Get the current position
-        int currentPosition = singlePhotoFragment.getCurrentPosition();
-
         // Build a confirmation dialog with a progress bar
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Deletion");
@@ -205,7 +204,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     public void onEmitMsgFromFragToMain(String sender, String request) {
         // Do not care who sender?
         // Get information about current picture => current position.
-        int currentPosition = Integer.parseInt(request);
-        setDateForToolbar(this.photoPaths[currentPosition]);
+        currentPosition = Integer.parseInt(request);
+        setDateForToolbar(photoPaths[currentPosition]);
     }
 }
