@@ -1,6 +1,10 @@
 package edu.team08.infinitegallery.singlephoto.edit;
 
+import static edu.team08.infinitegallery.InfinityGalleryApp.getApp;
+
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +44,22 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.colorPickerView.setBackgroundColor(colorPickerColors.get(position));
+        GradientDrawable gradientDrawable = new GradientDrawable();
+
+        // Set the shape to a rectangle
+        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+
+        // Set the corner radius
+        gradientDrawable.setCornerRadius(10);
+
+        // Set the background color
+        gradientDrawable.setColor(colorPickerColors.get(position));
+
+        // Set the border color and width
+        gradientDrawable.setStroke(3, ContextCompat.getColor(context, R.color.border_color_picker));
+
+        // Set the created drawable as the background for the view
+        holder.colorPickerView.setBackground(gradientDrawable);
     }
 
     @Override

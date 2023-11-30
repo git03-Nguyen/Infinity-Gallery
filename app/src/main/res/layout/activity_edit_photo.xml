@@ -8,6 +8,34 @@
     android:background="@android:color/black"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <RelativeLayout
+        android:id="@+id/toolbarRLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@android:color/transparent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/topToolbarEditPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleMarginStart="30dp"
+            android:background="@android:color/black" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:textColor="@color/light_blue"
+            android:text="Save" />
+    </RelativeLayout>
+
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -24,7 +52,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarRLayout"
         app:layout_constraintVertical_bias="0.0"
         app:photo_src="@drawable/blank_image" />
 
@@ -80,6 +108,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
+<!--    <ImageView-->
+<!--        android:id="@+id/imgCheck"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentLeft="true"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:src="@drawable/ic_check"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/guideline" />-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConstraintTools"
         android:layout_width="0dp"
@@ -118,16 +158,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
-
-    <ImageView
-        android:id="@+id/imgSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:src="@drawable/ic_save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
     <ImageView

@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +36,7 @@ import androidx.transition.TransitionManager;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import android.Manifest;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +56,7 @@ import ja.burhanrashid52.photoeditor.shape.ShapeBuilder;
 import ja.burhanrashid52.photoeditor.shape.ShapeType;
 
 public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Properties, View.OnClickListener,
-        EditToolAdapter.OnItemSelected, FilterListener, EmojiFragment.EmojiListener, StickerFragment.StickerListener{
+        EditToolAdapter.OnItemSelected, FilterListener, EmojiFragment.EmojiListener, StickerFragment.StickerListener, EraserFragment.Properties{
     private PhotoEditorView photoEditorView;
     private PhotoEditor photoEditor;
     private String photoPath;
@@ -62,6 +66,8 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
     private EditToolAdapter editToolAdapter;
     private RecyclerView rvTools;
     private Boolean isFilterVisible;
+    private Boolean isBrush;
+    private Boolean isErase;
     private ConstraintSet constraintSet = new ConstraintSet();
     private ConstraintLayout rootView;
     private RecyclerView rvFilters;
@@ -69,9 +75,11 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
     private EmojiFragment emojiFragment;
     private StickerFragment stickerFragment;
     private FileSaveHelper saveFileHelper;
+    private ImageView imageClose;
+    private ImageView imageCheck;
     private Uri saveImageUri;
     private Toolbar topToolbarEditPhoto;
-
+    private EraserFragment eraserFragment;
     public static final String TAG = "EditImageActivity";
     public static final String FILE_PROVIDER_AUTHORITY = "edu.team08.infinitegallery.fileprovider";
     private static final int CAMERA_REQUEST = 52;
@@ -92,8 +100,27 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
 
         initViews();
 
-//        setSupportActionBar(topToolbarEditPhoto);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(topToolbarEditPhoto);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+        Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_white);
+        upArrow.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+        topToolbarEditPhoto.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (isFilterVisible) {
+//                    displayFilter(false);
+//                    txtCurrentTool.setText(R.string.app_name);
+//                }
+                if (!photoEditor.isCacheEmpty()) {
+                    showSaveDialog();
+                } else {
+                    onBackPressed();
+                }
+            }
+        });
     }
 
     private void initViews(){
@@ -102,6 +129,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         rvTools = findViewById(R.id.rvConstraintTools);
         rvFilters = findViewById(R.id.rvFilterView);
         rootView = findViewById(R.id.rootView);
+        topToolbarEditPhoto = findViewById(R.id.topToolbarEditPhoto);
 
         shapeFragment = new ShapeFragment();
         shapeBuilder = new ShapeBuilder();
@@ -109,10 +137,12 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         emojiFragment = new EmojiFragment();
         stickerFragment = new StickerFragment();
         saveFileHelper = new FileSaveHelper(this);
+        eraserFragment = new EraserFragment();
 
         emojiFragment.setEmojiListener(this);
         stickerFragment.setStickerListener(this);
         shapeFragment.setPropertiesChangeListener(this);
+        eraserFragment.setPropertiesChangeListener(this);
 
         rvTools.setAdapter(editToolAdapter);
         LinearLayoutManager llmFilters = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -147,14 +177,19 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         ImageView imageGallery = findViewById(R.id.imgGallery);
         imageGallery.setOnClickListener(this);
 
-        ImageView imageSave = findViewById(R.id.imgSave);
-        imageSave.setOnClickListener(this);
-
-        ImageView imageClose = findViewById(R.id.imgClose);
-        imageClose.setOnClickListener(this);
+        Button btnSave = findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(this);
 
         ImageView imageShare = findViewById(R.id.imgShare);
         imageShare.setOnClickListener(this);
+
+        imageClose = findViewById(R.id.imgClose);
+        imageClose.setOnClickListener(this);
+        imageClose.setVisibility(View.INVISIBLE);
+
+//        imageCheck = findViewById(R.id.imgCheck);
+//        imageCheck.setOnClickListener(this);
+//        imageCheck.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -184,8 +219,10 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
     @Override
     public void onToolSelected(ToolType toolType) {
         if(toolType == ToolType.SHAPE){
+            isBrush = true;
             photoEditor.setBrushDrawingMode(true);
             photoEditor.setShape(shapeBuilder);
+            imageClose.setVisibility(View.VISIBLE);
             txtCurrentTool.setText(R.string.label_shape);
             showBottomSheetDialogFragment(shapeFragment);
         }else if(toolType == ToolType.TEXT){
@@ -200,15 +237,26 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
                 }
             });
         }else if(toolType == ToolType.ERASER){
+            isErase = true;
+            photoEditor.setBrushDrawingMode(true);
             photoEditor.brushEraser();
+            imageClose.setVisibility(View.VISIBLE);
             txtCurrentTool.setText(R.string.label_eraser_mode);
+            showBottomSheetDialogFragment(eraserFragment);
         }else if(toolType == ToolType.FILTER){
+            imageClose.setVisibility(View.VISIBLE);
             txtCurrentTool.setText(R.string.label_filter);
             displayFilter(true);
         }else if(toolType == ToolType.EMOJI){
+            imageClose.setVisibility(View.INVISIBLE);
             showBottomSheetDialogFragment(emojiFragment);
         }else if(toolType == ToolType.STICKER){
+            imageClose.setVisibility(View.INVISIBLE);
             showBottomSheetDialogFragment(stickerFragment);
+        }
+
+        if(toolType != ToolType.SHAPE && toolType != ToolType.ERASER){
+            photoEditor.setBrushDrawingMode(false);
         }
     }
 
@@ -274,10 +322,25 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
             photoEditor.undo();
         } else if (viewId == R.id.imgRedo) {
             photoEditor.redo();
-        } else if (viewId == R.id.imgSave) {
+        } else if (viewId == R.id.btnSave) {
             saveImage();
         } else if (viewId == R.id.imgClose) {
-            onBackPressed();
+            if(isBrush != null && isBrush){
+                isBrush = false;
+                txtCurrentTool.setText(R.string.app_name);
+                photoEditor.setBrushDrawingMode(false);
+            }
+            if(isErase != null && isErase){
+                isErase = false;
+                txtCurrentTool.setText(R.string.app_name);
+                photoEditor.setBrushDrawingMode(false);
+            }
+            if(isFilterVisible != null && isFilterVisible){
+                displayFilter(false);
+                txtCurrentTool.setText(R.string.app_name);
+            }
+
+            imageClose.setVisibility(View.INVISIBLE);
         } else if (viewId == R.id.imgShare) {
             shareImage();
         } else if (viewId == R.id.imgCamera) {
@@ -325,18 +388,6 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
     public void isPermissionGranted(Boolean isGranted, String permission) {
         if (isGranted) {
             saveImage();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isFilterVisible) {
-            displayFilter(false);
-            txtCurrentTool.setText(R.string.app_name);
-        } else if (!photoEditor.isCacheEmpty()) {
-            showSaveDialog();
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -439,7 +490,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
     }
 
-    private Uri buildFileProviderUri(Uri uri) {
+    public Uri buildFileProviderUri(Uri uri) {
         if (FileSaveHelper.isSdkHigherThan28()) {
             return uri;
         }
@@ -454,5 +505,10 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
                 FILE_PROVIDER_AUTHORITY,
                 new File(path)
         );
+    }
+
+    @Override
+    public void onEraserSizeChange(int size) {
+        photoEditor.setBrushEraserSize(size);
     }
 }

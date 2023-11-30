@@ -3,10 +3,12 @@ package edu.team08.infinitegallery.singlephoto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,6 +30,7 @@ import java.util.Date;
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
+import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
     SinglePhotoFragment singlePhotoFragment;
@@ -35,6 +38,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
     private int currentPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +71,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 Intent myIntent = new Intent(this, EditPhotoActivity.class);
                 myIntent.putExtra("photoPath", photoPaths[currentPosition]);
                 startActivity(myIntent);
-            }
-            else{
+            } else if(itemId == R.id.share){
+                try {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            this.getApplicationContext().getPackageName() + ".fileprovider", new File(photoPaths[currentPosition]));
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(photoURI));
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } else{
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
 
@@ -80,6 +95,23 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private Uri buildFileProviderUri(Uri uri) {
+        if (FileSaveHelper.isSdkHigherThan28()) {
+            return uri;
+        }
+
+        String path = uri.getPath();
+        if (path == null) {
+            throw new IllegalArgumentException("URI Path Expected");
+        }
+
+        return FileProvider.getUriForFile(
+                this,
+                EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
+                new File(path)
+        );
     }
 
     private void setDateForToolbar(String filePath){
