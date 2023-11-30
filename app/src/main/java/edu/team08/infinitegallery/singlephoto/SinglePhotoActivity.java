@@ -3,7 +3,7 @@ package edu.team08.infinitegallery.singlephoto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.F
+import androidx.core.content.FileProvider;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -154,34 +154,10 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     }
 
     private void moveToTrash() {
-        // Build a confirmation dialog with a progress bar
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirm Deletion");
-        builder.setMessage("Are you sure to move this photo to the trash?");
-
-        // Add positive button for confirmation
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // User confirmed, proceed with deletion
-                // Create a custom dialog with ProgressBar
-                Dialog progressDialog = new Dialog(SinglePhotoActivity.this);
-                progressDialog.setContentView(R.layout.dialog_progress_bar);
-                progressDialog.setTitle("Deleting...");
-                progressDialog.setCancelable(false);
-
-                ProgressBar progressBar = progressDialog.findViewById(R.id.progressBar);
-                TextView textViewMessage = progressDialog.findViewById(R.id.textViewMessage);
-
-                // Show the dialog
-                progressDialog.show();
-
-                // Simulate the deletion process
-                new Thread(new Runnable() {
-
         // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
 
+        // Build a confirmation dialog with a progress bar
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm Deletion",
