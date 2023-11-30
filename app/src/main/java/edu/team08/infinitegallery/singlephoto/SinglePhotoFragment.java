@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import java.io.File;
 
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 
 public class SinglePhotoFragment extends Fragment {
@@ -53,8 +54,8 @@ public class SinglePhotoFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-//                currentPosition = position;
-//                ((MainCallbacks) context).onEmitMsgFromFragToMain("SinglePhotoFragment", Integer.toString(position));
+                currentPosition = position;
+                ((MainCallbacks) context).onEmitMsgFromFragToMain("SinglePhotoFragment", Integer.toString(position));
             }
 
             @Override

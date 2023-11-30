@@ -75,6 +75,13 @@ public class AlbumsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.albumFolders = getAllAlbumFolders();
+        displayFolderAlbums();
+    }
+
     public AlbumFolder[] getAllAlbumFolders() {
         File[] allPhotos = readAllImages();
 
