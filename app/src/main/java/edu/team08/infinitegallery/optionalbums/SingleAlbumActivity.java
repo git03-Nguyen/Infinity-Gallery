@@ -17,11 +17,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
-public class SingleAlbumActivity extends AppCompatActivity {
+public class SingleAlbumActivity extends AppCompatActivity implements MainCallbacks {
     int spanCount = 4;
     List<File> photoFiles;
     RecyclerView photosRecView;
@@ -131,4 +132,8 @@ public class SingleAlbumActivity extends AppCompatActivity {
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
     }
 
+    @Override
+    public void onEmitMsgFromFragToMain(String sender, String request) {
+        
+    }
 }
