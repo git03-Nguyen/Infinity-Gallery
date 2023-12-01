@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorOnPrimary"
             app:title="File name"
-            app:subtitle="AAA"
             app:titleMarginStart="30dp" />
 
         <FrameLayout
