@@ -3,7 +3,10 @@ package edu.team08.infinitegallery.singlephoto;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import java.util.Date;
 
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
@@ -31,6 +35,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private BottomNavigationView bottomNavigationView;
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
+    private CheckBox favoriteBox;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,20 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
                 .commit();
+
+        favoriteBox = findViewById(R.id.cbFavorite);
+        favoriteBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    addToFavorite();
+                }
+                else {
+
+                }
+                favoriteBox.setChecked(isChecked);
+            }
+        });
 
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -106,6 +125,18 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             this.finish();
         }
         return true;
+    }
+
+    private void addToFavorite() {
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+        try {
+            File file = new File(photoPaths[currentPosition]);
+            Log.e("Favorite", file.getAbsolutePath());
+            new FavoriteManager(this).addToFavorite(file);
+            Toast.makeText(this, "Add to favorites", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void moveToTrash() {
