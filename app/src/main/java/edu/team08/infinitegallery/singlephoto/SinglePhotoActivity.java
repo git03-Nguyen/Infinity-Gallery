@@ -1,5 +1,5 @@
-package edu.team08.infinitegallery.singlephoto;
 
+package edu.team08.infinitegallery.singlephoto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,7 +8,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +31,7 @@ import java.util.Date;
 
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.favorite.FavoriteManager;
 
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
@@ -40,6 +45,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private BottomNavigationView bottomNavigationView;
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
+    private CheckBox favoriteBox;
     private int currentPosition;
 
     @Override
@@ -62,6 +68,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
                 .commit();
+
+        favoriteBox = findViewById(R.id.cbFavorite);
+        favoriteBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isChecked = favoriteBox.isChecked();
+                if (isChecked) {
+                    addToFavorite();
+                } else {
+                    removeFromFavorite();
+                }
+            }
+        });
 
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -95,6 +114,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         topToolbarPhoto = findViewById(R.id.topToolbarPhoto);
         setDateForToolbar(photoPaths[currentPosition]);
+        setFavoriteForToolbar(photoPaths[currentPosition]);
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -153,6 +173,18 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         return true;
     }
 
+    private void addToFavorite() {
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+        new FavoriteManager(this).addToFavorite(photoPaths[currentPosition]);
+        Toast.makeText(this, "Add to favorites", Toast.LENGTH_SHORT).show();
+    }
+
+    private void removeFromFavorite() {
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+        new FavoriteManager(this).removeFromFavorite(photoPaths[currentPosition]);
+        Toast.makeText(this, "Remove from favorites", Toast.LENGTH_SHORT).show();
+    }
+
     private void moveToTrash() {
         // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
@@ -182,7 +214,10 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 null);
     }
 
-    // ...
+    private void setFavoriteForToolbar(String photoPath) {
+        boolean isFavorite = new FavoriteManager(this).isFavorite(photoPath);
+        this.favoriteBox.setChecked(isFavorite);
+    }
 
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
@@ -190,5 +225,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         // Get information about current picture => current position.
         currentPosition = Integer.parseInt(request);
         setDateForToolbar(photoPaths[currentPosition]);
+        setFavoriteForToolbar(photoPaths[currentPosition]);
     }
+
 }

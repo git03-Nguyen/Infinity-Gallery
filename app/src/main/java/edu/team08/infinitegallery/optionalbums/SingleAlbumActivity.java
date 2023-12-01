@@ -146,7 +146,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         List<String> photoPaths = new ArrayList<>();
 
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                this.getDatabasePath("albums.db"), null);
+                this.getDatabasePath("favorite.db"), null);
 
         // Query for favorite photos
         Cursor cursor = db.query(
