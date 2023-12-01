@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Reveal all"
+        android:id="@+id/privacymenu_Reveal"
+        android:icon="@drawable/ic_privacy_reveal_24"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/privacymenu_Select"
+        android:title="Select" />
+    <item
+        android:id="@+id/privacymenu_ResetPassword"
+        android:title="Reset Password" />
+
+    <item
+        android:id="@+id/privacymenu_DeleteAll"
+        android:title="Delete All Files" />
+
+    <item
+        android:id="@+id/privacymenu_Settings"
+        android:title="Settings" />
+
+</menu>

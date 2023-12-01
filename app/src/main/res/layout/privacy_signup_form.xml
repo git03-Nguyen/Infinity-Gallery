@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".optionprivacy.PrivacySignupActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarForPrivacySignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Privacy Registration"
+        app:titleMarginStart="30dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="fill_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/passwordField"
+            android:layout_weight="5"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_margin="10dp" />
+
+
+        <Button
+            android:id="@+id/showTypeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="fill_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/retypePasswordField"
+            android:layout_weight="5"
+            android:hint="Retype Password"
+            android:inputType="textPassword"
+            android:layout_margin="10dp" />
+
+
+        <Button
+            android:id="@+id/showRetypeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/signup_Signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
