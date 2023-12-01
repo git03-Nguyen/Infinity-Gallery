@@ -91,7 +91,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        photoFiles = null;
+        photoList = null;
         performSearch(searchView.getQuery().toString());
     }
     private void performSearch(String query) {
