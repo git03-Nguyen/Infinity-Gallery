@@ -46,12 +46,32 @@
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:name=".optionprivacy.SinglePrivacyActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".optionprivacy.PrivacyActivity" />
+        <activity
             android:name=".singlephoto.edit.EditPhotoActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".singlephoto.SinglePhotoActivity" />
         <activity
             android:name=".trashbin.TrashBinActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".optionprivacy.PrivacyActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".optionprivacy.PrivacyPasswordActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".optionprivacy.PrivacySignupActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />
