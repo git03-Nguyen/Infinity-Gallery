@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
@@ -27,7 +28,7 @@ import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 import edu.team08.infinitegallery.favorite.FavoriteActivity;
 import edu.team08.infinitegallery.favorite.FavoriteManager;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class FavoriteActivity extends AppCompatActivity implements MainCallbacks {
     private int spanCount = 4;
     File[] favoriteFiles;
     private FavoriteManager favoriteManager;
@@ -88,5 +89,10 @@ public class FavoriteActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onEmitMsgFromFragToMain(String sender, String request) {
+
     }
 }

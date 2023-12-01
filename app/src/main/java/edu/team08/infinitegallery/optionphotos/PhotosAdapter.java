@@ -28,6 +28,8 @@ import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.favorite.FavoriteActivity;
+import edu.team08.infinitegallery.optionalbums.AlbumsAdapter;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
@@ -102,6 +104,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                     myIntent = new Intent(context, SinglePhotoActivity.class);
                 } else if (context instanceof SingleAlbumActivity) {
                     myIntent = new Intent(context, SinglePhotoActivity.class);
+                } else if (context instanceof FavoriteActivity) {
+                    myIntent = new Intent(context, SinglePhotoActivity.class);
                 }
                 if (myIntent != null) {
                     myIntent.putExtra("photoPaths", photoPaths);
@@ -117,6 +121,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         } else if (context instanceof SingleAlbumActivity) {
             ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else if (context instanceof FavoriteActivity) {
+            ((FavoriteActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         }
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {

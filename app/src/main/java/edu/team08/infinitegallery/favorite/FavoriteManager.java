@@ -19,7 +19,6 @@ import java.util.UUID;
 public class FavoriteManager {
     int spanCount = 4;
     private Context context;
-    private static String FAVORITE_PATH;
     private static final String FAVORITE_DB_NAME = "favorite.db";
     private static final String FAVORITE_TABLE_NAME = "FAVORITE";
 
@@ -33,37 +32,75 @@ public class FavoriteManager {
     }
 
     private void initFavorite() throws IOException {
-        File internalStorage = context.getFilesDir();
-        File favoriteDir = new File(internalStorage, "favorite");
-        if (!favoriteDir.exists()) favoriteDir.mkdir();
-        File nomediaFile = new File(favoriteDir, ".nomedia");
-        if (!nomediaFile.exists()) nomediaFile.createNewFile();
-        this.FAVORITE_PATH = favoriteDir.getAbsolutePath();
+        if (databaseExists(FAVORITE_DB_NAME)) {
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+                    context.getDatabasePath(FAVORITE_DB_NAME), null);
+            // Query all paths from the "FAVORITE" table
+            Cursor cursor = db.query("FAVORITE", new String[]{"PATH"}, null, null, null, null, null);
 
-        testDatabaseOperations();
+            if (cursor != null) {
+                // Iterate through the cursor to check and delete rows
+                while (cursor.moveToNext()) {
+                    @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex("PATH"));
+                    File file = new File(path);
+
+                    // Check if the file doesn't exist
+                    if (!file.exists()) {
+                        // Delete the row from the "FAVORITE" table
+                        db.delete("FAVORITE", "PATH=?", new String[]{path});
+                    }
+                }
+
+                cursor.close();
+            }
+            return;
+        }
+
+        // Create the database
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
+                context.getDatabasePath(FAVORITE_DB_NAME), null);
+
+        // Create the "favor" table if it doesn't exist
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
+                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT)");
+
+        // Close the database
+        db.close();
     }
 
-    private void cloneFile(File src, File dst) throws IOException {
-        FileChannel inChannel = new FileInputStream(src).getChannel();
-        FileChannel outChannel = new FileOutputStream(dst).getChannel();
-        try {
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-        }
-        finally {
-            if (inChannel != null) inChannel.close();
-            if (outChannel != null) outChannel.close();
-        }
-    }
-
-    public void addToFavorite(File photo) throws IOException {
+    public void addToFavorite(String photoPath) {
+        if (!new File(photoPath).exists()) return;
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(FAVORITE_DB_NAME), null);
         ContentValues values = new ContentValues();
-        values.put("PATH", photo.getAbsolutePath());
-        values.put("NAME", photo.getName());
-        //values.put("DATE", System.currentTimeMillis());
+        values.put("PATH", photoPath);
         db.insert(FAVORITE_TABLE_NAME, null, values);
+    }
 
-        cloneFile(photo, new File(FAVORITE_PATH, photo.getName()));
+    public void removeFromFavorite(String photoPath) {
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath("favorite.db"), null);
+
+        // Delete the row with the specified photoPath from the "FAVORITE" table
+        int deletedRows = db.delete("FAVORITE", "PATH=?", new String[]{photoPath});
+
+        db.close();
+    }
+
+
+    public boolean isFavorite(String photoPath) {
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath("favorite.db"), null);
+
+        // Query to check if the photoPath exists in the "FAVORITE" table
+        Cursor cursor = db.query("FAVORITE", null, "PATH=?", new String[]{photoPath}, null, null, null);
+
+        boolean isFavorite = cursor != null && cursor.getCount() > 0;
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+
+        return isFavorite;
     }
 
     public File[] getFavoriteFiles() {
@@ -77,7 +114,7 @@ public class FavoriteManager {
             do {
                 @SuppressLint("Range") String favorPath = cursor.getString(cursor.getColumnIndex("PATH"));
                 File favorFile = new File(favorPath);
-                favorFiles.add(favorFile);
+                if (favorFile.exists()) favorFiles.add(favorFile);
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -99,21 +136,4 @@ public class FavoriteManager {
         return checkDB != null;
     }
 
-    private void testDatabaseOperations() {
-
-        if (databaseExists(FAVORITE_DB_NAME)) {
-            return;
-        }
-
-        // Create the database
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                context.getDatabasePath(FAVORITE_DB_NAME), null);
-
-        // Create the "favor" table if it doesn't exist
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT, NAME TEXT)");
-
-        // Close the database
-        db.close();
-    }
 }

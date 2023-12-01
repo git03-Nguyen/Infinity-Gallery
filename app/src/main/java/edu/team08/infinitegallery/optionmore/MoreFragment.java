@@ -87,7 +87,6 @@ public class MoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(context, FavoriteActivity.class);
-                myIntent.putExtra("albumType", "favorite");
                 startActivity(myIntent, null);
             }
         });
