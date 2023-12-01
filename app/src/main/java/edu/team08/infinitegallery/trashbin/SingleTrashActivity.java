@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,6 +26,7 @@ public class SingleTrashActivity extends AppCompatActivity implements MainCallba
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
     private String[] trashPaths;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +61,9 @@ public class SingleTrashActivity extends AppCompatActivity implements MainCallba
             return true;
         });
 
-        setSupportActionBar(findViewById(R.id.topToolbarPhoto));
+        this.toolbar = findViewById(R.id.topToolbarPhoto);
+        this.toolbar.setTitle(new File(trashPaths[currentPosition]).getName());
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -127,6 +131,7 @@ public class SingleTrashActivity extends AppCompatActivity implements MainCallba
 
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
-
+        int currentPosition = Integer.parseInt(request);
+        this.toolbar.setTitle(new File(trashPaths[currentPosition]).getName());
     }
 }
