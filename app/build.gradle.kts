@@ -46,5 +46,7 @@ dependencies {
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
     implementation("com.burhanrashid52:photoeditor:3.0.1")
     implementation("com.drewnoakes:metadata-extractor:2.19.0")
+    implementation( "com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 }
 

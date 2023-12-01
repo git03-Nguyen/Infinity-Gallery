@@ -2,10 +2,13 @@ package edu.team08.infinitegallery.optionsearch;
 
 import android.content.Context;
 import android.database.Cursor;
+
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +21,24 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.helpers.StringUtils;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class SearchFragment extends Fragment {
+
+
     private Context context;
     private SearchView searchView;
 
@@ -33,8 +47,9 @@ public class SearchFragment extends Fragment {
     RecyclerView photosRecView;
     PhotosAdapter photosAdapter;
 
-    List<File> photoFiles;
-    List<File> resultOfSearching;
+    List<PhotoInfo> photoList;
+    List<PhotoInfo> resultOfSearching;
+    List<File> tempResult;
 
     public SearchFragment(Context context) {
         this.context = context;
@@ -79,10 +94,9 @@ public class SearchFragment extends Fragment {
         photoFiles = null;
         performSearch(searchView.getQuery().toString());
     }
-
     private void performSearch(String query) {
 
-        if (photoFiles == null) {
+        if (photoList == null) {
             readAllImages();
         }
 
@@ -93,17 +107,33 @@ public class SearchFragment extends Fragment {
             return;
         }
 
-        for (File file : photoFiles) {
-            if (file.getName().toLowerCase().contains(query.toLowerCase())) {
-                resultOfSearching.add(file);
+        for (PhotoInfo photoInfo : photoList) {
+            if (photoInfo.getFile().getName().toLowerCase().contains(query.toLowerCase())) {
+                resultOfSearching.add(photoInfo);
+                //Log.d("Đã tìm thấy file photo: ",photoInfo.getFile().getName());
+                //  break statement to stop adding the same photoInfo multiple times
             }
+            String address= StringUtils.removeAccent(photoInfo.getAddress());
+            Log.d("Address no accent: ",address);
+            if (address.toLowerCase().contains(query.toLowerCase())) {
+                resultOfSearching.add(photoInfo);
+                //Log.d("Đã tìm thấy vị trí: ",photoInfo.getAddress());
+
+            }
+        }
+
+
+        // Convert PhotoInfo objects to File objects
+        tempResult = new ArrayList<>();
+        for (PhotoInfo photoInfo : resultOfSearching) {
+            tempResult.add(photoInfo.getFile());
         }
 
         showAllPictures();
     }
 
     private void readAllImages() {
-        photoFiles = new ArrayList<>();
+        photoList = new ArrayList<>();
         Cursor cursor = null;
         try {
             String[] projection = {MediaStore.Images.Media.DATA};
@@ -116,7 +146,42 @@ public class SearchFragment extends Fragment {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             while (cursor.moveToNext()) {
                 String photoPath = cursor.getString(columnIndex);
-                photoFiles.add(new File(photoPath));
+                File photoFile = new File(photoPath);
+
+                float[] coordinates = LocationHelper.readCoordinatesFromExif(photoPath);
+
+                float latitude = 0;
+                float longitude = 0;
+                PhotoInfo photoInfo = new PhotoInfo(photoFile, latitude, longitude,"");
+                if (coordinates != null && coordinates.length == 2) {
+                    latitude = coordinates[0];
+                    longitude = coordinates[1];
+                    Log.d("ExifCoordinates", "Latitude: " + latitude + ", Longitude: " + longitude);
+                    LocationHelper.reverseCoordinatesToAddress(latitude, longitude, new LocationHelper.ReverseGeocodeCallback() {
+//                        String address="";
+                        @Override
+                        public void onSuccess(String formattedAddress,PhotoInfo photoInfo) {
+                            // Use the formatted address here
+                            Log.d("Reverse Geocoding Result", "Formatted Address: " + formattedAddress);
+//                            address=formattedAddress;
+                            photoInfo.setAddress(formattedAddress);
+                            Log.d("Photo infomation:",photoInfo.getAddress());
+                            photoList.add(photoInfo);
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+                            Log.d("Photo infomation:",photoInfo.getAddress());
+                            photoList.add(photoInfo);
+                            // Handle failure here
+                            t.printStackTrace();
+                        }
+                    },photoInfo);
+                }
+                else {
+                    photoList.add(photoInfo);
+                }
             }
         } finally {
             if (cursor != null) {
@@ -132,7 +197,7 @@ public class SearchFragment extends Fragment {
                     viewSwitcher.showNext();
                 }
 
-                photosAdapter = new PhotosAdapter(context, resultOfSearching, spanCount);
+                photosAdapter = new PhotosAdapter(context, tempResult, spanCount);
                 photosRecView.setAdapter(photosAdapter);
                 photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
             }
@@ -142,4 +207,8 @@ public class SearchFragment extends Fragment {
             }
         }
     }
+
+
+
+
 }
