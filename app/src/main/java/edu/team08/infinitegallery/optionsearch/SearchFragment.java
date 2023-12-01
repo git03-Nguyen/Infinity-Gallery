@@ -109,7 +109,6 @@ public class SearchFragment extends Fragment {
                 resultOfSearching.add(photoInfo);
                 //Log.d("Đã tìm thấy file photo: ",photoInfo.getFile().getName());
                 //  break statement to stop adding the same photoInfo multiple times
-                break;
             }
             String address= StringUtils.removeAccent(photoInfo.getAddress());
             Log.d("Address no accent: ",address);
