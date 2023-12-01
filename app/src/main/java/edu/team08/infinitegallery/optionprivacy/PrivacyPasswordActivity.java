@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,6 +55,17 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
         initComponents();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        final int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            this.finish();
+        } else {
+
+            return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
 
     //functional methods
     private void initComponents() {

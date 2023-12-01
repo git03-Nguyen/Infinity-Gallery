@@ -36,6 +36,7 @@ import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
 import edu.team08.infinitegallery.optionprivacy.SinglePrivacyActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
+import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
     private final Context context;
@@ -130,7 +131,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         } else if (context instanceof PrivacyActivity) {
             ((PrivacyActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         } else if (context instanceof MainActivity) {
-        if (context instanceof MainActivity) {
             ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         } else if (context instanceof SingleAlbumActivity) {
             ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
