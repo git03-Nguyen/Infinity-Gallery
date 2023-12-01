@@ -19,6 +19,7 @@ import ja.burhanrashid52.photoeditor.shape.ShapeType;
 
 public class ShapeFragment extends BottomSheetDialogFragment implements SeekBar.OnSeekBarChangeListener {
     private Properties properties;
+    private int sizeBrush = 25;
 
     @Nullable
     @Override
@@ -91,7 +92,13 @@ public class ShapeFragment extends BottomSheetDialogFragment implements SeekBar.
         this.properties = properties;
     }
 
+    public int getSizeBrush(){
+        return sizeBrush;
+    }
 
+    public void setSizeBrush(int size){
+        sizeBrush = size;
+    }
     public interface Properties {
         void onColorChanged(int colorCode);
 

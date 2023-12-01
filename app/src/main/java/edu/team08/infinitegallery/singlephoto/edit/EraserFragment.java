@@ -16,6 +16,7 @@ import edu.team08.infinitegallery.R;
 
 public class EraserFragment extends BottomSheetDialogFragment implements SeekBar.OnSeekBarChangeListener {
     private Properties properties;
+    private int sizeEraser = 25;
 
     @Nullable
     @Override
@@ -49,6 +50,14 @@ public class EraserFragment extends BottomSheetDialogFragment implements SeekBar
 
     public void setPropertiesChangeListener(Properties properties){
         this.properties = properties;
+    }
+
+    public int getSizeEraser(){
+        return sizeEraser;
+    }
+
+    public void setSizeEraser(int size){
+        sizeEraser = size;
     }
 
 

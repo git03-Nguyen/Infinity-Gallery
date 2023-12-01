@@ -206,6 +206,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
 
     @Override
     public void onShapeSizeChanged(int shapeSize) {
+        shapeFragment.setSizeBrush(shapeSize);
         photoEditor.setShape(shapeBuilder.withShapeSize(shapeSize));
         txtCurrentTool.setText(R.string.label_brush);
     }
@@ -221,7 +222,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         if(toolType == ToolType.SHAPE){
             isBrush = true;
             photoEditor.setBrushDrawingMode(true);
-            photoEditor.setShape(shapeBuilder);
+            photoEditor.setShape(shapeBuilder.withShapeSize(shapeFragment.getSizeBrush()));
             imageClose.setVisibility(View.VISIBLE);
             txtCurrentTool.setText(R.string.label_shape);
             showBottomSheetDialogFragment(shapeFragment);
@@ -239,6 +240,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
         }else if(toolType == ToolType.ERASER){
             isErase = true;
             photoEditor.setBrushDrawingMode(true);
+            photoEditor.setShape(shapeBuilder.withShapeSize(eraserFragment.getSizeEraser()));
             photoEditor.brushEraser();
             imageClose.setVisibility(View.VISIBLE);
             txtCurrentTool.setText(R.string.label_eraser_mode);
@@ -509,6 +511,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
 
     @Override
     public void onEraserSizeChange(int size) {
-        photoEditor.setBrushEraserSize(size);
+        eraserFragment.setSizeEraser(size);
+        photoEditor.setShape(shapeBuilder.withShapeSize(size));
     }
 }
