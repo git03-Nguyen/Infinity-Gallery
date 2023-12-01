@@ -6,8 +6,12 @@ import static android.content.Intent.parseUri;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+
+import android.content.SharedPreferences;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +32,12 @@ import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorite.FavoriteActivity;
 import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
+
+import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
+import edu.team08.infinitegallery.optionprivacy.PrivacyPasswordActivity;
+
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
+
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
@@ -36,6 +45,7 @@ public class MoreFragment extends Fragment {
     private static final int SETTINGS_REQUEST_CODE = 1;
     private Context context;
     private SquareImageButton btnTrashBin;
+    private SquareImageButton btnPrivacy;
     private SquareImageButton btnFavorite;
     FavoriteManager favoriteManager;
     TextView favText, trashText;
@@ -73,6 +83,21 @@ public class MoreFragment extends Fragment {
             return true;
         });
 
+        btnPrivacy = rootView.findViewById(R.id.btn_privacy);
+        btnPrivacy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isHavingPassword()) {
+                    Intent myIntent = new Intent(context, PrivacyPasswordActivity.class);
+                    startActivity(myIntent);
+                } else {
+                    Intent myIntent = new Intent(context, PrivacyActivity.class);
+                    startActivity(myIntent);
+                }
+
+            }
+        });
+
         btnTrashBin = rootView.findViewById(R.id.btn_trash_bin);
         btnTrashBin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +120,13 @@ public class MoreFragment extends Fragment {
         trashText = rootView.findViewById(R.id.txtTrashBinPhotos);
 
         return rootView;
+    }
+
+    boolean isHavingPassword() {
+        SharedPreferences mPref = context.getSharedPreferences(PrivacyPasswordActivity.PREF_NAME, Context.MODE_PRIVATE);
+
+        String password = mPref.getString(PrivacyPasswordActivity.PREF_PASS_NAME, null);
+        return (null != password);
     }
 
     @Override

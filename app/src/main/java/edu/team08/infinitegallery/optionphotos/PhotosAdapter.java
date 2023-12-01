@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +33,8 @@ import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorite.FavoriteActivity;
 import edu.team08.infinitegallery.optionalbums.AlbumsAdapter;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
+import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
+import edu.team08.infinitegallery.optionprivacy.SinglePrivacyActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
@@ -63,6 +67,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public PhotosAdapter(Context context, List<File> allPhotos, int spanCount) {
         this.context = context;
         this.allPhotos = allPhotos;
+
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
     }
@@ -84,6 +89,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
         File photo = allPhotos.get(position);
+
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
@@ -102,6 +108,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 Intent myIntent = null;
                 if (context instanceof MainActivity) {
                     myIntent = new Intent(context, SinglePhotoActivity.class);
+                } else if (context instanceof PrivacyActivity) {
+                    myIntent = new Intent(context, SinglePrivacyActivity.class);
                 } else if (context instanceof SingleAlbumActivity) {
                     myIntent = new Intent(context, SinglePhotoActivity.class);
                 } else if (context instanceof FavoriteActivity) {
@@ -117,6 +125,11 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
+        if (context instanceof TrashBinActivity) {
+            ((TrashBinActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else if (context instanceof PrivacyActivity) {
+            ((PrivacyActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else if (context instanceof MainActivity) {
         if (context instanceof MainActivity) {
             ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         } else if (context instanceof SingleAlbumActivity) {

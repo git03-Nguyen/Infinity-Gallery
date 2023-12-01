@@ -8,7 +8,17 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
+import android.content.Context;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -31,6 +41,7 @@ import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.optionalbums.AlbumsFragment;
 import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
+import edu.team08.infinitegallery.optionprivacy.PrivacyPasswordActivity;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
 import edu.team08.infinitegallery.optionsettings.AppConfig;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
@@ -199,4 +210,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             default: break;
         }
     }
+
+
 }

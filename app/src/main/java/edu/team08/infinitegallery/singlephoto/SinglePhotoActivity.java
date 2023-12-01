@@ -39,6 +39,9 @@ import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
+import edu.team08.infinitegallery.optionprivacy.PrivacyManager;
+import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
+
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
     SinglePhotoFragment singlePhotoFragment;
@@ -89,6 +92,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             int itemId = item.getItemId();
             if (itemId == R.id.moveTrash) {
                 moveToTrash();
+            } else if(itemId == R.id.hide) {
+                hideToPrivacy();
             } else if(itemId == R.id.edit){
                 Intent myIntent = new Intent(this, EditPhotoActivity.class);
                 myIntent.putExtra("photoPath", photoPaths[currentPosition]);
@@ -105,7 +110,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     e.printStackTrace();
                 }
 
-            } else{
+            } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
 
@@ -201,6 +206,33 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                         Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SinglePhotoActivity.this, "Deleting ...", () -> {
                                     try {
                                         new TrashBinManager(SinglePhotoActivity.this).moveToTrash(new File(photoPaths[currentPosition]));
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
+                                    finish();
+                                });
+
+                    }
+                },
+                null);
+    }
+
+    private void hideToPrivacy() {
+        // Get the current position
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                "Confirm Hiding",
+                "Are you sure to move this photo to the privacy list ?",
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SinglePhotoActivity.this, "Hiding ...", () -> {
+                                    try {
+                                        new PrivacyManager(SinglePhotoActivity.this).hideToPrivacy(new File(photoPaths[currentPosition]));
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
