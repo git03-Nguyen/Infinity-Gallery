@@ -3,7 +3,7 @@
     <item
         android:id="@+id/delete"
         android:icon="@drawable/ic_photo_delete_red_24"
-        android:title="Delete"/>
+        android:title="@string/delete"/>
     <item
         android:id="@+id/restore"
         android:icon="@drawable/ic_trash_restore_24"
