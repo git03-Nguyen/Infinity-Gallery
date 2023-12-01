@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class SingleAlbumActivity extends AppCompatActivity implements MainCallbacks {
     int spanCount = 4;
@@ -67,19 +69,33 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         if (firstTime) {
             firstTime = false;
         } else {
-            reGetAllPhotos();
+            getAllPhotosOfFolder(folderPath);
             showAllPhotos();
+            this.toolbar.setSubtitle(this.photoFiles.size() + " photos");
         }
     }
 
-    private void reGetAllPhotos() {
-        if (albumName == "Favorites") {
-            getAllFavoritePhotos();
-        } else if (albumName == "Privacy") {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_single_album, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            this.finish();
+        } else if (itemId == R.id.settings) {
+            Intent myIntent = new Intent(SingleAlbumActivity.this, SettingsActivity.class);
+            startActivity(myIntent, null);
+        } else if (itemId == R.id.addPhotos) {
 
         } else {
-            getAllPhotosOfFolder(folderPath);
+            Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            return super.onOptionsItemSelected(item);
         }
+        return true;
     }
 
     private void getAllPhotosOfFolder(String folderPath) {
@@ -105,21 +121,6 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 .anyMatch(extension -> file.getName().toLowerCase().endsWith(extension));
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        final int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            this.finish();
-        } else if (itemId == R.id.menuTrashBinSettings) {
-            Intent myIntent = new Intent(SingleAlbumActivity.this, SettingsActivity.class);
-            startActivity(myIntent, null);
-        } else {
-            Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
-            return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
-
     private void getAllPhotos() {
         Intent intent = getIntent();
         String[] photosPaths = null;
@@ -132,51 +133,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 this.photoFiles.add(new File(path));
             }
         }
-        if (albumName == "Favorites") {
-            getAllFavoritePhotos();
-        } else if (albumName == "Privacy") {
 
-        } else {
-
-        }
-    }
-
-    private void getAllFavoritePhotos() {
-        this.photoFiles = new ArrayList<>();
-        List<String> photoPaths = new ArrayList<>();
-
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                this.getDatabasePath("favorite.db"), null);
-
-        // Query for favorite photos
-        Cursor cursor = db.query(
-                "FAVORITE",
-                new String[]{"PATH"},
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-
-        // Extract paths from the cursor
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex("PATH"));
-                photoPaths.add(path);
-            } while (cursor.moveToNext());
-        }
-
-        // Close the cursor and database
-        if (cursor != null) {
-            cursor.close();
-        }
-        db.close();
-
-        for (String path : photoPaths) {
-            File photo = new File(path);
-            if (photo.exists()) photoFiles.add(photo);
-        }
     }
 
     private void showAllPhotos() {
