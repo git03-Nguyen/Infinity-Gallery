@@ -14,8 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorOnPrimary"
-            app:subtitle="05:49 PM"
-            app:title="October 15, 2023"
+            app:title="File name"
             app:titleMarginStart="30dp" />
 
         <FrameLayout

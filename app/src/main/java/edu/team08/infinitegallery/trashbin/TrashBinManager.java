@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +14,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class TrashBinManager {
     int spanCount = 4;
@@ -193,4 +193,36 @@ public class TrashBinManager {
         db.close();
     }
 
+    public int[] getDaysRemain(File[] trashFiles) {
+        int[] daysRemain = new int[trashFiles.length];
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
+        for (int i = 0; i < trashFiles.length; i++) {
+            Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, new String[]{"DELETE_DATE"}, "TRASH_NAME = ?", new String[]{trashFiles[i].getName()}, null, null, null);
+            if (cursor.moveToFirst()) {
+                @SuppressLint("Range") long deleteDate = cursor.getLong(cursor.getColumnIndex("DELETE_DATE"));
+                long currentDate = System.currentTimeMillis();
+                long difference = currentDate - deleteDate;
+                long daysPassed = TimeUnit.MILLISECONDS.toDays(difference);
+                daysRemain[i] = 30 - (int)daysPassed;
+            }
+            cursor.close();
+        }
+        db.close();
+        return daysRemain;
+    }
+
+
+    public void checkAndCleanTrashBin() {
+        File[] trashFiles = getTrashFiles();
+
+        int[] daysRemain = getDaysRemain(trashFiles);
+
+        for (int i = 0; i < daysRemain.length; i++) {
+            if (daysRemain[i] < 0) {
+                permanentDelete(trashFiles[i]);
+                trashFiles[i] = null;
+            }
+        }
+
+    }
 }

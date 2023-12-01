@@ -6,12 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +13,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.ObjectTestFavorites;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;

@@ -1,29 +1,27 @@
-package edu.team08.infinitegallery.singlephoto;
 
+package edu.team08.infinitegallery.singlephoto;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.core.content.FileProvider;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
-import com.drew.metadata.file.FileTypeDirectory;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
@@ -33,17 +31,26 @@ import java.util.Date;
 
 import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.favorite.FavoriteManager;
+
+import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
+import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
+
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
+
 import edu.team08.infinitegallery.optionprivacy.PrivacyManager;
 import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
+
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
-
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
+    private CheckBox favoriteBox;
+    private int currentPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,16 +60,30 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         if (intent.hasExtra("photoPaths")) {
             this.photoPaths = intent.getStringArrayExtra("photoPaths");
         }
-        int currentPosition = 0;
+
+        currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.photoPaths, currentPosition);
+        singlePhotoFragment = new SinglePhotoFragment(this, photoPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
                 .commit();
+
+        favoriteBox = findViewById(R.id.cbFavorite);
+        favoriteBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isChecked = favoriteBox.isChecked();
+                if (isChecked) {
+                    addToFavorite();
+                } else {
+                    removeFromFavorite();
+                }
+            }
+        });
 
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -73,6 +94,22 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 moveToTrash();
             } else if(itemId == R.id.hide) {
                 hideToPrivacy();
+            } else if(itemId == R.id.edit){
+                Intent myIntent = new Intent(this, EditPhotoActivity.class);
+                myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                startActivity(myIntent);
+            } else if(itemId == R.id.share){
+                try {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            this.getApplicationContext().getPackageName() + ".fileprovider", new File(photoPaths[currentPosition]));
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, buildFileProviderUri(photoURI));
+                    startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -82,11 +119,28 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         topToolbarPhoto = findViewById(R.id.topToolbarPhoto);
         setDateForToolbar(photoPaths[currentPosition]);
+        setFavoriteForToolbar(photoPaths[currentPosition]);
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private Uri buildFileProviderUri(Uri uri) {
+        if (FileSaveHelper.isSdkHigherThan28()) {
+            return uri;
+        }
+
+        String path = uri.getPath();
+        if (path == null) {
+            throw new IllegalArgumentException("URI Path Expected");
+        }
+
+        return FileProvider.getUriForFile(
+                this,
+                EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
+                new File(path)
+        );
+    }
 
     private void setDateForToolbar(String filePath){
         try {
@@ -94,7 +148,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             ExifSubIFDDirectory exifDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             FileSystemDirectory fileDir = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
             Date date = null;
-            if(exifDir != null){
+            if(exifDir != null) {
                 date = exifDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
             }else if(fileDir != null){
                 date = fileDir.getDate(FileSystemDirectory.TAG_FILE_MODIFIED_DATE);
@@ -124,15 +178,29 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         return true;
     }
 
+    private void addToFavorite() {
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+        new FavoriteManager(this).addToFavorite(photoPaths[currentPosition]);
+        Toast.makeText(this, "Add to favorites", Toast.LENGTH_SHORT).show();
+    }
+
+    private void removeFromFavorite() {
+        int currentPosition = singlePhotoFragment.getCurrentPosition();
+        new FavoriteManager(this).removeFromFavorite(photoPaths[currentPosition]);
+        Toast.makeText(this, "Remove from favorites", Toast.LENGTH_SHORT).show();
+    }
+
     private void moveToTrash() {
         // Get the current position
         int currentPosition = singlePhotoFragment.getCurrentPosition();
 
+        // Build a confirmation dialog with a progress bar
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm Deletion",
                 "Are you sure to move this photo to the trash?",
                 new Runnable() {
+
                     @Override
                     public void run() {
                         Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SinglePhotoActivity.this, "Deleting ...", () -> {
@@ -150,7 +218,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 },
                 null);
     }
-
 
     private void hideToPrivacy() {
         // Get the current position
@@ -179,13 +246,18 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 null);
     }
 
-    // ...
+    private void setFavoriteForToolbar(String photoPath) {
+        boolean isFavorite = new FavoriteManager(this).isFavorite(photoPath);
+        this.favoriteBox.setChecked(isFavorite);
+    }
 
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
         // Do not care who sender?
         // Get information about current picture => current position.
-        int currentPosition = Integer.parseInt(request);
-        setDateForToolbar(this.photoPaths[currentPosition]);
+        currentPosition = Integer.parseInt(request);
+        setDateForToolbar(photoPaths[currentPosition]);
+        setFavoriteForToolbar(photoPaths[currentPosition]);
     }
+
 }

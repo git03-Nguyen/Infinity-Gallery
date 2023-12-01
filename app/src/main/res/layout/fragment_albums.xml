@@ -15,17 +15,50 @@
         app:titleTextColor="?attr/colorSecondary"
         app:menu="@menu/menu_toolbar_albums" />
 
-
-
-    <FrameLayout
+    <ViewSwitcher
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/viewSwitcher">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewAlbums"
+        <LinearLayout
+            android:id="@+id/emptyView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center" >
 
-    </FrameLayout>
+            <ImageView
+                android:layout_marginTop="-100dp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:src="@drawable/img_trash_empty" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="No item"
+                android:textSize="16sp"
+                android:textColor="?colorSecondary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="We couldn't find any albums on your device"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridView"
+            android:numColumns="3"
+            android:padding="5dp" />
+
+    </ViewSwitcher>
+
+
 
 </LinearLayout>

@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.io.File;
-import java.util.List;
-
 // TODO: Warning: this object is only used for testing the favorites album
 public class ObjectTestFavorites {
     Context context;

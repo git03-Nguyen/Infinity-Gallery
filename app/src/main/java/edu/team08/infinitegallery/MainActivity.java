@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,14 +28,23 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.optionalbums.AlbumsFragment;
 import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
 import edu.team08.infinitegallery.optionprivacy.PrivacyPasswordActivity;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
 import edu.team08.infinitegallery.optionsettings.AppConfig;
+import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private final int PERMISSIONS_REQUEST_CODE_1  = 100;
@@ -61,10 +71,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onResume() {
+        super.onResume();
         scanMediaOnStorage();
     }
+
+
 
     private void requestPermissions() {
         String readPermission = (SDK_INT >= VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         }
 
         if (successful){
-            Toast.makeText(MainActivity.this, "Permissions have been granted in the past!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
         } else {
             String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
             ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSIONS_REQUEST_CODE_1);
@@ -154,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
         bottomNavigationView = findViewById(R.id.bottomNavBar);
         bottomNavigationView.setOnItemSelectedListener(item -> {
+            scanMediaOnStorage();
             int itemId = item.getItemId();
             if (itemId == R.id.nav_photos) {
                 currentFragment = photosFragment;
@@ -170,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                         .beginTransaction()
                         .replace(R.id.fragmentHolder, currentFragment)
                         .commit();
+
+            // Check to clean the trash bin
+            new TrashBinManager(this).checkAndCleanTrashBin();
+            new FavoriteManager(this);
+
             return true;
         });
 

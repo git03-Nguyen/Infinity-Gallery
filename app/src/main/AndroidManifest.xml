@@ -7,11 +7,12 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
-	<!-- Other permissions -->
+	<!-- Other permissions... -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".InfinityGalleryApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -35,6 +36,11 @@
             android:launchMode="singleTop"
             android:parentActivityName=".trashbin.TrashBinActivity" />
         <activity
+            android:name=".favorite.FavoriteActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".singlephoto.SinglePhotoActivity"
             android:exported="false"
             android:launchMode="singleTop"
@@ -44,6 +50,11 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".optionprivacy.PrivacyActivity" />
+        <activity
+            android:name=".singlephoto.edit.EditPhotoActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".singlephoto.SinglePhotoActivity" />
         <activity
             android:name=".trashbin.TrashBinActivity"
             android:exported="false"
@@ -73,5 +84,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="edu.team08.infinitegallery.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
     </application>
 </manifest>

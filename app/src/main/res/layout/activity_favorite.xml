@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".favorite.FavoriteActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarFavorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Favorites"
+        app:titleMarginStart="30dp" />
+
+    <LinearLayout
+        android:id="@+id/fragmentFavorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ViewSwitcher
+            android:id="@+id/viewSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="-100dp"
+                    android:src="@drawable/favorite_not_items" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="No favorite images"
+                    android:textSize="16sp"
+                    android:textColor="?colorSecondary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Photos you liked are shown here"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recViewFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </ViewSwitcher>
+
+    </LinearLayout>
+
+</LinearLayout>
