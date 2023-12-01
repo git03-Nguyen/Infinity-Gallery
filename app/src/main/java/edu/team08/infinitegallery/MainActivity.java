@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.optionalbums.AlbumsFragment;
 import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
@@ -174,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
             // Check to clean the trash bin
             new TrashBinManager(this).checkAndCleanTrashBin();
-
+            new FavoriteManager(this);
 
             return true;
         });
