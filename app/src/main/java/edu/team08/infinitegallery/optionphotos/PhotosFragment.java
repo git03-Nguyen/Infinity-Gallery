@@ -79,6 +79,18 @@ public class PhotosFragment extends Fragment {
 //                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
                 toggleSelectionMode();
                 
+            } else if (itemId == R.id.column_2) {
+                spanCount = 2;
+                setSpanSize();
+            } else if (itemId == R.id.column_3) {
+                spanCount = 3;
+                setSpanSize();
+            } else if (itemId == R.id.column_4) {
+                spanCount = 4;
+                setSpanSize();
+            } else if (itemId == R.id.column_5) {
+                spanCount = 5;
+                setSpanSize();
             } else {
                 Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -166,6 +178,7 @@ public class PhotosFragment extends Fragment {
             photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
             photosRecView.setAdapter(photosAdapter);
             photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+            setSpanSize();
             toolbar.setTitle("November 29, 2023"); // TODO: set by the first image on the window view
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
@@ -173,7 +186,6 @@ public class PhotosFragment extends Fragment {
             }
             toolbar.setTitle("");
         }
-
     }
 
     public File[] getSelectedFiles() {
@@ -193,5 +205,9 @@ public class PhotosFragment extends Fragment {
         this.txtNumberOfSelectedFiles.setText("Selected " + photosAdapter.getSelectionsCount());
     }
 
-
+    private void setSpanSize() {
+        photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
+        photosRecView.setAdapter(photosAdapter);
+        photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+    }
 }

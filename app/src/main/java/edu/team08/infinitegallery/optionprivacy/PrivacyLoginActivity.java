@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
-public class PrivacyPasswordActivity extends AppCompatActivity {
+public class PrivacyLoginActivity extends AppCompatActivity {
 
     //Properties and attributes
     private String _password;
@@ -34,7 +35,7 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
     private EditText _passwordField;
     private Button _showHideButton;
     private Button _loginButton;
-    private Button _resetButton;
+    private Button _forgotPasswordButton;
 
 
     //on- methods
@@ -52,7 +53,7 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
 //            this._password = intent.getStringExtra("password");
 //        }
 
-        initComponents();
+        initializeActivity();
     }
 
     @Override
@@ -68,11 +69,11 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
     }
 
     //functional methods
-    private void initComponents() {
+    private void initializeActivity() {
         _passwordField = (EditText) findViewById(R.id.passwordField);
         _showHideButton = (Button) findViewById(R.id.showHideButton);
         _loginButton = (Button) findViewById(R.id.login_Login);
-        _resetButton = (Button) findViewById(R.id.login_Reset);
+        _forgotPasswordButton = (Button) findViewById(R.id.login_Forgot);
 
         //Click Button to show/hide password field
         _showHideButton.setOnClickListener(new View.OnClickListener() {
@@ -102,38 +103,22 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
 
                 //TODO: check the password and redirect properly
                 if(isAuthorized()) {
-                    Intent intent = new Intent(PrivacyPasswordActivity.this, PrivacyActivity.class);
+                    Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyActivity.class);
                     startActivity(intent);
+                    Toast.makeText(PrivacyLoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PrivacyLoginActivity.this, "Login failed due to wrong password", Toast.LENGTH_SHORT).show();
+
                 }
 
             }
         });
 
-        _resetButton.setOnClickListener(new View.OnClickListener() {
+        _forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmDialogBuilder.showConfirmDialog(
-                        PrivacyPasswordActivity.this,
-                        "Confirm reset password",
-                        "By resetting password, you can access \\\"Privacy\\\" \" +\n" +
-                                "                        \"without typing password, but every pictures in \\\"Privacy\\\" will be deleted\" +\n" +
-                                "                        \"\\nDo you want to reset password?",
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(PrivacyPasswordActivity.this, "Reseting ...",
-                                        () -> {
-                                            Intent intent = new Intent(PrivacyPasswordActivity.this, PrivacySignupActivity.class);
-                                            startActivity(intent);
-                                        },
-                                        () -> {
-                                            //DO NOTHING
-                                        });
-
-                            }
-                        },
-                        null
-                );
+                Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyForgetPassActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -143,8 +128,7 @@ public class PrivacyPasswordActivity extends AppCompatActivity {
         SharedPreferences mPref = this.
                 getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
-        String password = mPref.getString(PREF_PASS_NAME, null);
-        _password = password;
+        _password = mPref.getString(PREF_PASS_NAME, null);
 
         //always correct if there is no password yet
         if (input_password == null)

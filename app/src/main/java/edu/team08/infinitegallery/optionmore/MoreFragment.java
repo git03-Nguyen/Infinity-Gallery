@@ -1,9 +1,5 @@
 package edu.team08.infinitegallery.optionmore;
 
-import static android.content.Intent.getIntent;
-import static android.content.Intent.parseUri;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -23,20 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorite.FavoriteActivity;
 import edu.team08.infinitegallery.favorite.FavoriteManager;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
 
 import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
-import edu.team08.infinitegallery.optionprivacy.PrivacyPasswordActivity;
-
-import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
+import edu.team08.infinitegallery.optionprivacy.PrivacyLoginActivity;
 
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
@@ -88,7 +77,7 @@ public class MoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isHavingPassword()) {
-                    Intent myIntent = new Intent(context, PrivacyPasswordActivity.class);
+                    Intent myIntent = new Intent(context, PrivacyLoginActivity.class);
                     startActivity(myIntent);
                 } else {
                     Intent myIntent = new Intent(context, PrivacyActivity.class);
@@ -123,9 +112,9 @@ public class MoreFragment extends Fragment {
     }
 
     boolean isHavingPassword() {
-        SharedPreferences mPref = context.getSharedPreferences(PrivacyPasswordActivity.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mPref = context.getSharedPreferences(PrivacyLoginActivity.PREF_NAME, Context.MODE_PRIVATE);
 
-        String password = mPref.getString(PrivacyPasswordActivity.PREF_PASS_NAME, null);
+        String password = mPref.getString(PrivacyLoginActivity.PREF_PASS_NAME, null);
         return (null != password);
     }
 
