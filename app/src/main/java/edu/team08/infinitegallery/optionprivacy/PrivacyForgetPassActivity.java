@@ -19,8 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import edu.team08.infinitegallery.R;
 
-public class PrivacySignupActivity extends AppCompatActivity {
-    //Secure questions
+public class PrivacyForgetPassActivity extends AppCompatActivity {
+    //Properties and attributes
     String[] securityQuestions = {
             "What city were you born in?",
             "What is the name of your first pet?",
@@ -44,16 +44,17 @@ public class PrivacySignupActivity extends AppCompatActivity {
     private Button _showHideButton;
     private EditText _retypePasswordField;
     private Button _showRetypeButton;
-    private Button _signupButton;
+    private Button _applyChangeButton;
     private Spinner _secureQuesSpinner;
+
     //on- methods
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_signup_form);
+        setContentView(R.layout.privacy_forget_password_form);
 
         //set toolbar
-        setSupportActionBar(findViewById(R.id.toolbarForPrivacySignup));
+        setSupportActionBar(findViewById(R.id.toolbarForPrivacyForgetPassword));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeActivity();
@@ -66,7 +67,7 @@ public class PrivacySignupActivity extends AppCompatActivity {
         _secureAnsField = (EditText) findViewById(R.id.secure_ans);
         _showHideButton = (Button) findViewById(R.id.showTypeButton);
         _showRetypeButton = (Button) findViewById(R.id.showRetypeButton);
-        _signupButton = (Button) findViewById(R.id.signup_Signup);
+        _applyChangeButton = (Button) findViewById(R.id.change_applyChange);
         _secureQuesSpinner = findViewById(R.id.secure_ques_spinner);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, securityQuestions);
@@ -106,40 +107,42 @@ public class PrivacySignupActivity extends AppCompatActivity {
             }
         });
 
-        _signupButton.setOnClickListener(new View.OnClickListener() {
+        _applyChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkCorrespondingPassword()) {
-                    savePreferencePassword();
-                    savePreferenceSecureQues_Ans();
+                    SharedPreferences mPref = getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mPref.edit();
+                    editor.putString("PASS", PrivacyEncodingPassword.SHA256(_password));
+                    editor.commit();
 
-                    Intent intent = new Intent(PrivacySignupActivity.this, PrivacyLoginActivity.class);
+                    Intent intent = new Intent(PrivacyForgetPassActivity.this, PrivacyLoginActivity.class);
                     startActivity(intent);
-                    Toast.makeText(PrivacySignupActivity.this, "Create password successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivacyForgetPassActivity.this, "Change password successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PrivacySignupActivity.this, _errorMsg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivacyForgetPassActivity.this, _errorMsg, Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-
-    }
-
-    private void savePreferenceSecureQues_Ans() {
-        SharedPreferences mPref = this.
-                getSharedPreferences("SECURE_PREF", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPref.edit();
-        try {
-            editor.putString("SECURE_QUES", PrivacyEncodingPassword.SHA256(selectedQuestion));
-            editor.putString("SECURE_ANS", PrivacyEncodingPassword.SHA256(enteredAnswer));
-
-            editor.commit();
-        } catch (Exception e) {
-            Log.e("Error in hashing!", e.getMessage());
-        }
     }
 
     private boolean checkCorrespondingPassword() {
+        SharedPreferences mPref = getSharedPreferences("SECURE_PREF", Context.MODE_PRIVATE);
+
+        selectedQuestion = mPref.getString("SECURE_QUES", null);
+        enteredAnswer = mPref.getString("SECURE_ANS", null);
+
+        String cur_selectedQuestion = _secureQuesSpinner.getSelectedItem().toString();
+        String cur_enteredAnswer = _secureAnsField.getText().toString().toLowerCase().trim();
+
+        if(!PrivacyEncodingPassword.SHA256(cur_selectedQuestion).equals(selectedQuestion)
+        || (!PrivacyEncodingPassword.SHA256(cur_enteredAnswer).equals(enteredAnswer))) {
+            _errorMsg = "Error: the secure question or answer is not corresponding with the saved data.";
+            return false;
+        }
+
+
         _password = _passwordField.getText().toString();
         retype_password = _retypePasswordField.getText().toString();
 
@@ -158,17 +161,5 @@ public class PrivacySignupActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    void savePreferencePassword() {
-        SharedPreferences mPref = this.
-                getSharedPreferences(PrivacyLoginActivity.PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPref.edit();
-        try {
-            editor.putString(PrivacyLoginActivity.PREF_PASS_NAME, PrivacyEncodingPassword.SHA256(_password));
-            editor.commit();
-        } catch (Exception e) {
-            Log.e("Error in hashing!", e.getMessage());
-        }
     }
 }
