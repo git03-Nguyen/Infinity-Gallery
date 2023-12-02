@@ -11,10 +11,6 @@
         android:title="Select" />
 
     <item
-        android:id="@+id/menuPhotosCollege"
-        android:title="College" />
-
-    <item
         android:id="@+id/menuPhotosColumns"
         android:title="Columns" >
         <menu>
@@ -35,14 +31,6 @@
                 android:title="5 columns" />
         </menu>
     </item>
-
-    <item
-        android:id="@+id/menuPhotosCreateVideo"
-        android:title="Create video" />
-
-    <item
-        android:id="@+id/menuPhotosSlideshow"
-        android:title="Slideshow" />
 
     <item
         android:id="@+id/menuPhotosSettings"

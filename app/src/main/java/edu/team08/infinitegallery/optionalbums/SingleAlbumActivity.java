@@ -1,10 +1,14 @@
 package edu.team08.infinitegallery.optionalbums;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -145,5 +149,24 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     @Override
     public void onEmitMsgFromFragToMain(String sender, String request) {
 
+    }
+
+    List<String> imagePathList;
+    String imagePath;
+
+    @SuppressLint("Range")
+    public void getImageFilePath(Uri uri) {
+
+        File file = new File(uri.getPath());
+        String[] filePath = file.getPath().split(":");
+        String image_id = filePath[filePath.length - 1];
+
+        Cursor cursor = getContentResolver().query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Images.Media._ID + " = ? ", new String[]{image_id}, null);
+        if (cursor!=null) {
+            cursor.moveToFirst();
+            imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            imagePathList.add(imagePath);
+            cursor.close();
+        }
     }
 }
