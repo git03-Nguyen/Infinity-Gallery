@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -16,8 +17,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,8 +32,10 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.MainActivity;
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorite.FavoriteActivity;
+import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.optionalbums.AlbumsAdapter;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
@@ -43,6 +48,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private SparseBooleanArray selectedItemsIds;
     private List<File> allPhotos;
     private final int spanCount;
+    private boolean selectionMode;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -71,6 +77,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
+        this.selectionMode = false;
     }
 
     @NonNull
@@ -97,30 +104,34 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 .load(photo)
                 .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
+
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
-                // TODO: (!) remember to check if it's exist or not
-                String[] photoPaths = new String[allPhotos.size()];
-                for (int i = 0; i < photoPaths.length; i++) {
-                    photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                if (!selectionMode) {
+                    String[] photoPaths = new String[allPhotos.size()];
+                    for (int i = 0; i < photoPaths.length; i++) {
+                        photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                    }
+                    Intent myIntent = null;
+                    if (context instanceof MainActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    } else if (context instanceof PrivacyActivity) {
+                        myIntent = new Intent(context, SinglePrivacyActivity.class);
+                    } else if (context instanceof SingleAlbumActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    } else if (context instanceof FavoriteActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    }
+                    if (myIntent != null) {
+                        myIntent.putExtra("photoPaths", photoPaths);
+                        myIntent.putExtra("currentPosition", position);
+                        startActivity(context, myIntent, null);
+                    }
+                } else {
+                    toggleSelection(position);
                 }
-                Intent myIntent = null;
-                if (context instanceof MainActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } else if (context instanceof PrivacyActivity) {
-                    myIntent = new Intent(context, SinglePrivacyActivity.class);
-                } else if (context instanceof SingleAlbumActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } else if (context instanceof FavoriteActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                }
-                if (myIntent != null) {
-                    myIntent.putExtra("photoPaths", photoPaths);
-                    myIntent.putExtra("currentPosition", position);
-                    startActivity(context, myIntent, null);
-                }
+
             }
         });
 
@@ -158,7 +169,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.txtSizeAndDateImage.append(sdf.format(photo.lastModified()));
         }
 
-
         if(selectedItemsIds.get(position)) {
             holder.itemView.setBackgroundColor(0x9934B5E4);
             holder.checkbox.setVisibility(View.VISIBLE);
@@ -174,4 +184,40 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public int getItemCount() {
         return allPhotos.size();
     }
+
+    public void toggleSelectionMode() {
+        this.selectionMode = !this.selectionMode;
+        removeAllSelections();
+    }
+
+    public boolean getSelectionMode() {
+        return this.selectionMode;
+    }
+
+    public void toggleSelection(int position) {
+        if (selectedItemsIds.get(position)) {
+            selectedItemsIds.delete(position);
+        } else {
+            selectedItemsIds.put(position, true);
+        }
+        notifyItemChanged(position);
+        ((MainCallbacks) context).onEmitMsgFromFragToMain("NUMBER OF SELECTIONS", String.valueOf(getSelectionsCount()));
+    }
+
+    public void removeAllSelections() {
+        selectedItemsIds.clear();
+        notifyDataSetChanged();
+    }
+
+    //Get total selected count
+    public int getSelectionsCount() {
+        return selectedItemsIds.size();
+    }
+
+    //Return all selected ids
+    public SparseBooleanArray getSelectedIds() {
+        return selectedItemsIds;
+    }
+
+
 }
