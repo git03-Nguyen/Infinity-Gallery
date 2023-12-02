@@ -35,6 +35,11 @@ public class FavoriteManager {
         if (databaseExists(FAVORITE_DB_NAME)) {
             SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                     context.getDatabasePath(FAVORITE_DB_NAME), null);
+
+            // Create the "favor" table if it doesn't exist
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
+                    + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT)");
+
             // Query all paths from the "FAVORITE" table
             Cursor cursor = db.query("FAVORITE", new String[]{"PATH"}, null, null, null, null, null);
 
@@ -59,10 +64,6 @@ public class FavoriteManager {
         // Create the database
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                 context.getDatabasePath(FAVORITE_DB_NAME), null);
-
-        // Create the "favor" table if it doesn't exist
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT)");
 
         // Close the database
         db.close();
