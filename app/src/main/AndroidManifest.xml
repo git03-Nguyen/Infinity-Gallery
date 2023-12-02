@@ -66,12 +66,17 @@
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".optionprivacy.PrivacyPasswordActivity"
+            android:name=".optionprivacy.PrivacyLoginActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".optionprivacy.PrivacySignupActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".optionprivacy.PrivacyForgetPassActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity" />
