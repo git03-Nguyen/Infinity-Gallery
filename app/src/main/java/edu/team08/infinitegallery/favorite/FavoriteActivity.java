@@ -29,7 +29,7 @@ import edu.team08.infinitegallery.favorite.FavoriteActivity;
 import edu.team08.infinitegallery.favorite.FavoriteManager;
 
 public class FavoriteActivity extends AppCompatActivity implements MainCallbacks {
-    private int spanCount = 4;
+    private static int spanCount = 0;
     File[] favoriteFiles;
     private FavoriteManager favoriteManager;
     PhotosAdapter photosAdapter;
@@ -48,6 +48,9 @@ public class FavoriteActivity extends AppCompatActivity implements MainCallbacks
         favoriteFiles = null;
         photosRecView = findViewById(R.id.recViewFavorites);
         viewSwitcher = findViewById(R.id.viewSwitcher);
+        if (spanCount == 0) {
+            spanCount = 4;
+        }
     }
 
     @Override
@@ -61,9 +64,7 @@ public class FavoriteActivity extends AppCompatActivity implements MainCallbacks
         } else if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
             viewSwitcher.showNext();
         }
-        photosAdapter = new PhotosAdapter(this, Arrays.asList(favoriteFiles), spanCount);
-        photosRecView.setAdapter(photosAdapter);
-        photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
+        setSpanSize();
     }
 
     @Override
@@ -78,10 +79,25 @@ public class FavoriteActivity extends AppCompatActivity implements MainCallbacks
 
         if (itemId == android.R.id.home) {
             this.finish();
-        } else if (itemId == R.id.menuPhotosSelect) {
+        }
+        else if (itemId == R.id.menuPhotosSelect) {
             Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-        } else if (itemId == R.id.menuPhotosColumns) {
-
+        }
+        else if (itemId == R.id.column_2) {
+            spanCount = 2;
+            setSpanSize();
+        }
+        else if (itemId == R.id.column_3) {
+            spanCount = 3;
+            setSpanSize();
+        }
+        else if (itemId == R.id.column_4) {
+            spanCount = 4;
+            setSpanSize();
+        }
+        else if (itemId == R.id.column_5) {
+            spanCount = 5;
+            setSpanSize();
         } else if (itemId == R.id.menuPhotosSettings) {
             Intent myIntent = new Intent(FavoriteActivity.this, SettingsActivity.class);
             startActivity(myIntent, null);
@@ -89,6 +105,12 @@ public class FavoriteActivity extends AppCompatActivity implements MainCallbacks
             return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void setSpanSize() {
+        photosAdapter = new PhotosAdapter(this, Arrays.asList(favoriteFiles), spanCount);
+        photosRecView.setAdapter(photosAdapter);
+        photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
     }
 
     @Override

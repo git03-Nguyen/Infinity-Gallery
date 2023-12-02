@@ -26,6 +26,23 @@
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_main_bottom"
         style="@style/BottomNavStyle"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        android:visibility="visible" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/selectionBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingVertical="8dp"
+        app:itemIconSize="28dp"
+        app:itemTextAppearanceActiveBoldEnabled="false"
+        app:itemPaddingBottom="7dp"
+        app:itemPaddingTop="7dp"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_photos_selection_bottom"
+        style="@style/BottomNavPhotoStyle"
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+        android:visibility="gone" />
 
 </RelativeLayout>

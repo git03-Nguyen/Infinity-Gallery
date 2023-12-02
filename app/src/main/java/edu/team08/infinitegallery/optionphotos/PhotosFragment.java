@@ -7,9 +7,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -18,11 +20,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.team08.infinitegallery.ObjectTestFavorites;
+import edu.team08.infinitegallery.MainActivity;
+import edu.team08.infinitegallery.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
@@ -34,6 +40,10 @@ public class PhotosFragment extends Fragment {
     PhotosAdapter photosAdapter;
     ViewSwitcher viewSwitcher;
     Toolbar toolbar;
+    Toolbar selectionToolbar;
+    MaterialCheckBox checkBoxAll;
+    MaterialButton btnTurnOffSelectionMode;
+    TextView txtNumberOfSelectedFiles;
 
     public PhotosFragment(Context context) {
         this.context = context;
@@ -61,13 +71,69 @@ public class PhotosFragment extends Fragment {
             if (itemId == R.id.menuPhotosSettings) {
                 Intent myIntent = new Intent(context, SettingsActivity.class);
                 startActivity(myIntent, null);
+            } else if (itemId == R.id.menuPhotosSelect) {
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
+                toggleSelectionMode();
+                
+            } else if (itemId == R.id.column_2) {
+                spanCount = 2;
+                setSpanSize();
+            } else if (itemId == R.id.column_3) {
+                spanCount = 3;
+                setSpanSize();
+            } else if (itemId == R.id.column_4) {
+                spanCount = 4;
+                setSpanSize();
+            } else if (itemId == R.id.column_5) {
+                spanCount = 5;
+                setSpanSize();
             } else {
                 Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
             return true;
         });
 
+        selectionToolbar = photosFragment.findViewById(R.id.toolbarPhotosSelection);
+        txtNumberOfSelectedFiles = photosFragment.findViewById(R.id.txtNumberOfSelected);
+        btnTurnOffSelectionMode = photosFragment.findViewById(R.id.btnTurnOffSelectionMode);
+        btnTurnOffSelectionMode.setOnClickListener(v -> {
+            toggleSelectionMode();
+        });
+        checkBoxAll = photosFragment.findViewById(R.id.checkboxAll);
+        // TODO: set onclick for checkBoxAll
+
         return photosFragment;
+    }
+
+    public void toggleSelectionMode() {
+        photosAdapter.toggleSelectionMode();
+        if (photosAdapter.getSelectionMode()) {
+            // Change the layout (toolbar)
+            toggleToolbarForSelection();
+            // Call activity to change layout (nav bar)
+            ((MainCallbacks) context).onEmitMsgFromFragToMain("SELECTION MODE", "1");
+        } else {
+            // Change the layout (top bar)
+            toggleToolbarForSelection();
+            // Call activity to change layout (nav bar)
+            ((MainCallbacks) context).onEmitMsgFromFragToMain("SELECTION MODE", "0");
+            onResume();
+        }
+    }
+
+    private void toggleToolbarForSelection() {
+        if (photosAdapter.getSelectionMode()) {
+            this.toolbar.setVisibility(View.GONE);
+            this.selectionToolbar.setVisibility(View.VISIBLE);
+            this.txtNumberOfSelectedFiles.setText("Selected " + 0);
+        } else {
+            this.toolbar.setVisibility(View.VISIBLE);
+            this.selectionToolbar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -75,13 +141,6 @@ public class PhotosFragment extends Fragment {
         super.onResume();
         readAllImages();
         showAllPictures();
-
-
-        // TODO: Warning: this object is only for testing favorites album, must be removed
-        if (photoFiles.size() > 1) {
-            ObjectTestFavorites objectTestFavorites = new ObjectTestFavorites(context, new String[] {photoFiles.get(0).getAbsolutePath(), photoFiles.get(1).getAbsolutePath()});
-        }
-
     }
 
     private void readAllImages() {
@@ -119,15 +178,36 @@ public class PhotosFragment extends Fragment {
             photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
             photosRecView.setAdapter(photosAdapter);
             photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
-            toolbar.setTitle("November 29, 2023");
+            setSpanSize();
+            toolbar.setTitle("November 29, 2023"); // TODO: set by the first image on the window view
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
             toolbar.setTitle("");
         }
-
     }
 
+    public File[] getSelectedFiles() {
+        if (photosAdapter.getSelectionMode()) {
+            List<File> list = new ArrayList<>();
+            SparseBooleanArray selectedItemsId = photosAdapter.getSelectedIds();
+            for (int i = 0; i < selectedItemsId.size(); i++) {
+                if (selectedItemsId.valueAt(i)) list.add(photoFiles.get(selectedItemsId.keyAt(i)));
+            }
+            return list.toArray(new File[0]);
+        } else {
+            return new File[0];
+        }
+    }
 
+    public void setNumberOfSelectedFiles(int number) {
+        this.txtNumberOfSelectedFiles.setText("Selected " + photosAdapter.getSelectionsCount());
+    }
+
+    private void setSpanSize() {
+        photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
+        photosRecView.setAdapter(photosAdapter);
+        photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+    }
 }
