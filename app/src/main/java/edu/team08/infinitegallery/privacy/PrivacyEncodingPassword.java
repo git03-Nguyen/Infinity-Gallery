@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.optionprivacy;
+package edu.team08.infinitegallery.privacy;
 
 import android.util.Log;
 

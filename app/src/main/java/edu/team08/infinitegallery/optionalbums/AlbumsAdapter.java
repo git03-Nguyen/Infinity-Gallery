@@ -1,39 +1,19 @@
 package edu.team08.infinitegallery.optionalbums;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.util.DisplayMetrics;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.CheckBox;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.util.List;
 
-import edu.team08.infinitegallery.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
-import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
 // TODO: implement albums adapter
 public class AlbumsAdapter extends BaseAdapter {

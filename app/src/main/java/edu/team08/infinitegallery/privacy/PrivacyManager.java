@@ -1,11 +1,10 @@
-package edu.team08.infinitegallery.optionprivacy;
+package edu.team08.infinitegallery.privacy;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 

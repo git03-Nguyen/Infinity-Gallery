@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import edu.team08.infinitegallery.MainActivity;
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.R;
 
 public class SettingsActivity extends AppCompatActivity {

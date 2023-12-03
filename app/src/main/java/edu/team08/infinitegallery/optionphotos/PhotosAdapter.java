@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +23,16 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import edu.team08.infinitegallery.MainActivity;
+import edu.team08.infinitegallery.main.MainActivity;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.favorite.FavoriteActivity;
-import edu.team08.infinitegallery.optionalbums.AlbumsAdapter;
+import edu.team08.infinitegallery.favorites.FavoriteActivity;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
-import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
-import edu.team08.infinitegallery.optionprivacy.SinglePrivacyActivity;
+import edu.team08.infinitegallery.privacy.PrivacyActivity;
+import edu.team08.infinitegallery.privacy.SinglePrivacyActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
@@ -43,6 +41,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private SparseBooleanArray selectedItemsIds;
     private List<File> allPhotos;
     private final int spanCount;
+    private boolean selectionMode;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -71,6 +70,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
+        this.selectionMode = false;
     }
 
     @NonNull
@@ -97,30 +97,34 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 .load(photo)
                 .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
+
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: start fullScreenPhoto activity, sending the photo's absolutePath.
-                // TODO: (!) remember to check if it's exist or not
-                String[] photoPaths = new String[allPhotos.size()];
-                for (int i = 0; i < photoPaths.length; i++) {
-                    photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                if (!selectionMode) {
+                    String[] photoPaths = new String[allPhotos.size()];
+                    for (int i = 0; i < photoPaths.length; i++) {
+                        photoPaths[i] = allPhotos.get(i).getAbsolutePath();
+                    }
+                    Intent myIntent = null;
+                    if (context instanceof MainActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    } else if (context instanceof PrivacyActivity) {
+                        myIntent = new Intent(context, SinglePrivacyActivity.class);
+                    } else if (context instanceof SingleAlbumActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    } else if (context instanceof FavoriteActivity) {
+                        myIntent = new Intent(context, SinglePhotoActivity.class);
+                    }
+                    if (myIntent != null) {
+                        myIntent.putExtra("photoPaths", photoPaths);
+                        myIntent.putExtra("currentPosition", position);
+                        startActivity(context, myIntent, null);
+                    }
+                } else {
+                    toggleSelection(position);
                 }
-                Intent myIntent = null;
-                if (context instanceof MainActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } else if (context instanceof PrivacyActivity) {
-                    myIntent = new Intent(context, SinglePrivacyActivity.class);
-                } else if (context instanceof SingleAlbumActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                } else if (context instanceof FavoriteActivity) {
-                    myIntent = new Intent(context, SinglePhotoActivity.class);
-                }
-                if (myIntent != null) {
-                    myIntent.putExtra("photoPaths", photoPaths);
-                    myIntent.putExtra("currentPosition", position);
-                    startActivity(context, myIntent, null);
-                }
+
             }
         });
 
@@ -158,15 +162,18 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.txtSizeAndDateImage.append(sdf.format(photo.lastModified()));
         }
 
-
         if(selectedItemsIds.get(position)) {
-            holder.itemView.setBackgroundColor(0x9934B5E4);
+            holder.itemView.setBackgroundColor(0x993BF566);
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setChecked(true);
+            // make the holder.imageItem a bit darker
+            //holder.imageItem.setColorFilter(Color.argb(150, 54, 171, 81));
+            holder.imageItem.setColorFilter(Color.argb(150, 100, 100, 100));
         }
         else {
             holder.checkbox.setVisibility(View.GONE);
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            holder.imageItem.clearColorFilter();
         }
     }
 
@@ -174,4 +181,40 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     public int getItemCount() {
         return allPhotos.size();
     }
+
+    public void toggleSelectionMode() {
+        this.selectionMode = !this.selectionMode;
+        removeAllSelections();
+    }
+
+    public boolean getSelectionMode() {
+        return this.selectionMode;
+    }
+
+    public void toggleSelection(int position) {
+        if (selectedItemsIds.get(position)) {
+            selectedItemsIds.delete(position);
+        } else {
+            selectedItemsIds.put(position, true);
+        }
+        notifyItemChanged(position);
+        ((MainCallbacks) context).onEmitMsgFromFragToMain("NUMBER OF SELECTIONS", String.valueOf(getSelectionsCount()));
+    }
+
+    public void removeAllSelections() {
+        selectedItemsIds.clear();
+        notifyDataSetChanged();
+    }
+
+    //Get total selected count
+    public int getSelectionsCount() {
+        return selectedItemsIds.size();
+    }
+
+    //Return all selected ids
+    public SparseBooleanArray getSelectedIds() {
+        return selectedItemsIds;
+    }
+
+
 }

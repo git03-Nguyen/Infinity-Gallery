@@ -11,9 +11,9 @@
         <item name="colorSecondaryVariant">#FF018786</item>
         <item name="colorOnSecondary">#FF000000</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">#FF3700B3</item>
-        <item name="android:windowLightStatusBar">true</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#ff303030</item>
         <!-- Text color secondary -->
         <item name="android:textColorSecondary">#DDDDDD</item>
 
@@ -51,6 +51,19 @@
         <item name="itemTextAppearanceActiveBoldEnabled">false</item>
         <item name="labelVisibilityMode">labeled</item>
         <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="MyIconButtonCancelStyle" parent="Widget.Material3.Button.IconButton" >
+        <item name="icon">@drawable/ic_close_24</item>
+        <item name="endIconCheckable">false</item>
+        <item name="iconTint">?attr/colorSecondary</item>
+    </style>
+
+    <style name="Theme.MyTheme.AllPhotosTheme" parent="Theme.MyTheme">
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+
     </style>
 
 </resources>
