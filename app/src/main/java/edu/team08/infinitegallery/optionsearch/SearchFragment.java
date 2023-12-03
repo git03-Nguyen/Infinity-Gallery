@@ -28,6 +28,7 @@ import java.util.List;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.StringUtils;
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,6 +94,7 @@ public class SearchFragment extends Fragment {
         super.onResume();
         photoList = null;
         performSearch(searchView.getQuery().toString());
+        ((MainActivity) context).changeStatusBar();
     }
     private void performSearch(String query) {
 

@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
-	<!-- Other permissions... -->
+    <!-- Other permissions... -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -36,20 +36,20 @@
             android:launchMode="singleTop"
             android:parentActivityName=".trashbin.TrashBinActivity" />
         <activity
-            android:name=".favorite.FavoriteActivity"
+            android:name=".favorites.FavoriteActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
             android:name=".singlephoto.SinglePhotoActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".optionprivacy.SinglePrivacyActivity"
+            android:name=".privacy.SinglePrivacyActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".optionprivacy.PrivacyActivity" />
+            android:parentActivityName=".privacy.PrivacyActivity" />
         <activity
             android:name=".singlephoto.edit.EditPhotoActivity"
             android:exported="false"
@@ -59,30 +59,35 @@
             android:name=".trashbin.TrashBinActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".optionprivacy.PrivacyActivity"
+            android:name=".privacy.PrivacyActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".optionprivacy.PrivacyLoginActivity"
+            android:name=".privacy.PrivacyLoginActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".optionprivacy.PrivacySignupActivity"
+            android:name=".privacy.PrivacySignupActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".optionprivacy.PrivacyForgetPassActivity"
+            android:name=".privacy.PrivacyForgetPassActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".main.MainActivity" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".main.MainActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

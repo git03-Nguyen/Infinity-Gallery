@@ -6,9 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,29 +15,24 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import edu.team08.infinitegallery.MainActivity;
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainActivity;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.favorite.FavoriteActivity;
-import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
-import edu.team08.infinitegallery.optionalbums.AlbumsAdapter;
+import edu.team08.infinitegallery.favorites.FavoriteActivity;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
-import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
-import edu.team08.infinitegallery.optionprivacy.SinglePrivacyActivity;
+import edu.team08.infinitegallery.privacy.PrivacyActivity;
+import edu.team08.infinitegallery.privacy.SinglePrivacyActivity;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
@@ -170,13 +163,17 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         }
 
         if(selectedItemsIds.get(position)) {
-            holder.itemView.setBackgroundColor(0x9934B5E4);
+            holder.itemView.setBackgroundColor(0x993BF566);
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setChecked(true);
+            // make the holder.imageItem a bit darker
+            //holder.imageItem.setColorFilter(Color.argb(150, 54, 171, 81));
+            holder.imageItem.setColorFilter(Color.argb(150, 100, 100, 100));
         }
         else {
             holder.checkbox.setVisibility(View.GONE);
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            holder.imageItem.clearColorFilter();
         }
     }
 

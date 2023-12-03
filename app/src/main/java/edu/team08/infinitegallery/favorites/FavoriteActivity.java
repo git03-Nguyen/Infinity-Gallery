@@ -1,8 +1,5 @@
-package edu.team08.infinitegallery.favorite;
+package edu.team08.infinitegallery.favorites;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,18 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
-import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
-import edu.team08.infinitegallery.favorite.FavoriteActivity;
-import edu.team08.infinitegallery.favorite.FavoriteManager;
 
 public class FavoriteActivity extends AppCompatActivity implements MainCallbacks {
     private static int spanCount = 0;

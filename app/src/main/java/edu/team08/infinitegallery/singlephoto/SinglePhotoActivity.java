@@ -1,6 +1,5 @@
 
 package edu.team08.infinitegallery.singlephoto;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -8,15 +7,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
@@ -29,9 +23,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.favorite.FavoriteManager;
+import edu.team08.infinitegallery.favorites.FavoriteManager;
 
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
@@ -39,8 +33,7 @@ import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
-import edu.team08.infinitegallery.optionprivacy.PrivacyManager;
-import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
+import edu.team08.infinitegallery.privacy.PrivacyManager;
 
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {

@@ -7,87 +7,131 @@
     android:orientation="vertical"
     tools:context=".optionphotos.PhotosFragment" >
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarPhotos"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        app:title="November 09, 2023"
-        app:titleMarginStart="10dp"
-        app:menu="@menu/menu_toolbar_photos" />
+        android:layout_height="match_parent" >
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarPhotosSelection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:visibility="gone"
-        app:contentInsetStart="0dp">
+        <ViewSwitcher
+            android:id="@+id/viewSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTurnOffSelectionMode"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            style="@style/MyIconButtonCancelStyle" />
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center" >
 
-        <TextView
-            android:id="@+id/txtNumberOfSelected"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:text="Selected 0"
-            style="@style/TextAppearance.AppCompat.Title" />
+                <ImageView
+                    android:layout_marginTop="-100dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:src="@drawable/img_image_empty" />
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/checkboxAll"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="No item"
+                    android:textSize="16sp"
+                    android:textColor="?colorSecondary" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="We couldn't find any photos on your device"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recViewPhotos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </ViewSwitcher>
+
+        <FrameLayout
+            android:id="@+id/toolbarFrameLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp" />
+            android:background="@drawable/bg_gradient_black_for_all_photos_status_bar"
+            android:clickable="false"
+            android:focusable="false"
+            >
 
-    </androidx.appcompat.widget.Toolbar>
-
-    <ViewSwitcher
-        android:id="@+id/viewSwitcher"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center" >
-
-            <ImageView
-                android:layout_marginTop="-100dp"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:src="@drawable/img_image_empty" />
-
-            <TextView
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarPhotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="No item"
-                android:textSize="16sp"
-                android:textColor="?colorSecondary" />
+                android:background="#00000000"
+                app:titleTextColor="@color/white"
+                android:theme="@style/Theme.MyTheme.AllPhotosTheme"
+                app:menu="@menu/menu_toolbar_photos"
+                android:visibility="visible"
+                app:contentInsetStart="10dp">
 
-            <TextView
+                <TextView
+                    android:id="@+id/txtPhotosTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:text="December 03, 2023"
+                    android:textColor="@color/white"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"/>
+
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarPhotosSelection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="We couldn't find any photos on your device"
-                android:textSize="14sp" />
+                android:theme="@style/Theme.MyTheme.AllPhotosTheme"
+                android:background="#00000000"
+                android:visibility="gone"
+                app:contentInsetStart="0dp" >
 
-        </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTurnOffSelectionMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    style="@style/MyIconButtonCancelStyle" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewPhotos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+                <TextView
+                    android:id="@+id/txtNumberOfSelected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:text="Selected 0"
+                    android:textColor="@color/white"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="2"/>
 
-    </ViewSwitcher>
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkboxAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:buttonTint="@color/white"/>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+
 
 
 

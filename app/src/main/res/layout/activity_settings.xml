@@ -33,30 +33,6 @@
             android:text="Dark Mode"
             android:textSize="18sp" />
 
-        <LinearLayout
-            android:id="@+id/relChange"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp">
-
-            <TextView
-                android:id="@+id/changeTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Change time lapse slideshow "
-                android:textColor="?attr/colorSecondary"
-                android:textSize="18sp"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:id="@+id/timeSlideshow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="After 2 seconds"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
