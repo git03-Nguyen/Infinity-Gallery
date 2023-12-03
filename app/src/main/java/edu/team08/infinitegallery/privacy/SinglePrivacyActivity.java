@@ -24,7 +24,6 @@ public class SinglePrivacyActivity extends AppCompatActivity {
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
     private String[] privatePathList;
-
     //on- methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +60,7 @@ public class SinglePrivacyActivity extends AppCompatActivity {
 
             return true;
         });
+
 
         setSupportActionBar(findViewById(R.id.topToolbarPhoto));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

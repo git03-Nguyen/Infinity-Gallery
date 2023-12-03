@@ -126,10 +126,13 @@ public class PrivacyLoginActivity extends AppCompatActivity {
                 getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         _password = mPref.getString(PREF_PASS_NAME, null);
+        //TODO: delete  this
+        Log.d("PASSWORD_TAG", "Cleared password: " + mPref.getString("PASS", null));
 
         //always correct if there is no password yet
-        if (input_password == null)
+        if (_password == null || input_password.equals("null"))
         {
+            Log.d("PASSWORD_TAG", "The password is null");
             return true;
         }
 

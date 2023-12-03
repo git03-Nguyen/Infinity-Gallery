@@ -1,8 +1,11 @@
 package edu.team08.infinitegallery.privacy;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -91,7 +94,15 @@ public class PrivacyActivity extends AppCompatActivity {
         } else if (itemId == R.id.privacymenu_ResetPassword) {
             Intent myIntent = new Intent(PrivacyActivity.this, PrivacySignupActivity.class);
             startActivity(myIntent, null);
-        } else if (itemId == R.id.privacymenu_DeleteAll) {
+        }
+//        else if (itemId == R.id.privacymenu_ClearPassword) {
+//            SharedPreferences mPref = getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = mPref.edit();
+//            editor.putString("PASS", "null");
+//            editor.commit();
+//
+//        }
+        else if (itemId == R.id.privacymenu_DeleteAll) {
             this.deleteAllPrivateFiles();
         } else if (itemId == R.id.privacymenu_Settings) {
             Intent myIntent = new Intent(PrivacyActivity.this, SettingsActivity.class);
