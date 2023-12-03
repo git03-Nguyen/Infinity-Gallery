@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
@@ -64,13 +65,14 @@ public class AlbumsFragment extends Fragment {
         Toolbar toolbar = rootView.findViewById(R.id.toolbarAlbums);
 
         toolbar.setOnMenuItemClickListener(item -> {
-            Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             int itemId = item.getItemId();
             if (itemId == R.id.menuAlbumsSettings) {
                 Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(myIntent, null);
             } else if (itemId == R.id.menuAlbumsAdd) {
                 addNewAlbum();
+            } else {
+                Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
             return true;
         });
@@ -146,6 +148,7 @@ public class AlbumsFragment extends Fragment {
         super.onResume();
         this.albumFolders = getAllAlbumFolders();
         displayFolderAlbums();
+        ((MainActivity) context).changeStatusBar();
     }
 
     public AlbumFolder[] getAllAlbumFolders() {

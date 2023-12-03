@@ -24,6 +24,7 @@ import edu.team08.infinitegallery.favorites.FavoriteActivity;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
 
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.privacy.PrivacyActivity;
 import edu.team08.infinitegallery.privacy.PrivacyLoginActivity;
 
@@ -123,6 +124,7 @@ public class MoreFragment extends Fragment {
         super.onResume();
         favText.setText(String.valueOf(getPhotosSize("favorite.db", "FAVORITE")) + " photos");
         trashText.setText(String.valueOf(getPhotosSize("trash_bin.db", "TRASH_BIN")) + " photos");
+        ((MainActivity) context).changeStatusBar();
     }
 
     public int getPhotosSize(String dbName, String table) {

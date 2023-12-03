@@ -11,6 +11,7 @@ import static android.os.Build.VERSION_CODES;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,14 +19,17 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -70,7 +74,23 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     protected void onResume() {
         super.onResume();
-        scanMediaOnStorage(null);
+        runOnUiThread(() -> {
+            scanMediaOnStorage(null);
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        runOnUiThread(() -> {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
+                getWindow().getDecorView().setSystemUiVisibility(0);
+            } else {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+        });
     }
 
     private void initApp() {
@@ -121,6 +141,24 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             return true;
         });
 
+    }
+
+    public void changeStatusBar() {
+        runOnUiThread(() -> {
+            if (currentFragment instanceof PhotosFragment) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                getWindow().getDecorView().setSystemUiVisibility(0);
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
+                    getWindow().getDecorView().setSystemUiVisibility(0);
+                } else {
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                }
+            }
+        });
     }
 
     private void setSelectionFeaturesForAllPhotos() {

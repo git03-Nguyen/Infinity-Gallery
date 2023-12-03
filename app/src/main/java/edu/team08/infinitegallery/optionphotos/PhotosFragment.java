@@ -1,8 +1,10 @@
 package edu.team08.infinitegallery.optionphotos;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +13,10 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.widget.Toolbar;
@@ -21,11 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.color.MaterialColorUtilitiesHelper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
@@ -38,10 +45,12 @@ public class PhotosFragment extends Fragment {
     PhotosAdapter photosAdapter;
     ViewSwitcher viewSwitcher;
     Toolbar toolbar;
+    TextView txtPhotosTitle;
     Toolbar selectionToolbar;
     MaterialCheckBox checkBoxAll;
     MaterialButton btnTurnOffSelectionMode;
     TextView txtNumberOfSelectedFiles;
+    FrameLayout frameLayoutToolbar;
 
     public PhotosFragment(Context context) {
         this.context = context;
@@ -51,9 +60,12 @@ public class PhotosFragment extends Fragment {
         return new PhotosFragment(context);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        ((MainActivity) context).getWindow().setStatusBarColor(Color.TRANSPARENT);
+
     }
 
     @Override
@@ -63,6 +75,7 @@ public class PhotosFragment extends Fragment {
         viewSwitcher = photosFragment.findViewById(R.id.viewSwitcher);
 
         // TODO: update functionalities in toolbar
+        txtPhotosTitle = photosFragment.findViewById(R.id.txtPhotosTitle);
         toolbar = photosFragment.findViewById(R.id.toolbarPhotos);
         toolbar.setOnMenuItemClickListener(item -> {
             int itemId = item.getItemId();
@@ -95,6 +108,17 @@ public class PhotosFragment extends Fragment {
             return true;
         });
 
+        frameLayoutToolbar = photosFragment.findViewById(R.id.toolbarFrameLayout);
+        // status bar height
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        frameLayoutToolbar.setPadding(0, statusBarHeight, 0, 0);
+//        Toast.makeText(context, statusBarHeight, Toast.LENGTH_SHORT).show();
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) frameLayoutToolbar.getLayoutParams();
+//        params.(0, statusBarHeight, 0, 0);
         selectionToolbar = photosFragment.findViewById(R.id.toolbarPhotosSelection);
         txtNumberOfSelectedFiles = photosFragment.findViewById(R.id.txtNumberOfSelected);
         btnTurnOffSelectionMode = photosFragment.findViewById(R.id.btnTurnOffSelectionMode);
@@ -139,6 +163,13 @@ public class PhotosFragment extends Fragment {
         super.onResume();
         readAllImages();
         showAllPictures();
+        ((MainActivity) context).changeStatusBar();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
     private void readAllImages() {
@@ -177,12 +208,12 @@ public class PhotosFragment extends Fragment {
             photosRecView.setAdapter(photosAdapter);
             photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
             setSpanSize();
-            toolbar.setTitle("November 29, 2023"); // TODO: set by the first image on the window view
+            this.txtPhotosTitle.setText("December 03, 2023"); // TODO: set by the first image on the window view
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-            toolbar.setTitle("");
+            this.txtPhotosTitle.setText("");
         }
     }
 
