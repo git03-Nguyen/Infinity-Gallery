@@ -1,20 +1,15 @@
-package edu.team08.infinitegallery.favorite;
+package edu.team08.infinitegallery.favorites;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class FavoriteManager {
     int spanCount = 4;
@@ -35,6 +30,11 @@ public class FavoriteManager {
         if (databaseExists(FAVORITE_DB_NAME)) {
             SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                     context.getDatabasePath(FAVORITE_DB_NAME), null);
+
+            // Create the "favor" table if it doesn't exist
+            db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
+                    + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT)");
+
             // Query all paths from the "FAVORITE" table
             Cursor cursor = db.query("FAVORITE", new String[]{"PATH"}, null, null, null, null, null);
 
@@ -59,10 +59,6 @@ public class FavoriteManager {
         // Create the database
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                 context.getDatabasePath(FAVORITE_DB_NAME), null);
-
-        // Create the "favor" table if it doesn't exist
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + FAVORITE_TABLE_NAME
-                + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, PATH TEXT)");
 
         // Close the database
         db.close();

@@ -1,0 +1,131 @@
+package edu.team08.infinitegallery;
+
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
+import android.widget.Toast;
+
+import edu.team08.infinitegallery.main.MainActivity;
+
+public class SplashScreen extends AppCompatActivity {
+    private final int PERMISSIONS_REQUEST_CODE_1  = 100;
+    private final int PERMISSIONS_REQUEST_CODE_2 = 2296;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
+        requestAppPermissions();
+    }
+
+    private void requestAppPermissions() {
+        if (checkAppPermission()) return;
+        
+        String readPermission = (SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
+        String writePermission = MANAGE_EXTERNAL_STORAGE;
+        String internetPermission = INTERNET;
+        String networkPermission = ACCESS_NETWORK_STATE;
+
+        String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
+        ActivityCompat.requestPermissions(SplashScreen.this, permissions, PERMISSIONS_REQUEST_CODE_1);
+
+    }
+
+    private boolean checkAppPermission() {
+        boolean result = false;
+        String readPermission = (SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
+        String writePermission = MANAGE_EXTERNAL_STORAGE;
+        String internetPermission = INTERNET;
+        String networkPermission = ACCESS_NETWORK_STATE;
+
+        boolean isReadImagesAllowed = ContextCompat.checkSelfPermission(this, readPermission) == PackageManager.PERMISSION_GRANTED;
+        boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
+        boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
+        boolean isNetworkStateAllowed = ContextCompat.checkSelfPermission(this, networkPermission) == PackageManager.PERMISSION_GRANTED;
+        
+        result = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
+        
+        if (SDK_INT < 34) {
+            result = result && isWriteImagesAllowed;
+        }
+
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            result = result & Environment.isExternalStorageManager();
+        }
+        
+        if (result) {
+            Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+            startApplication();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_CODE_1) {
+            boolean successful = grantResults.length > 0;
+            successful = successful & (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+
+            if (successful) {
+                // Permission to copy, move, delete, edit files on external storage - (!) new for Android 11+
+                if (SDK_INT >= Build.VERSION_CODES.R) {
+                    try {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                        intent.addCategory("android.intent.category.DEFAULT");
+                        intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
+                        startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
+                    } catch (Exception e) {
+
+                    }
+                } else {
+                    startApplication();
+                }
+            } else {
+                Toast.makeText(SplashScreen.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PERMISSIONS_REQUEST_CODE_2) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (!Environment.isExternalStorageManager()) {
+                    Toast.makeText(this, "Permission to access files has been denied! Stopping app...", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+                    startApplication();
+                }
+            }
+        }
+    }
+
+    private void startApplication() {
+        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+}

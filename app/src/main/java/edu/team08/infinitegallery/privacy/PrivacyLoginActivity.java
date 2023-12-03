@@ -1,6 +1,5 @@
-package edu.team08.infinitegallery.optionprivacy;
+package edu.team08.infinitegallery.privacy;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,8 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
-import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
 public class PrivacyLoginActivity extends AppCompatActivity {
 

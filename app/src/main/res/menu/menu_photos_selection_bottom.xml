@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/multipleHide"
+        android:icon="@drawable/ic_photo_hide_24"
+        android:title="Hide"/>
+    <item
+        android:id="@+id/multipleMoveTrash"
+        android:icon="@drawable/ic_photo_delete_24"
+        android:title="Delete"/>
+    <item
+        android:id="@+id/multipleShare"
+        android:icon="@drawable/ic_photo_share_24"
+        android:title="Share"/>
+    <item
+        android:id="@+id/multipleMore"
+        android:icon="@drawable/ic_photo_more_24"
+        android:title="More">
+<!--                <menu>-->
+<!--                    <item-->
+<!--                        android:id="@+id/copyTo"-->
+<!--                        android:title="Copy to" />-->
+<!--                    <item-->
+<!--                        android:id="@+id/moveTo"-->
+<!--                        android:title="Move to" />-->
+<!--                </menu>-->
+    </item>
+</menu>
