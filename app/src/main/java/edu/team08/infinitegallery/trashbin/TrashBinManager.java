@@ -43,7 +43,7 @@ public class TrashBinManager {
         testDatabaseOperations();
     }
 
-    private void moveFile(File src, File dst) throws IOException {
+    public void moveFile(File src, File dst) throws IOException {
         if (dst.exists()) {
             // If the destination file already exists, rename it with a postfix
             dst = getUniqueDestination(dst);

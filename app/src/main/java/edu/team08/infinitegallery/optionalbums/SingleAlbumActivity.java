@@ -90,7 +90,9 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             Intent myIntent = new Intent(SingleAlbumActivity.this, SettingsActivity.class);
             startActivity(myIntent, null);
         } else if (itemId == R.id.addPhotos) {
-
+            Intent myIntent = new Intent(SingleAlbumActivity.this, AddPhotoActivity.class);
+            myIntent.putExtra("folderPath", folderPath);
+            startActivity(myIntent, null);
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);

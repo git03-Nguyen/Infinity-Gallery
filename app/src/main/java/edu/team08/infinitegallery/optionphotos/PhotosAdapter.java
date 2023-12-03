@@ -30,6 +30,7 @@ import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteActivity;
+import edu.team08.infinitegallery.optionalbums.AddPhotoActivity;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.privacy.PrivacyActivity;
 import edu.team08.infinitegallery.privacy.SinglePrivacyActivity;
@@ -140,6 +141,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             ((SingleAlbumActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         } else if (context instanceof FavoriteActivity) {
             ((FavoriteActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        } else if (context instanceof AddPhotoActivity) {
+            ((AddPhotoActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         }
         // Depend on how many columns of images are displayed in view
         if (spanCount != 1) {
