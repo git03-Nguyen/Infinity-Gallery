@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,6 @@ import android.widget.ViewSwitcher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,8 +32,7 @@ import java.util.Map;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.main.MainActivity;
-import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
-import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class AlbumsFragment extends Fragment {
     private Context context;

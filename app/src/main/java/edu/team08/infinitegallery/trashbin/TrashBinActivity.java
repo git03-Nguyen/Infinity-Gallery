@@ -19,7 +19,7 @@ import java.util.Arrays;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;

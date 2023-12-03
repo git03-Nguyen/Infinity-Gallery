@@ -1,35 +1,21 @@
 package edu.team08.infinitegallery.main;
 
-import static android.Manifest.permission.ACCESS_NETWORK_STATE;
-import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.READ_MEDIA_IMAGES;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES;
-
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,7 +32,7 @@ import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
-import edu.team08.infinitegallery.optionsettings.AppConfig;
+import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
@@ -83,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     protected void onPause() {
         super.onPause();
         runOnUiThread(() -> {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
                 getWindow().getDecorView().setSystemUiVisibility(0);
             } else {
@@ -143,15 +127,24 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     }
 
+    public static void setWindowFlag(Activity activity, final int bits, boolean on) {
+        Window win = activity.getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
+    }
+
     public void changeStatusBar() {
         runOnUiThread(() -> {
             if (currentFragment instanceof PhotosFragment) {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                getWindow().getDecorView().setSystemUiVisibility(0);
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
             } else {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
                 if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
                     getWindow().getDecorView().setSystemUiVisibility(0);
                 } else {

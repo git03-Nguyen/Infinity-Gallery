@@ -20,6 +20,8 @@
         android:layout_height="wrap_content"
         android:text="Favorites"
         android:paddingStart="5dp"
+        android:maxLines="1"
+        android:breakStrategy="simple"
         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
     <TextView
