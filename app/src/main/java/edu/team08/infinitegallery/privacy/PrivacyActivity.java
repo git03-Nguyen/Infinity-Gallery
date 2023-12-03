@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.optionprivacy;
+package edu.team08.infinitegallery.privacy;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -21,7 +21,6 @@ import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PrivacyActivity extends AppCompatActivity {
     //adapter, manager usage list

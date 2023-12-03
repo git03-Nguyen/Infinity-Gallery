@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.widget.Toolbar;
@@ -27,8 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.team08.infinitegallery.MainActivity;
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 
@@ -92,7 +90,7 @@ public class PhotosFragment extends Fragment {
                 spanCount = 5;
                 setSpanSize();
             } else {
-                Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
             return true;
         });

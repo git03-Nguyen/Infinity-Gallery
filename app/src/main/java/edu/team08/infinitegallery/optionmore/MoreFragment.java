@@ -20,12 +20,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.favorite.FavoriteActivity;
-import edu.team08.infinitegallery.favorite.FavoriteManager;
+import edu.team08.infinitegallery.favorites.FavoriteActivity;
+import edu.team08.infinitegallery.favorites.FavoriteManager;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
 
-import edu.team08.infinitegallery.optionprivacy.PrivacyActivity;
-import edu.team08.infinitegallery.optionprivacy.PrivacyLoginActivity;
+import edu.team08.infinitegallery.privacy.PrivacyActivity;
+import edu.team08.infinitegallery.privacy.PrivacyLoginActivity;
 
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
@@ -128,15 +128,28 @@ public class MoreFragment extends Fragment {
     public int getPhotosSize(String dbName, String table) {
         int size = 0;
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(dbName), null);
-        // Query the database to get all favorite file names
-        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + table, null);
-        if (cursor.getCount() > 0){
-            cursor.moveToFirst();
-            size = cursor.getInt(0);
-        }
-        cursor.close();
-        db.close();
 
+        // Check if the table exists
+        if (tableExists(db, table)) {
+            // Query the database to get the count of all records in the table
+            Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + table, null);
+
+            // Move to the first row of the result set
+            if (cursor.moveToFirst()) {
+                size = cursor.getInt(0); // Get the count from the first column
+            }
+            cursor.close();
+        }
+        db.close();
         return size;
     }
+
+    // Helper method to check if a table exists in the database
+    private boolean tableExists(SQLiteDatabase db, String tableName) {
+        Cursor cursor = db.rawQuery("SELECT DISTINCT tbl_name FROM sqlite_master WHERE tbl_name = ?", new String[]{tableName});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        return exists;
+    }
+
 }

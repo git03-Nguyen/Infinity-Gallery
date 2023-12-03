@@ -1,14 +1,11 @@
 package edu.team08.infinitegallery.optionalbums;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,11 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.optionsettings.SettingsActivity;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class SingleAlbumActivity extends AppCompatActivity implements MainCallbacks {
     int spanCount = 4;

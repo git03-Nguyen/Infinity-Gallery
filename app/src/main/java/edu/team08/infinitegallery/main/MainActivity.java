@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery;
+package edu.team08.infinitegallery.main;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -33,20 +33,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.File;
 import java.io.IOException;
 
-import edu.team08.infinitegallery.favorite.FavoriteManager;
+import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.favorites.FavoriteManager;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.optionalbums.AlbumsFragment;
 import edu.team08.infinitegallery.optionmore.MoreFragment;
 import edu.team08.infinitegallery.optionphotos.PhotosFragment;
-import edu.team08.infinitegallery.optionprivacy.PrivacyManager;
+import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
 import edu.team08.infinitegallery.optionsettings.AppConfig;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
-    private final int PERMISSIONS_REQUEST_CODE_1  = 100;
-    private final int PERMISSIONS_REQUEST_CODE_2 = 2296;
     private static final int SETTINGS_REQUEST_CODE = 1;
     private PhotosFragment photosFragment;
     private AlbumsFragment albumsFragment;
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        requestPermissions();
         initApp();
     }
 
@@ -73,81 +71,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     protected void onResume() {
         super.onResume();
         scanMediaOnStorage(null);
-    }
-
-
-
-    private void requestPermissions() {
-        String readPermission = (SDK_INT >= VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
-        String writePermission = WRITE_EXTERNAL_STORAGE;
-        String internetPermission = INTERNET;
-        String networkPermission = ACCESS_NETWORK_STATE;
-
-        Boolean isReadImagesAllowed = ContextCompat.checkSelfPermission(this, readPermission) == PackageManager.PERMISSION_GRANTED;
-        Boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
-        Boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
-        Boolean isNetworkStateAllowed = ContextCompat.checkSelfPermission(this, networkPermission) == PackageManager.PERMISSION_GRANTED;
-        Boolean successful = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
-        if (SDK_INT < 34) {
-            successful = successful && isWriteImagesAllowed;
-        }
-
-        if (successful){
-            Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
-        } else {
-            String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
-            ActivityCompat.requestPermissions(MainActivity.this, permissions, PERMISSIONS_REQUEST_CODE_1);
-        }
-
-        // Permission to copy, move, delete, edit files on external storage - (!) new for Android 11+
-        if (SDK_INT >= VERSION_CODES.R) {
-            if (Environment.isExternalStorageManager()) {return;}
-            try {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
-                startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
-            } catch (Exception e) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
-            }
-        } else {
-            //below android 11 - maybe WRITE_EXTERNAL_STORAGE
-
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_CODE_1) {
-            Boolean successful = grantResults.length > 0;
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    successful = false;
-                    break;
-                }
-            }
-            if (successful) {
-                Toast.makeText(MainActivity.this, "Permissions granted!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PERMISSIONS_REQUEST_CODE_2) {
-            if (SDK_INT >= VERSION_CODES.R) {
-                if (!Environment.isExternalStorageManager()) {
-                    Toast.makeText(this, "Permission to access files has been denied! Stopping app...", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-            }
-        }
     }
 
     private void initApp() {
@@ -228,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm Deletion",
-                "Are you sure to move this photo to the trash?",
+                "Are you sure to move ${n} photos to the trash?".replace("${n}", String.valueOf(files.length)),
                 new Runnable() {
 
                     @Override
@@ -257,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 "Confirm Hiding",
-                "Are you sure to move this photo to the privacy list ?",
+                "Are you sure to move ${n} photos to the privacy list?".replace("${n}", String.valueOf(files.length)),
                 new Runnable() {
                     @Override
                     public void run() {

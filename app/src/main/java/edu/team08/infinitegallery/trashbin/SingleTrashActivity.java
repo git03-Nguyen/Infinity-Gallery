@@ -15,7 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import edu.team08.infinitegallery.MainCallbacks;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
