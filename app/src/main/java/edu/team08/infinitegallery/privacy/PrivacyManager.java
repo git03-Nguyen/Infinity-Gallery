@@ -198,7 +198,7 @@ public class PrivacyManager {
     public void deletePermanent(File privateFile) {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(PRIVACY_DBNAME), null);
         db.delete(PRIVACY_TABLENAME,
-                "TRASH_NAME = ?", new String[]{privateFile.getName()}
+                "PHOTO_NAME = ?", new String[]{privateFile.getName()}
         );
         db.close();
 

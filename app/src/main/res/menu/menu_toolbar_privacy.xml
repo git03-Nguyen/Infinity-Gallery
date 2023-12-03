@@ -15,6 +15,9 @@
     <item
         android:id="@+id/privacymenu_ResetPassword"
         android:title="Reset Password" />
+    <item
+        android:id="@+id/privacymenu_ClearPassword"
+        android:title="Clear Password" />
 
     <item
         android:id="@+id/privacymenu_DeleteAll"
