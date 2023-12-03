@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.optionsettings;
+package edu.team08.infinitegallery.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;

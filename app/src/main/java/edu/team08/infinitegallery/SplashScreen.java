@@ -81,8 +81,13 @@ public class SplashScreen extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST_CODE_1) {
             boolean successful = grantResults.length > 0;
-            if (successful)
+            if (successful) {
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(SplashScreen.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
                 successful = successful && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            }
 
             if (successful) {
                 // Permission to copy, move, delete, edit files on external storage - (!) new for Android 11+
@@ -100,9 +105,6 @@ public class SplashScreen extends AppCompatActivity {
                 } else {
                     startApplication();
                 }
-            } else {
-                Toast.makeText(SplashScreen.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
-                finish();
             }
         }
     }

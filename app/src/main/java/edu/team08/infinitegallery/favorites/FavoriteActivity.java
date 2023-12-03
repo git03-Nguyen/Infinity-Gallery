@@ -17,7 +17,7 @@ import java.util.Arrays;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
-import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class FavoriteActivity extends AppCompatActivity implements MainCallbacks {
     private static int spanCount = 0;

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.widget.Toolbar;
@@ -26,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.color.MaterialColorUtilitiesHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ import java.util.List;
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class PhotosFragment extends Fragment {
     int spanCount = 4;

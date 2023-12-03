@@ -27,7 +27,7 @@
             android:name=".optionalbums.SingleAlbumActivity"
             android:exported="false" />
         <activity
-            android:name=".optionsettings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity

@@ -28,7 +28,7 @@ import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.privacy.PrivacyActivity;
 import edu.team08.infinitegallery.privacy.PrivacyLoginActivity;
 
-import edu.team08.infinitegallery.optionsettings.SettingsActivity;
+import edu.team08.infinitegallery.settings.SettingsActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class MoreFragment extends Fragment {
