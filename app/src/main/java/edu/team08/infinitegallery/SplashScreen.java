@@ -25,8 +25,8 @@ import android.widget.Toast;
 import edu.team08.infinitegallery.main.MainActivity;
 
 public class SplashScreen extends AppCompatActivity {
-    private final int PERMISSIONS_REQUEST_CODE_1  = 100;
-    private final int PERMISSIONS_REQUEST_CODE_2 = 2296;
+    private final int PERMISSIONS_REQUEST_CODE_1  = 1001;
+    private final int PERMISSIONS_REQUEST_CODE_2 = 1002;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +35,14 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void requestAppPermissions() {
-        if (checkAppPermission()) return;
+        if (checkAppPermission()) {
+            Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+            startApplication();
+            return;
+        }
         
         String readPermission = (SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
-        String writePermission = MANAGE_EXTERNAL_STORAGE;
+        String writePermission = WRITE_EXTERNAL_STORAGE;
         String internetPermission = INTERNET;
         String networkPermission = ACCESS_NETWORK_STATE;
 
@@ -48,12 +52,12 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private boolean checkAppPermission() {
-        boolean result = false;
         String readPermission = (SDK_INT >= Build.VERSION_CODES.TIRAMISU) ? READ_MEDIA_IMAGES : READ_EXTERNAL_STORAGE;
-        String writePermission = MANAGE_EXTERNAL_STORAGE;
+        String writePermission = WRITE_EXTERNAL_STORAGE;
         String internetPermission = INTERNET;
         String networkPermission = ACCESS_NETWORK_STATE;
 
+        boolean result = false;
         boolean isReadImagesAllowed = ContextCompat.checkSelfPermission(this, readPermission) == PackageManager.PERMISSION_GRANTED;
         boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
         boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
@@ -61,17 +65,12 @@ public class SplashScreen extends AppCompatActivity {
         
         result = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
         
-        if (SDK_INT < 34) {
+        if (SDK_INT < 29) {
             result = result && isWriteImagesAllowed;
         }
 
         if (SDK_INT >= Build.VERSION_CODES.R) {
-            result = result & Environment.isExternalStorageManager();
-        }
-        
-        if (result) {
-            Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
-            startApplication();
+            result = result && Environment.isExternalStorageManager();
         }
 
         return result;
@@ -82,7 +81,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSIONS_REQUEST_CODE_1) {
             boolean successful = grantResults.length > 0;
-            successful = successful & (grantResults[0] == PackageManager.PERMISSION_GRANTED);
+            if (successful)
+                successful = successful && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
 
             if (successful) {
                 // Permission to copy, move, delete, edit files on external storage - (!) new for Android 11+
@@ -93,7 +93,9 @@ public class SplashScreen extends AppCompatActivity {
                         intent.setData(Uri.parse(String.format("package:%s",getApplicationContext().getPackageName())));
                         startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
                     } catch (Exception e) {
-
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                        startActivityForResult(intent, PERMISSIONS_REQUEST_CODE_2);
                     }
                 } else {
                     startApplication();
