@@ -49,7 +49,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recViewPhotos"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                app:stackFromEnd="true"
+                />
 
         </ViewSwitcher>
 

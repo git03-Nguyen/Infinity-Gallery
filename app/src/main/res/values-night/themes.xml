@@ -13,9 +13,11 @@
         <!-- Status bar color. -->
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:statusBarColor">#ff303030</item>
+        <item name="android:statusBarColor">#0d0d0d</item>
         <!-- Text color secondary -->
         <item name="android:textColorSecondary">#DDDDDD</item>
+
+        <item name="android:colorBackground">#0d0d0d</item>
 
     </style>
 

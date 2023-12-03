@@ -203,7 +203,8 @@ public class PhotosFragment extends Fragment {
             }
             photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
             photosRecView.setAdapter(photosAdapter);
-            photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
+            photosRecView.setLayoutManager(gridLayoutManager);
             setSpanSize();
             this.txtPhotosTitle.setText("December 03, 2023"); // TODO: set by the first image on the window view
         } else {
