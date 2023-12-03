@@ -1,4 +1,4 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#80FFC0C0"/> <!-- semi-transparent light pink -->
+    <solid android:color="#60FFC0C0"/> <!-- semi-transparent light pink -->
     <corners android:radius="16dp"/> <!-- border-radius -->
 </shape>

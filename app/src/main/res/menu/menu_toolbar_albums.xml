@@ -17,10 +17,6 @@
         android:title="Select" />
 
     <item
-        android:id="@+id/menuAlbumsCollage"
-        android:title="Collage" />
-
-    <item
         android:id="@+id/menuAlbumsSortBy"
         android:title="Sort by" >
         <menu
@@ -35,22 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </item>
-
-    <item
-        android:id="@+id/menuAlbumsCreateVideo"
-        android:title="Create video" />
-
-    <item
-        android:id="@+id/menuAlbumsSlideshow"
-        android:title="Slideshow" />
-
-    <item
-        android:id="@+id/menuAlbumsExcludeAlbums"
-        android:title="Exclude albums" />
-
-    <item
-        android:id="@+id/menuAlbumsNewAlbum"
-        android:title="New album" />
 
     <item
         android:id="@+id/menuAlbumsSettings"
