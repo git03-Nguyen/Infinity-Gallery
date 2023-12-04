@@ -98,11 +98,11 @@ public class PrivacyLoginActivity extends AppCompatActivity {
                     input_password = "";
                 }
 
-                //TODO: check the password and redirect properly
                 if(isAuthorized()) {
                     Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyActivity.class);
                     startActivity(intent);
                     Toast.makeText(PrivacyLoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(PrivacyLoginActivity.this, "Login failed due to wrong password", Toast.LENGTH_SHORT).show();
 
@@ -116,6 +116,7 @@ public class PrivacyLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyForgetPassActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -125,19 +126,24 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         SharedPreferences mPref = this.
                 getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
-        _password = mPref.getString(PREF_PASS_NAME, null);
-        //TODO: delete  this
+        if(mPref.contains("PASS") == false) {
+            _password = null;
+            return true;
+        } else {
+            _password = mPref.getString(PREF_PASS_NAME, null);
+        }
         Log.d("PASSWORD_TAG", "Cleared password: " + mPref.getString("PASS", null));
 
+
         //always correct if there is no password yet
-        if (_password == null || input_password.equals("null"))
+        if (_password == null)
         {
             Log.d("PASSWORD_TAG", "The password is null");
             return true;
         }
 
         try {
-            if (PrivacyEncodingPassword.SHA256(input_password).equals(_password))
+            if (PrivacyEncoder.SHA256_hashing(input_password).equals(_password))
             {
                 return true;
             }
