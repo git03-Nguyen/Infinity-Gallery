@@ -103,6 +103,7 @@ public class PrivacyLoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyActivity.class);
                     startActivity(intent);
                     Toast.makeText(PrivacyLoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(PrivacyLoginActivity.this, "Login failed due to wrong password", Toast.LENGTH_SHORT).show();
 
