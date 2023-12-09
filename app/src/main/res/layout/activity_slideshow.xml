@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSlideshow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentInsetStart="30dp"
+        android:theme="@style/Theme.Material3.Dark"
+        app:title="Slide of ${AlbumName}"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/count"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:padding="15dp"/>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerImageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp" />
+
+</LinearLayout>

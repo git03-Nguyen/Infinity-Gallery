@@ -1,23 +1,38 @@
 package edu.team08.infinitegallery.settings;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
+import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 
 public class SettingsActivity extends AppCompatActivity {
     private SwitchMaterial nightModeSwitch, trashModeSwitch;
-    private TextView timeSlideShow;
+    private CardView slideshowCard;
+    private SeekBar durationBar;
+    private static int delayedValue = 1;
+    private TextView durationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +44,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         nightModeSwitch = findViewById(R.id.sNightMode);
         trashModeSwitch = findViewById(R.id.sTrashMode);
+        slideshowCard = findViewById(R.id.slideshow);
+        durationText = findViewById(R.id.durationText);
+        durationBar = findViewById(R.id.durationBar);
 
         String[] list = getResources().getStringArray(R.array.choice_items);
 
         nightModeSwitch.setChecked(AppConfig.getInstance(this).getNightMode());
         trashModeSwitch.setChecked(AppConfig.getInstance(this).getTrashMode());
-//        timeSlideShow.setText("After " + AppConfig.getInstance(this).getTimeLapse());
+        durationText.setText(AppConfig.getInstance(this).getTimeLapse() + "s");
+        durationBar.setProgress(AppConfig.getInstance(this).getTimeLapse());
 
         nightModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -45,6 +64,63 @@ public class SettingsActivity extends AppCompatActivity {
                         .startActivities();
             }
         });
+
+        durationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                //delayedValue = progress;
+                AppConfig.getInstance(SettingsActivity.this).setTimeLapse(progress);
+                durationText.setText(String.valueOf(progress) + "s");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        /*slideshowCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
+                View view = LayoutInflater.from(v.getRootView().getContext())
+                        .inflate(R.layout.slideshow_dialog, null, false);
+                RadioGroup durationGroup = view.findViewById(R.id.durRadioGroup);
+                // Set default check
+                //String radioId = "duration_" + durationText.getText();
+                // On check changed
+                durationGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                    if(checkedId == R.id.duration_1s){
+                        delayedValue = 1;
+                    } else if(checkedId == R.id.duration_2s){
+                        delayedValue = 2;
+                    } else if(checkedId == R.id.duration_3s){
+                        delayedValue = 3;
+                    } else if(checkedId == R.id.duration_4s){
+                        delayedValue = 4;
+                    } else if(checkedId == R.id.duration_5s) {
+                        delayedValue = 5;
+                    } else {
+                        delayedValue = 10;
+                    }
+                    durationText.setText(String.valueOf(delayedValue) + "s");
+                    Toast.makeText(v.getRootView().getContext(), "Duration" + String.valueOf(delayedValue) + "s", Toast.LENGTH_SHORT).show();
+                    Intent myIntent = new Intent(SettingsActivity.this, SlideShowActivity.class);
+                    myIntent.putExtra("delayedValue", delayedValue);
+                });
+                builder.setView(view);
+                builder.show();
+            }
+
+            private void showDurationDialog() {
+
+            }
+        });*/
     }
 
     @Override
