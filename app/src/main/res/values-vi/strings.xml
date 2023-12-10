@@ -1,4 +1,554 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="delete">Delete</string>
+    <string name="app_name">InfiniteGallery</string>
+    <string name="label_none">Không</string>
+    <string name="label_brush">Bút vẽ</string>
+    <string name="label_shape">Hình dạng</string>
+    <string name="label_oval">Hình oval</string>
+    <string name="label_rectangle">Hình chữ nhật</string>
+    <string name="label_line">Đường</string>
+    <string name="label_arrow">Mũi tên</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Cục tẩy</string>
+    <string name="label_eraser_mode">Chế độ tẩy</string>
+    <string name="label_text">Văn bản</string>
+    <string name="label_filter">Bộ lọc</string>
+    <string name="label_adjust">Chỉnh sửa</string>
+    <string name="msg_save_image">Bạn có muốn thoát mà không lưu hình ảnh không?</string>
+    <string name="app_intent_name">PhotoEditor</string>
+    <string name="msg_save_image_to_share">Vui lòng lưu hình ảnh để chia sẻ</string>
+    <string name="msg_share_image">Chia sẻ hình ảnh</string>
+    <string name="delete">Xóa</string>
+    <string name="save">Lưu</string>
+    <string name="dark_mode">Chế độ tối</string>
+    <string name="move_to_trash_when_delete">Chuyển đến thùng rác khi xóa</string>
+    <string name="language">Ngôn ngữ Tiếng Việt</string>
+    <string name="selected_photos">Đã chọn %1$d ảnh.</string>
+    <string name="no_item">Không có mục</string>
+    <string name="we_couldn_t_find_any_photos_on_your_device">Chúng tôi không thể tìm thấy bất kỳ ảnh nào trên thiết bị của bạn</string>
+    <string name="no_favorite_images">Không có hình ảnh yêu thích</string>
+    <string name="photos_you_liked_are_shown_here">Hình ảnh bạn thích được hiển thị ở đây</string>
+    <string name="no_item_found">Không tìm thấy mục</string>
+    <string name="the_photos_you_set_to_be_private_will_be_collected_here">Hình ảnh bạn đặt làm riêng tư sẽ được thu thập ở đây</string>
+    <string name="developed_by_infinity_team">Phát triển bởi Nhóm 11 - Infinity Team</string>
+    <string name="items_in_trash_will_be_removed_after_30_days">Các mục trong thùng rác sẽ bị xóa sau 30 ngày.</string>
+    <string name="the_photos_you_deleted_will_be_collected_here">Hình ảnh bạn đã xóa sẽ được thu thập ở đây</string>
+    <string name="done">Hoàn tất</string>
+    <string name="please_wait">Vui lòng đợi...</string>
+    <string name="we_couldn_t_find_any_albums_on_your_device">Chúng tôi không thể tìm thấy bất kỳ album nào trên thiết bị của bạn</string>
+    <string name="eraser_size">Kích thước cục tẩy</string>
+    <string name="favorites">Yêu thích</string>
+    <string name="_0_photos">0 ảnh</string>
+    <string name="privacy">Quyền riêng tư</string>
+    <string name="trash_bin">Thùng rác</string>
+    <string name="december_03_2023">03 tháng 12 năm 2023</string>
+    <string name="selected_0">Đã chọn 0</string>
+    <string name="found_nothing">Không tìm thấy gì</string>
+    <string name="sorry_we_couldn_t_find_any_matches_to_your_search">Xin lỗi, chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn</string>
+    <string name="brush">Bút vẽ</string>
+    <string name="opacity">Độ mờ</string>
+    <string name="shape">Hình dạng</string>
+    <string name="close">Đóng</string>
+    <string name="album_name">Tên album</string>
+    <string name="_29_days">29 ngày</string>
+    <string name="photo_s_information">Thông tin của ảnh</string>
+    <string name="size_and_date_of_image">Kích thước và Ngày của ảnh</string>
+    <string name="enter_the_saved_secure_question_and_answer_to_change_the_password">Nhập câu hỏi và câu trả lời bảo mật đã lưu để đổi mật khẩu</string>
+    <string name="asnwer">Câu trả lời</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="show">Hiển thị</string>
+    <string name="retype_new_password">Nhập lại mật khẩu mới</string>
+    <string name="apply_change">Áp dụng thay đổi</string>
+    <string name="please_fill_out_your_password_to_confirm_the_authentication">Vui lòng điền mật khẩu của bạn để xác nhận xác thực</string>
+    <string name="password">Mật khẩu</string>
+    <string name="login">Đăng nhập</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+    <string name="finding_other_methods">Đang tìm phương pháp khác?</string>
+    <string name="finger_print">Vân tay</string>
+    <string name="pattern">Mẫu</string>
+    <string name="answer">Câu trả lời</string>
+    <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Nhập câu hỏi và câu trả lời bảo mật mới của bạn, cùng với mật khẩu</string>
+    <string name="retype_password">Nhập lại mật khẩu</string>
+    <string name="sign_up">Đăng ký</string>
+
+    <string name="add_photos">Thêm ảnh</string>
+    <string name="photos">Ảnh</string>
+    <string name="albums">Album</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="more">Thêm</string>
+    <string name="hide">Ẩn</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="share">Chia sẻ</string>
+    <string name="reveal">Hiển thị</string>
+    <string name="add_new_albums">Thêm album mới</string>
+    <string name="camera">Máy ảnh</string>
+    <string name="select">Chọn</string>
+    <string name="sort_by">Sắp xếp theo</string>
+    <string name="columns">Cột</string>
+    <string name="settings">Cài đặt</string>
+    <string name="_2_columns">2 cột</string>
+    <string name="_3_columns">3 cột</string>
+    <string name="_4_columns">4 cột</string>
+    <string name="_5_columns">5 cột</string>
+    <string name="reveal_all">Hiển thị tất cả</string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="clear_password">Xóa mật khẩu</string>
+    <string name="delete_all_files">Xóa tất cả tệp</string>
+    <string name="view_as">Xem dưới dạng</string>
+    <string name="timeline">Dòng thời gian</string>
+    <string name="grid">Lưới</string>
+    <string name="rename">Đổi tên</string>
+    <string name="restore_all">Khôi phục tất cả</string>
+    <string name="empty_trash">Làm trống thùng rác</string>
+    <string name="restore">Khôi phục</string>
+
+    <string name="search_your_photos">Nhập nội dung tìm kiếm</string>
+    <string name="confirm_deletion_title">Xác Nhận Xóa</string>
+    <string name="confirm_deletion_message">Bạn có chắc chắn muốn di chuyển %1$d ảnh vào thùng rác không?</string>
+    <string name="confirm_deletion_one_photo_message">Bạn có chắc chắn muốn di chuyển ảnh này vào thùng rác không?</string>
+    <string name="confirm_dialog_yes">Có</string>
+    <string name="confirm_dialog_no">Không</string>
+    <string name="confirm_hiding_title">Xác nhận ẩn</string>
+    <string name="confirm_hiding_message">Bạn có chắc chắn muốn di chuyển ảnh này vào danh sách riêng tư không?</string>
+    <string name="title_october_15">Ngày 15 tháng 10, 2023</string>
+    <string name="subtitle_05_49_pm">05:49 CH</string>
+    <string name="add_to_album">Thêm vào %1$s</string>
+    <string name="confirm_move_photos">Bạn có chắc chắn muốn chuyển %1$d ảnh đến %2$s?</string>
+    <string name="move_photos">Di chuyển ảnh</string>
+    <string name="create_new_album">Tạo Alubm Mới</string>
+    <string name="create">Tạo</string>
+    <string name="cancel">Hủy</string>
+    <string name="num_photos">%1$d ảnh</string>
+    <string name="privacy_album">Riêng tư</string>
+    <string name="privacy_registration">Thiết lập Chế độ Riêng tư</string>
+    <string name="privacy_authentication">Xác thực Quyền Riêng tư</string>
+    <string name="privacy_change_password">Thay đổi Mật khẩu Riêng tư</string>
+    <string name="confirm_the_reveal">Xác nhận Hiển thị</string>
+    <string name="confirm_reveal_all_photos">Bạn có chắc chắn muốn hiển thị tất cả các ảnh riêng tư không?</string>
+    <string name="confirm_delete_all_files">Xác nhận xóa tất cả các tập tin riêng tư</string>
+    <string name="confirm_delete_all_files_description">Bạn có chắc chắn muốn xóa toàn bộ các tập tin riêng tư không? Hành động này không thể hoàn tác.</string>
+    <string name="confirm_empty_trash_bin">Xác nhận làm trống thùng rác</string>
+    <string name="confirm_empty_trash_bin_description">Bạn có chắc chắn muốn làm trống thùng rác không? Hành động này không thể hoàn tác.</string>
+    <string name="confirm_restore">Xác nhận Khôi phục</string>
+    <string name="confirm_restore_description">Bạn có chắc chắn muốn khôi phục tất cả ảnh không?</string>
+    <string name="date_format">d MMMM, yyyy</string>
+    <string name="time_format">HH:mm a</string>
+
+    <string-array name="choice_items">
+        <item>1 giây</item>
+        <item>2 giây</item>
+        <item>3 giây</item>
+        <item>4 giây</item>
+        <item>5 giây</item>
+    </string-array>
+
+
+
+    <string-array name="photo_editor_emoji">
+
+        <!-- Smiles -->
+        <item>u+1f604</item>
+        <item>u+1f603</item>
+        <item>u+1f600</item>
+        <item>u+1f60a</item>
+        <item>u+263a</item>
+        <item>u+1f609</item>
+        <item>u+1f60d</item>
+        <item>u+1f618</item>
+        <item>u+1f61a</item>
+        <item>u+1f617</item>
+        <item>u+1f619</item>
+        <item>u+1f61c</item>
+        <item>u+1f61d</item>
+        <item>u+1f61b</item>
+        <item>u+1f633</item>
+        <item>u+1f601</item>
+        <item>u+1f614</item>
+        <item>u+1f60c</item>
+        <item>u+1f612</item>
+        <item>u+1f61e</item>
+        <item>u+1f623</item>
+        <item>u+1f622</item>
+        <item>u+1f602</item>
+        <item>u+1f62d</item>
+        <item>u+1f62a</item>
+        <item>u+1f625</item>
+        <item>u+1f630</item>
+        <item>u+1f605</item>
+        <item>u+1f613</item>
+        <item>u+1f629</item>
+        <item>u+1f62b</item>
+        <item>u+1f628</item>
+        <item>u+1f631</item>
+        <item>u+1f620</item>
+        <item>u+1f621</item>
+        <item>u+1f624</item>
+
+        <!--People -->
+        <item>u+1f616</item>
+        <item>u+1f606</item>
+        <item>u+1f60b</item>
+        <item>u+1f637</item>
+        <item>u+1f60e</item>
+        <item>u+1f634</item>
+        <item>u+1f635</item>
+        <item>u+1f632</item>
+        <item>u+1f61f</item>
+        <item>u+1f626</item>
+        <item>u+1f627</item>
+        <item>u+1f608</item>
+        <item>u+1f47f</item>
+        <item>u+1f62e</item>
+        <item>u+1f62c</item>
+        <item>u+1f610</item>
+        <item>u+1f615</item>
+        <item>u+1f62f</item>
+        <item>u+1f636</item>
+        <item>u+1f607</item>
+        <item>u+1f60f</item>
+        <item>u+1f611</item>
+        <item>u+1f472</item>
+        <item>u+1f473</item>
+        <item>u+1f46e</item>
+        <item>u+1f477</item>
+        <item>u+1f482</item>
+        <item>u+1f476</item>
+        <item>u+1f466</item>
+        <item>u+1f467</item>
+        <item>u+1f468</item>
+        <item>u+1f469</item>
+        <item>u+1f474</item>
+        <item>u+1f475</item>
+        <item>u+1f471</item>
+        <item>u+1f47c</item>
+        <item>u+1f478</item>
+        <item>u+1f63a</item>
+        <item>u+1f638</item>
+        <item>u+1f63b</item>
+        <item>u+1f63d</item>
+        <item>u+1f63c</item>
+        <item>u+1f640</item>
+        <item>u+1f63f</item>
+        <item>u+1f639</item>
+        <item>u+1f63e</item>
+        <item>u+1f479</item>
+        <item>u+1f47a</item>
+        <item>u+1f648</item>
+        <item>u+1f649</item>
+        <item>u+1f64a</item>
+        <item>u+1f480</item>
+        <item>u+1f47d</item>
+        <item>u+1f4a9</item>
+        <item>u+1f525</item>
+        <item>u+2728</item>
+        <item>u+1f31f</item>
+        <item>u+1f4ab</item>
+        <item>u+1f4a5</item>
+        <item>u+1f4a2</item>
+        <item>u+1f4a6</item>
+        <item>u+1f4a7</item>
+        <item>u+1f4a4</item>
+        <item>u+1f4a8</item>
+        <item>u+1f442</item>
+        <item>u+1f440</item>
+        <item>u+1f443</item>
+        <item>u+1f445</item>
+        <item>u+1f444</item>
+        <item>u+1f44d</item>
+        <item>u+1f44e</item>
+        <item>u+1f44c</item>
+        <item>u+1f44a</item>
+        <item>u+270a</item>
+        <item>u+270c</item>
+        <item>u+1f44b</item>
+        <item>u+270b</item>
+        <item>u+1f450</item>
+        <item>u+1f446</item>
+        <item>u+1f447</item>
+        <item>u+1f449</item>
+        <item>u+1f448</item>
+        <item>u+1f64c</item>
+        <item>u+1f64f</item>
+        <item>u+261d</item>
+        <item>u+1f44f</item>
+        <item>u+1f4aa</item>
+        <item>u+1f6b6</item>
+        <item>u+1f3c3</item>
+        <item>u+1f483</item>
+        <item>u+1f46b</item>
+        <item>u+1f46a</item>
+        <item>u+1f46c</item>
+        <item>u+1f46d</item>
+        <item>u+1f48f</item>
+        <item>u+1f491</item>
+        <item>u+1f46f</item>
+        <item>u+1f646</item>
+        <item>u+1f645</item>
+        <item>u+1f481</item>
+        <item>u+1f64b</item>
+        <item>u+1f486</item>
+        <item>u+1f487</item>
+        <item>u+1f485</item>
+        <item>u+1f470</item>
+        <item>u+1f64e</item>
+        <item>u+1f64d</item>
+        <item>u+1f647</item>
+        <item>u+1f3a9</item>
+        <item>u+1f451</item>
+        <item>u+1f452</item>
+        <item>u+1f45f</item>
+        <item>u+1f45e</item>
+        <item>u+1f461</item>
+        <item>u+1f460</item>
+        <item>u+1f462</item>
+        <item>u+1f455</item>
+        <item>u+1f454</item>
+        <item>u+1f45a</item>
+        <item>u+1f457</item>
+        <item>u+1f3bd</item>
+        <item>u+1f456</item>
+        <item>u+1f458</item>
+        <item>u+1f459</item>
+        <item>u+1f4bc</item>
+        <item>u+1f45c</item>
+        <item>u+1f45d</item>
+        <item>u+1f45b</item>
+        <item>u+1f453</item>
+        <item>u+1f380</item>
+        <item>u+1f302</item>
+        <item>u+1f484</item>
+        <item>u+1f49b</item>
+        <item>u+1f499</item>
+        <item>u+1f49c</item>
+        <item>u+1f49a</item>
+        <item>u+2764</item>
+        <item>u+1f494</item>
+        <item>u+1f497</item>
+        <item>u+1f493</item>
+        <item>u+1f495</item>
+        <item>u+1f496</item>
+        <item>u+1f49e</item>
+        <item>u+1f498</item>
+        <item>u+1f48c</item>
+        <item>u+1f48b</item>
+        <item>u+1f48d</item>
+        <item>u+1f48e</item>
+        <item>u+1f464</item>
+        <item>u+1f465</item>
+        <item>u+1f4ac</item>
+        <item>u+1f463</item>
+        <item>u+1f4ad</item>
+
+        <!--  Nature-->
+        <item>u+1f436</item>
+        <item>u+1f43a</item>
+        <item>u+1f431</item>
+        <item>u+1f42d</item>
+        <item>u+1f439</item>
+        <item>u+1f430</item>
+        <item>u+1f438</item>
+        <item>u+1f42f</item>
+        <item>u+1f428</item>
+        <item>u+1f43b</item>
+        <item>u+1f437</item>
+        <item>u+1f43d</item>
+        <item>u+1f42e</item>
+        <item>u+1f417</item>
+        <item>u+1f435</item>
+        <item>u+1f412</item>
+        <item>u+1f434</item>
+        <item>u+1f411</item>
+        <item>u+1f418</item>
+        <item>u+1f43c</item>
+        <item>u+1f427</item>
+        <item>u+1f426</item>
+        <item>u+1f424</item>
+        <item>u+1f425</item>
+        <item>u+1f423</item>
+        <item>u+1f414</item>
+        <item>u+1f40d</item>
+        <item>u+1f422</item>
+        <item>u+1f41b</item>
+        <item>u+1f41d</item>
+        <item>u+1f41c</item>
+        <item>u+1f41e</item>
+        <item>u+1f40c</item>
+        <item>u+1f419</item>
+        <item>u+1f41a</item>
+        <item>u+1f420</item>
+        <item>u+1f41f</item>
+        <item>u+1f42c</item>
+        <item>u+1f433</item>
+        <item>u+1f40b</item>
+        <item>u+1f404</item>
+        <item>u+1f40f</item>
+        <item>u+1f400</item>
+        <item>u+1f403</item>
+        <item>u+1f405</item>
+        <item>u+1f407</item>
+        <item>u+1f409</item>
+        <item>u+1f40e</item>
+        <item>u+1f410</item>
+        <item>u+1f413</item>
+        <item>u+1f415</item>
+        <item>u+1f416</item>
+        <item>u+1f401</item>
+        <item>u+1f402</item>
+        <item>u+1f432</item>
+        <item>u+1f421</item>
+        <item>u+1f40a</item>
+        <item>u+1f42b</item>
+        <item>u+1f42a</item>
+        <item>u+1f406</item>
+        <item>u+1f408</item>
+        <item>u+1f429</item>
+        <item>u+1f43e</item>
+        <item>u+1f490</item>
+        <item>u+1f338</item>
+        <item>u+1f337</item>
+        <item>u+1f340</item>
+        <item>u+1f339</item>
+        <item>u+1f33b</item>
+        <item>u+1f33a</item>
+        <item>u+1f341</item>
+        <item>u+1f343</item>
+        <item>u+1f342</item>
+        <item>u+1f33f</item>
+        <item>u+1f33e</item>
+        <item>u+1f344</item>
+        <item>u+1f335</item>
+        <item>u+1f334</item>
+        <item>u+1f332</item>
+        <item>u+1f333</item>
+        <item>u+1f330</item>
+        <item>u+1f331</item>
+        <item>u+1f33c</item>
+        <item>u+1f310</item>
+        <item>u+1f31e</item>
+        <item>u+1f31d</item>
+        <item>u+1f31a</item>
+        <item>u+1f311</item>
+        <item>u+1f312</item>
+        <item>u+1f313</item>
+        <item>u+1f314</item>
+        <item>u+1f315</item>
+        <item>u+1f316</item>
+        <item>u+1f317</item>
+        <item>u+1f318</item>
+        <item>u+1f31c</item>
+        <item>u+1f31b</item>
+        <item>u+1f319</item>
+        <item>u+1f30d</item>
+        <item>u+1f30e</item>
+        <item>u+1f30f</item>
+        <item>u+1f30b</item>
+        <item>u+1f30c</item>
+        <item>u+1f320</item>
+        <item>u+2b50</item>
+        <item>u+2600</item>
+        <item>u+26c5</item>
+        <item>u+2601</item>
+        <item>u+26a1</item>
+        <item>u+2614</item>
+        <item>u+2744</item>
+        <item>u+26c4</item>
+        <item>u+1f300</item>
+        <item>u+1f301</item>
+        <item>u+1f308</item>
+        <item>u+1f30a</item>
+
+        <!--Places-->
+        <item>u+1f3e0</item>
+        <item>u+1f3e1</item>
+        <item>u+1f3eb</item>
+        <item>u+1f3e2</item>
+        <item>u+1f3e3</item>
+        <item>u+1f3e5</item>
+        <item>u+1f3e6</item>
+        <item>u+1f3ea</item>
+        <item>u+1f3e9</item>
+        <item>u+1f3e8</item>
+        <item>u+1f492</item>
+        <item>u+26ea</item>
+        <item>u+1f3ec</item>
+        <item>u+1f3e4</item>
+        <item>u+1f307</item>
+        <item>u+1f306</item>
+        <item>u+1f3ef</item>
+        <item>u+1f3f0</item>
+        <item>u+26fa</item>
+        <item>u+1f3ed</item>
+        <item>u+1f5fc</item>
+        <item>u+1f5fe</item>
+        <item>u+1f5fb</item>
+        <item>u+1f304</item>
+        <item>u+1f305</item>
+        <item>u+1f303</item>
+        <item>u+1f5fd</item>
+        <item>u+1f309</item>
+        <item>u+1f3a0</item>
+        <item>u+1f3a1</item>
+        <item>u+26f2</item>
+        <item>u+1f3a2</item>
+        <item>u+1f6a2</item>
+        <item>u+26f5</item>
+        <item>u+1f6a4</item>
+        <item>u+1f6a3</item>
+        <item>u+2693</item>
+        <item>u+1f680</item>
+        <item>u+2708</item>
+        <item>u+1f4ba</item>
+        <item>u+1f681</item>
+        <item>u+1f682</item>
+        <item>u+1f68a</item>
+        <item>u+1f689</item>
+        <item>u+1f69e</item>
+        <item>u+1f686</item>
+        <item>u+1f684</item>
+        <item>u+1f685</item>
+        <item>u+1f688</item>
+        <item>u+1f687</item>
+        <item>u+1f69d</item>
+        <item>u+1f68b</item>
+        <item>u+1f683</item>
+        <item>u+1f68e</item>
+        <item>u+1f68c</item>
+        <item>u+1f68d</item>
+        <item>u+1f699</item>
+        <item>u+1f698</item>
+        <item>u+1f697</item>
+        <item>u+1f695</item>
+        <item>u+1f696</item>
+        <item>u+1f69b</item>
+        <item>u+1f69a</item>
+        <item>u+1f6a8</item>
+        <item>u+1f693</item>
+        <item>u+1f694</item>
+        <item>u+1f692</item>
+        <item>u+1f691</item>
+        <item>u+1f690</item>
+        <item>u+1f6b2</item>
+        <item>u+1f6a1</item>
+        <item>u+1f69f</item>
+        <item>u+1f6a0</item>
+        <item>u+1f69c</item>
+        <item>u+1f488</item>
+        <item>u+1f68f</item>
+        <item>u+1f3ab</item>
+        <item>u+1f6a6</item>
+        <item>u+1f6a5</item>
+        <item>u+26a0</item>
+        <item>u+1f6a7</item>
+        <item>u+1f530</item>
+        <item>u+26fd</item>
+        <item>u+1f3ee</item>
+        <item>u+1f3b0</item>
+        <item>u+2668</item>
+        <item>u+1f5ff</item>
+        <item>u+1f3aa</item>
+        <item>u+1f3ad</item>
+        <item>u+1f4cd</item>
+        <item>u+1f6a9</item>
+    </string-array>
 </resources>

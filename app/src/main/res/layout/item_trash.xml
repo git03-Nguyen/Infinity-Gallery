@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|start"
             android:layout_margin="4dp"
-            android:text="29 days"
+            android:text="@string/_29_days"
             android:textColor="#FFFFFF" />
 
     </FrameLayout>

@@ -9,7 +9,7 @@
         android:id="@+id/toolbarSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Settings"
+        app:title="@string/settings"
         app:titleMarginStart="30dp" />
 
     <LinearLayout
@@ -23,14 +23,20 @@
             android:id="@+id/sTrashMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Move to trash when delete"
+            android:text="@string/move_to_trash_when_delete"
             android:textSize="18sp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/sNightMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dark Mode"
+            android:text="@string/dark_mode"
+            android:textSize="18sp" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/languageMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/language"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -59,7 +65,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Developed by Infinity Team"
+            android:text="@string/developed_by_infinity_team"
             android:textSize="15sp"/>
     </LinearLayout>
 

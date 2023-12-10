@@ -2,7 +2,6 @@ package edu.team08.infinitegallery.optionsearch;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,9 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -113,6 +110,7 @@ public class SearchFragment extends Fragment {
         });
     }
     private void readAllImages() {
+
         photoList = new ArrayList<>();
         Cursor cursor = null;
         try {

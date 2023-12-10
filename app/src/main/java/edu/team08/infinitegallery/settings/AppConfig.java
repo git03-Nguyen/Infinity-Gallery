@@ -10,6 +10,7 @@ public class AppConfig {
     private static final String TRASH_MODE = "trash_mode";
     private static final String TIME_LAPSE = "time_lapse";
 
+    private static final String VIETNAMESE_LANGUAGE = "vietnamese_language";
     public static AppConfig getInstance(Context context) {
         if (instance == null)
             instance = new AppConfig(context);
@@ -25,6 +26,7 @@ public class AppConfig {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(NIGHT_MODE, getNightMode());
         editor.putBoolean(TRASH_MODE, getTrashMode());
+        editor.putBoolean(VIETNAMESE_LANGUAGE,getSelectedLanguage());
         editor.apply();
     }
 
@@ -38,6 +40,9 @@ public class AppConfig {
 
     public String getTimeLapse() { return sharedPreferences.getString(TIME_LAPSE, "1 seconds");}
 
+    public boolean getSelectedLanguage() {
+        return sharedPreferences.getBoolean(VIETNAMESE_LANGUAGE, false); // Default false
+    }
     public void setNightMode(boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (getNightMode() == value) return;
@@ -59,6 +64,13 @@ public class AppConfig {
         if (getTimeLapse().equalsIgnoreCase(value)) return;
         editor.remove(TIME_LAPSE);
         editor.putString(TIME_LAPSE, value);
+        editor.apply();
+    }
+    public void setSelectedLanguage(boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (getSelectedLanguage()==value) return;
+        editor.remove(VIETNAMESE_LANGUAGE);
+        editor.putBoolean(VIETNAMESE_LANGUAGE, value);
         editor.apply();
     }
 }

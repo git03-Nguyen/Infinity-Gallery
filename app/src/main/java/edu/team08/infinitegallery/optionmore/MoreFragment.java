@@ -122,8 +122,10 @@ public class MoreFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        favText.setText(String.valueOf(getPhotosSize("favorite.db", "FAVORITE")) + " photos");
-        trashText.setText(String.valueOf(getPhotosSize("trash_bin.db", "TRASH_BIN")) + " photos");
+        String numFavPhoto=getResources().getString(R.string.num_photos,getPhotosSize("favorite.db", "FAVORITE"));
+        favText.setText(numFavPhoto );
+        String numbTrashPhoto=getResources().getString(R.string.num_photos,getPhotosSize("trash_bin.db", "TRASH_BIN"));
+        trashText.setText(numbTrashPhoto);
         ((MainActivity) context).changeStatusBar();
     }
 

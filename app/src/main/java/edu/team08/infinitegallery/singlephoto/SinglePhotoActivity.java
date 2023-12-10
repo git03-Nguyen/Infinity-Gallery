@@ -22,11 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 
+import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 
@@ -150,11 +152,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             }
 
             if(date != null && topToolbarPhoto != null){
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-                topToolbarPhoto.setTitle(dateFormat.format(date));
-                topToolbarPhoto.setSubtitle(timeFormat.format(date));
-            }
+                if (AppConfig.getInstance(this).getSelectedLanguage()) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("vi"));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format), new Locale("vi"));
+                    topToolbarPhoto.setTitle(dateFormat.format(date));
+                    topToolbarPhoto.setSubtitle(timeFormat.format(date));
+                }
+                else {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format));
+                    topToolbarPhoto.setTitle(dateFormat.format(date));
+                    topToolbarPhoto.setSubtitle(timeFormat.format(date));
+                }
+        }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -190,8 +200,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         // Build a confirmation dialog with a progress bar
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Deletion",
-                "Are you sure to move this photo to the trash?",
+                getString(R.string.confirm_deletion_title),
+                getString(R.string.confirm_deletion_one_photo_message),
                 new Runnable() {
 
                     @Override
@@ -218,8 +228,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Hiding",
-                "Are you sure to move this photo to the privacy list ?",
+                getString(R.string.confirm_hiding_title),
+                getString(R.string.confirm_hiding_message),
                 new Runnable() {
                     @Override
                     public void run() {

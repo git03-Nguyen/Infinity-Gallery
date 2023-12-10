@@ -14,8 +14,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorOnPrimary"
             app:titleMarginStart="30dp"
-            app:title="October 15, 2023"
-            app:subtitle="05:49 PM" />
+            app:title="@string/title_october_15"
+            app:subtitle="@string/subtitle_05_49_pm" />
 
         <CheckBox
             android:id="@+id/cbFavorite"

@@ -54,7 +54,9 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
 
         this.toolbar = findViewById(R.id.topToolbarAlbum);
         this.toolbar.setTitle(this.albumName);
-        this.toolbar.setSubtitle(this.photoFiles.size() + " photos");
+        String formatText=getResources().getString(R.string.num_photos,this.photoFiles.size());
+//        this.toolbar.setSubtitle(this.photoFiles.size() + " photos");
+        this.toolbar.setSubtitle(formatText);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

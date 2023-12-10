@@ -12,7 +12,7 @@
         android:id="@+id/toolbarForPrivacySignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Privacy Registration"
+        app:title="@string/privacy_registration"
         app:titleMarginStart="30dp" />
 
 
@@ -22,7 +22,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textStyle="italic"
-        android:text="Enter your new secure question and answer, along with the password"
+        android:text="@string/enter_your_new_secure_question_and_answer_along_with_the_password"
         android:layout_marginTop="100dp" />
 
     <Spinner
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/secure_ans"
-        android:hint="Asnwer"
+        android:hint="@string/answer"
         android:inputType="text"
         android:background="@drawable/round_corner_widget"
         android:padding="10dp"
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/passwordField"
             android:layout_weight="5"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:background="@drawable/round_corner_widget"
             android:padding="10dp"
@@ -71,7 +71,7 @@
             android:background="@drawable/round_corner_widget"
             android:padding="10dp"
             android:layout_marginTop="8dp"
-            android:text="Show"/>
+            android:text="@string/show"/>
 
     </LinearLayout>
 
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/retypePasswordField"
             android:layout_weight="5"
-            android:hint="Retype Password"
+            android:hint="@string/retype_password"
             android:background="@drawable/round_corner_widget"
             android:padding="10dp"
             android:minHeight="48dp"
@@ -101,7 +101,7 @@
             android:background="@drawable/round_corner_widget"
             android:padding="10dp"
             android:layout_marginTop="8dp"
-            android:text="Show"/>
+            android:text="@string/show"/>
 
     </LinearLayout>
 
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/round_corner_widget"
             android:padding="10dp"
-            android:text="Sign up"/>
+            android:text="@string/sign_up"/>
 
 
     </LinearLayout>

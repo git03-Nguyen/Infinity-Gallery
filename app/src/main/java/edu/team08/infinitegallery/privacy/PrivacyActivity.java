@@ -121,8 +121,8 @@ public class PrivacyActivity extends AppCompatActivity {
 
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm The Reveal",
-                "Are you sure to reveal all the private photos?",
+                getResources().getString(R.string.confirm_the_reveal),
+                getResources().getString(R.string.confirm_reveal_all_photos),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -154,8 +154,8 @@ public class PrivacyActivity extends AppCompatActivity {
         }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm deleting all the private files",
-                "Are you sure to delete the whole private files? This action cannot be undone.",
+                getResources().getString(R.string.confirm_delete_all_files),
+                getResources().getString(R.string.confirm_delete_all_files_description),
                 new Runnable() {
                     @Override
                     public void run() {
