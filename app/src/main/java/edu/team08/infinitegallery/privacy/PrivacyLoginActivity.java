@@ -1,9 +1,13 @@
 package edu.team08.infinitegallery.privacy;
 
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -11,15 +15,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
+
+import java.util.concurrent.Executor;
 
 import edu.team08.infinitegallery.R;
 
 public class PrivacyLoginActivity extends AppCompatActivity {
+
+    Executor executor;
+    BiometricPrompt biometricPrompt;
+    BiometricPrompt.PromptInfo promptInfo;
 
     //Properties and attributes
     private String _password;
@@ -33,7 +47,8 @@ public class PrivacyLoginActivity extends AppCompatActivity {
     private Button _showHideButton;
     private Button _loginButton;
     private Button _forgotPasswordButton;
-
+    private ImageButton _fingerPrintButton;
+    private ImageButton _patternButton;
 
     //on- methods
     @Override
@@ -46,11 +61,54 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-//        if (intent.hasExtra("password")) {
-//            this._password = intent.getStringExtra("password");
-//        }
+
+        initializeBiometricPrompt();
 
         initializeActivity();
+    }
+
+    private void initializeBiometricPrompt() {
+
+        executor = ContextCompat.getMainExecutor(this);
+        biometricPrompt = new BiometricPrompt(PrivacyLoginActivity.this,
+                executor,
+                new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                                "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyActivity.class);
+                startActivity(intent);
+                Toast.makeText(PrivacyLoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed",
+                                Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Login Privacy Folder using your Fingerprint !")
+                .setSubtitle("Please put your finger into the sensor in order to take the verification")
+                .setNegativeButtonText("Cancel")
+                .build()
+        ;
     }
 
     @Override
@@ -71,6 +129,9 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         _showHideButton = (Button) findViewById(R.id.showHideButton);
         _loginButton = (Button) findViewById(R.id.login_Login);
         _forgotPasswordButton = (Button) findViewById(R.id.login_Forgot);
+        _fingerPrintButton = (ImageButton) findViewById(R.id.login_FingerprintLogin);
+        _patternButton = (ImageButton) findViewById(R.id.login_PatternLogin);
+
 
         //Click Button to show/hide password field
         _showHideButton.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +181,14 @@ public class PrivacyLoginActivity extends AppCompatActivity {
             }
         });
 
+        _fingerPrintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkAvailableBiometric()) {
+                    biometricPrompt.authenticate(promptInfo);
+                }
+            }
+        });
 }
 
     private boolean isAuthorized() {
@@ -153,5 +222,35 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private boolean checkAvailableBiometric() {
+        BiometricManager biometricManager = BiometricManager.from(PrivacyLoginActivity.this);
+        boolean result = false;
+
+        switch (biometricManager.canAuthenticate()) {
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                Toast.makeText(PrivacyLoginActivity.this, "App can authenticate using biometrics.", Toast.LENGTH_SHORT).show();
+                result = true;
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                Toast.makeText(PrivacyLoginActivity.this, "No biometric features available on this device.", Toast.LENGTH_SHORT).show();
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                Toast.makeText(PrivacyLoginActivity.this, "Biometric features are currently unavailable.", Toast.LENGTH_SHORT).show();
+
+                // Biometric features are currently unavailable
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                final Intent enrollIntent = new Intent(Settings.ACTION_BIOMETRIC_ENROLL);
+                enrollIntent.putExtra(Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
+                        BIOMETRIC_STRONG | DEVICE_CREDENTIAL);
+                startActivityForResult(enrollIntent, 202);
+                break;
+
+            default: break;
+        }
+
+        return result;
     }
 }

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> <!-- Other permissions... -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
         android:name=".InfinityGalleryApp"
@@ -85,6 +86,11 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity" />
+        <activity
+            android:name=".privacy.PrivacyLoginByPatternActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".privacy.PrivacyLoginActivity" />
         <activity
             android:name=".main.MainActivity"
             android:exported="false"

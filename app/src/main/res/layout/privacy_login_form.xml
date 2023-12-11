@@ -104,6 +104,7 @@
         android:gravity="center">
 
         <ImageButton
+            android:id="@+id/login_FingerprintLogin"
             android:layout_width="60dp"
             android:scaleType="fitCenter"
             android:layout_marginTop="10dp"
@@ -116,6 +117,7 @@
             android:background="@drawable/round_corner_widget"/>
 
         <ImageButton
+            android:id="@+id/login_PatternLogin"
             android:layout_width="60dp"
             android:scaleType="fitCenter"
             android:layout_marginTop="10dp"
