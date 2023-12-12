@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Favorites"
+                android:text="@string/favorites"
                 android:paddingStart="5dp"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
                 android:paddingStart="5dp"
-                android:text="0 photos" />
+                android:text="@string/_0_photos" />
 
         </LinearLayout>
 
@@ -72,7 +72,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Privacy"
+                android:text="@string/privacy_album"
                 android:paddingStart="5dp"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -80,7 +80,7 @@
                 android:id="@+id/txtPrivacyPhotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0 photos"
+                android:text="@string/_0_photos"
                 android:paddingStart="5dp"
                 style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"/>
 
@@ -104,7 +104,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Trash Bin"
+                android:text="@string/trash_bin"
                 android:paddingStart="5dp"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
                 android:paddingStart="5dp"
-                android:text="0 photos" />
+                android:text="@string/_0_photos" />
 
         </LinearLayout>
 

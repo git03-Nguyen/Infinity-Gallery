@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,13 +23,15 @@ import androidx.cardview.widget.CardView;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.Locale;
+
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 
 public class SettingsActivity extends AppCompatActivity {
-    private SwitchMaterial nightModeSwitch, trashModeSwitch;
+    private SwitchMaterial nightModeSwitch, trashModeSwitch, languageSwitch;
     private CardView slideshowCard;
     private SeekBar durationBar;
     private static int delayedValue = 1;
@@ -44,14 +47,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         nightModeSwitch = findViewById(R.id.sNightMode);
         trashModeSwitch = findViewById(R.id.sTrashMode);
+        languageSwitch = findViewById(R.id.languageMode);
+
         slideshowCard = findViewById(R.id.slideshow);
         durationText = findViewById(R.id.durationText);
         durationBar = findViewById(R.id.durationBar);
-
         String[] list = getResources().getStringArray(R.array.choice_items);
 
         nightModeSwitch.setChecked(AppConfig.getInstance(this).getNightMode());
         trashModeSwitch.setChecked(AppConfig.getInstance(this).getTrashMode());
+        languageSwitch.setChecked(AppConfig.getInstance(this).getSelectedLanguage());
         durationText.setText(AppConfig.getInstance(this).getTimeLapse() + "s");
         durationBar.setProgress(AppConfig.getInstance(this).getTimeLapse());
 
@@ -59,11 +64,39 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 AppConfig.getInstance(SettingsActivity.this).setNightMode(isChecked);
-                TaskStackBuilder.create(SettingsActivity.this)
-                        .addNextIntent(new Intent(SettingsActivity.this, MainActivity.class))
-                        .startActivities();
+                restartMainActivity();
             }
         });
+
+        languageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    setLocale("vi");
+                } else {
+                    setLocale("en");
+                }
+                // Set selected language in AppConfig
+                AppConfig.getInstance(SettingsActivity.this).setSelectedLanguage(isChecked);
+
+                restartMainActivity();
+            }
+        });
+    }
+
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        getResources().getConfiguration().setLocale(locale);
+       getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+    }
+
+    private void restartMainActivity() {
+        TaskStackBuilder.create(SettingsActivity.this)
+                .addNextIntent(new Intent(SettingsActivity.this, MainActivity.class))
+                .startActivities();
+
+//        finish();
 
         durationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

@@ -62,8 +62,9 @@ public class AlbumsAdapter extends BaseAdapter {
         }
         btnAlbum.setBackgroundResource(R.drawable.sl_bg_button_private_album);
         txtAlbumName.setText(currentFolder.getFolder().getName());
-        txtNumOfPhotos.setText(currentFolder.getNumberOfPhotos() + " photos");
-
+        String formatText=context.getResources().getString(R.string.num_photos,currentFolder.getNumberOfPhotos());
+//        txtNumOfPhotos.setText(currentFolder.getNumberOfPhotos() + " photos");
+        txtNumOfPhotos.setText(formatText);
         btnAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

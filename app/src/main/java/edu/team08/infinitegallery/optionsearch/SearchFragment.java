@@ -2,7 +2,6 @@ package edu.team08.infinitegallery.optionsearch;
 
 import android.content.Context;
 import android.database.Cursor;
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,9 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-
+import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +29,15 @@ import java.util.concurrent.Executors;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.StringUtils;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
-
+import edu.team08.infinitegallery.singlephoto.FaceOnLiveService;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class SearchFragment extends Fragment {
@@ -103,6 +109,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void run() {
                 readAllImages();
+//                String path = "/storage/emulated/0/Pictures/cccd.jpg";
+//                File photoFile = new File(path);
+//                postCurrentImage("cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P", photoFile);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -113,6 +122,7 @@ public class SearchFragment extends Fragment {
         });
     }
     private void readAllImages() {
+
         photoList = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -188,6 +198,8 @@ public class SearchFragment extends Fragment {
     }
 
     private void performSearch(String query) {
+
+
         if (photoList == null) {
             readAllImages();
         }
@@ -212,10 +224,10 @@ public class SearchFragment extends Fragment {
         tempResult = new ArrayList<>();
         for (PhotoInfo photoInfo : resultOfSearching) {
             tempResult.add(photoInfo.getFile());
+            Log.d("Path of file",photoInfo.getFile().getPath());
         }
 
         showAllPictures();
     }
-
 
 }
