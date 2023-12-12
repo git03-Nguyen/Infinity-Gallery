@@ -19,6 +19,9 @@
 
         <item name="android:colorBackground">#0d0d0d</item>
 
+        <item name="colorTertiary">#222</item>
+
+
     </style>
 
     <!-- OverflowMenu style for Dark Theme -->
