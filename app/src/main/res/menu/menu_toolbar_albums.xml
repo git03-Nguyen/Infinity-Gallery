@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">\
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menuAlbumsAdd"
-        android:title="Add new albums"
+        android:title="@string/add_new_albums"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_albums_add_24" />
 
     <item
         android:id="@+id/menuAlbumsCamera"
-        android:title="Camera" />
+        android:title="@string/camera" />
 
     <item
         android:id="@+id/menuAlbumsSelect"
-        android:title="Select" />
+        android:title="@string/select" />
 
     <item
         android:id="@+id/menuAlbumsSortBy"
-        android:title="Sort by" >
+        android:title="@string/sort_by" >
         <menu
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -26,7 +26,7 @@
 
     <item
         android:id="@+id/menuAlbumsColumns"
-        android:title="Columns" >
+        android:title="@string/columns" >
         <menu
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -34,6 +34,6 @@
 
     <item
         android:id="@+id/menuAlbumsSettings"
-        android:title="Settings" />
+        android:title="@string/settings" />
 
 </menu>

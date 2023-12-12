@@ -24,7 +24,7 @@
             android:id="@+id/txtNamePhoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Photo's information"
+            android:text="@string/photo_s_information"
             android:textSize="16sp"/>
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txtNamePhoto"
             android:layout_marginTop="5dp"
-            android:text="Size and Date of Image"
+            android:text="@string/size_and_date_of_image"
             android:textSize="16sp"/>
 
     </RelativeLayout>

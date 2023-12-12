@@ -12,7 +12,7 @@
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Search your photos"
+        android:queryHint="@string/search_your_photos"
         android:iconifiedByDefault="false"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="30dp"
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Found nothing"
+                android:text="@string/found_nothing"
                 android:textSize="16sp"
                 android:textColor="?colorSecondary" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Sorry, we couldn't find any matches to your search"
+                android:text="@string/sorry_we_couldn_t_find_any_matches_to_your_search"
                 android:textSize="14sp" />
 
         </LinearLayout>

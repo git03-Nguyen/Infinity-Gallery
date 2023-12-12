@@ -49,6 +49,8 @@ public class PhotosFragment extends Fragment {
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
 
+    public PhotosFragment(){}
+
     public PhotosFragment(Context context) {
         this.context = context;
     }
@@ -85,7 +87,9 @@ public class PhotosFragment extends Fragment {
 //                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 //                intent.setAction(Intent.ACTION_GET_CONTENT);
 //                startActivityForResult(Intent.createChooser(intent,"Select Picture"), 1);
-                toggleSelectionMode();
+                if (!photoFiles.isEmpty()) {
+                    toggleSelectionMode();
+                }
                 
             } else if (itemId == R.id.column_2) {
                 spanCount = 2;
@@ -148,7 +152,8 @@ public class PhotosFragment extends Fragment {
         if (photosAdapter.getSelectionMode()) {
             this.toolbar.setVisibility(View.GONE);
             this.selectionToolbar.setVisibility(View.VISIBLE);
-            this.txtNumberOfSelectedFiles.setText("Selected " + 0);
+            String formattedText=getResources().getString(R.string.selected_photos,0);
+            this.txtNumberOfSelectedFiles.setText(formattedText);
         } else {
             this.toolbar.setVisibility(View.VISIBLE);
             this.selectionToolbar.setVisibility(View.GONE);
@@ -206,7 +211,7 @@ public class PhotosFragment extends Fragment {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
             photosRecView.setLayoutManager(gridLayoutManager);
             setSpanSize();
-            this.txtPhotosTitle.setText("December 03, 2023"); // TODO: set by the first image on the window view
+            this.txtPhotosTitle.setText(getString(R.string.december_03_2023)); // TODO: set by the first image on the window view
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
@@ -229,7 +234,8 @@ public class PhotosFragment extends Fragment {
     }
 
     public void setNumberOfSelectedFiles(int number) {
-        this.txtNumberOfSelectedFiles.setText("Selected " + photosAdapter.getSelectionsCount());
+        String formattedText=getResources().getString(R.string.selected_photos,photosAdapter.getSelectionsCount());
+        this.txtNumberOfSelectedFiles.setText(formattedText);
     }
 
     private void setSpanSize() {

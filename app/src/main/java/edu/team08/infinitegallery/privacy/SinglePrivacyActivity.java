@@ -112,8 +112,8 @@ public class SinglePrivacyActivity extends AppCompatActivity implements MainCall
 
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Permanent Deletion",
-                "Are you sure to permanently delete this photo? This action cannot be undone.",
+                getString(R.string.confirm_permanent_deletion_title),
+                getString(R.string.confirm_permanent_deletion_message),
                 new Runnable() {
                     @Override
                     public void run() {

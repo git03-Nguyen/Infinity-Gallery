@@ -3,19 +3,19 @@
     <item
         android:id="@+id/multipleHide"
         android:icon="@drawable/ic_photo_hide_24"
-        android:title="Hide"/>
+        android:title="@string/hide"/>
     <item
         android:id="@+id/multipleMoveTrash"
         android:icon="@drawable/ic_photo_delete_24"
-        android:title="Delete"/>
+        android:title="@string/delete"/>
     <item
         android:id="@+id/multipleShare"
         android:icon="@drawable/ic_photo_share_24"
-        android:title="Share"/>
+        android:title="@string/share"/>
     <item
         android:id="@+id/multipleMore"
         android:icon="@drawable/ic_photo_more_24"
-        android:title="More">
+        android:title="@string/more">
 <!--                <menu>-->
 <!--                    <item-->
 <!--                        android:id="@+id/copyTo"-->

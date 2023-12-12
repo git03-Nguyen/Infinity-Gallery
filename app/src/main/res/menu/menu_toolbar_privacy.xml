@@ -4,30 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Reveal all"
+        android:title="@string/reveal_all"
         android:id="@+id/privacymenu_Reveal"
         android:icon="@drawable/ic_privacy_reveal_24"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/privacymenu_Select"
-        android:title="Select" />
+        android:title="@string/select" />
     <item
         android:id="@+id/privacymenu_ResetPassword"
-        android:title="Reset Password" />
+        android:title="@string/reset_password" />
     <item
         android:id="@+id/privacymenu_ClearPassword"
-        android:title="Clear Password" />
+        android:title="@string/clear_password" />
     <item
         android:id="@+id/privacymenu_SetOrClearPattern"
         android:title="Set / Clear Pattern" />
 
     <item
         android:id="@+id/privacymenu_DeleteAll"
-        android:title="Delete All Files" />
+        android:title="@string/delete_all_files" />
 
     <item
         android:id="@+id/privacymenu_Settings"
-        android:title="Settings" />
+        android:title="@string/settings" />
 
 </menu>
