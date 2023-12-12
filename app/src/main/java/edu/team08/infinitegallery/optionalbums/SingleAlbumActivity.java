@@ -24,9 +24,10 @@ import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 
 public class SingleAlbumActivity extends AppCompatActivity implements MainCallbacks {
-    int spanCount = 4;
+    static int spanCount = 4;
     List<File> photoFiles;
     RecyclerView photosRecView;
     PhotosAdapter photosAdapter;
@@ -93,6 +94,24 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             Intent myIntent = new Intent(SingleAlbumActivity.this, AddPhotoActivity.class);
             myIntent.putExtra("folderPath", folderPath);
             startActivity(myIntent, null);
+        } else if (itemId == R.id.column_2) {
+            spanCount = 2;
+            showAllPhotos();
+        } else if (itemId == R.id.column_3) {
+            spanCount = 3;
+            showAllPhotos();
+        } else if (itemId == R.id.column_4) {
+            spanCount = 4;
+            showAllPhotos();
+        } else if (itemId == R.id.column_5) {
+            spanCount = 5;
+            showAllPhotos();
+        } else if (itemId == R.id.slideshow) {
+            if (photoFiles.size() > 0) {
+                Intent myIntent = new Intent(SingleAlbumActivity.this, SlideShowActivity.class);
+                myIntent.putExtra("folderPath", folderPath);
+                startActivity(myIntent, null);
+            }
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);
@@ -135,7 +154,6 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 this.photoFiles.add(new File(path));
             }
         }
-
     }
 
     private void showAllPhotos() {

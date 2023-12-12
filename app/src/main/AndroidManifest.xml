@@ -46,6 +46,11 @@
             android:launchMode="singleTop"
             android:parentActivityName=".main.MainActivity" />
         <activity
+            android:name=".slideshow.SlideShowActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:parentActivityName=".optionalbums.SingleAlbumActivity" />
+        <activity
             android:name=".singlephoto.SinglePhotoActivity"
             android:exported="false"
             android:launchMode="singleTop"
