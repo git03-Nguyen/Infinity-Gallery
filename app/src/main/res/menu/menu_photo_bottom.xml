@@ -19,14 +19,5 @@
     <item
         android:id="@+id/more"
         android:icon="@drawable/ic_photo_more_24"
-        android:title="More">
-<!--        <menu>-->
-<!--            <item-->
-<!--                android:id="@+id/collage"-->
-<!--                android:title="Collage" />-->
-<!--            <item-->
-<!--                android:id="@+id/copy"-->
-<!--                android:title="Copy to" />-->
-<!--        </menu>-->
-    </item>
+        android:title="More"/>
 </menu>

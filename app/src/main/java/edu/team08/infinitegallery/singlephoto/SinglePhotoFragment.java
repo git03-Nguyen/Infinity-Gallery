@@ -6,9 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 
@@ -67,5 +70,9 @@ public class SinglePhotoFragment extends Fragment {
 
     public int getCurrentPosition() {
         return this.currentPosition;
+    }
+
+    public PhotoView getImageView(){
+        return adapter.getZoomViewImage();
     }
 }

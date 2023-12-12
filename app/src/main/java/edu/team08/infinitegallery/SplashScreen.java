@@ -5,6 +5,7 @@ import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.SET_WALLPAPER;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
@@ -45,6 +46,7 @@ public class SplashScreen extends AppCompatActivity {
         String writePermission = WRITE_EXTERNAL_STORAGE;
         String internetPermission = INTERNET;
         String networkPermission = ACCESS_NETWORK_STATE;
+//        String setWallpaper = SET_WALLPAPER;
 
         String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
         ActivityCompat.requestPermissions(SplashScreen.this, permissions, PERMISSIONS_REQUEST_CODE_1);
@@ -56,13 +58,14 @@ public class SplashScreen extends AppCompatActivity {
         String writePermission = WRITE_EXTERNAL_STORAGE;
         String internetPermission = INTERNET;
         String networkPermission = ACCESS_NETWORK_STATE;
+//        String setWallpaper = SET_WALLPAPER;
 
         boolean result = false;
         boolean isReadImagesAllowed = ContextCompat.checkSelfPermission(this, readPermission) == PackageManager.PERMISSION_GRANTED;
         boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
         boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
         boolean isNetworkStateAllowed = ContextCompat.checkSelfPermission(this, networkPermission) == PackageManager.PERMISSION_GRANTED;
-        
+//        boolean isSetWallpaperAllowed = ContextCompat.checkSelfPermission(this, setWallpaper) == PackageManager.PERMISSION_GRANTED;
         result = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
         
         if (SDK_INT < 29) {
@@ -130,6 +133,4 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 }

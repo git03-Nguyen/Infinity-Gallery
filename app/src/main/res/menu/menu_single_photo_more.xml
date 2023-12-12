@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/more_copyTo"
+        android:title="Copy to"/>
+
+    <item
+        android:id="@+id/more_moveTo"
+        android:title="Move to"/>
+
+    <item
+        android:id="@+id/more_slideshow"
+        android:title="Slideshow"/>
+
+    <item
+        android:id="@+id/more_rotate"
+        android:title="Rotate">
+        <menu>
+            <item
+                android:id="@+id/rotateLeft"
+                android:title="Rotate left"/>
+            <item
+                android:id="@+id/rotateRight"
+                android:title="Rotate right"/>
+            <item
+                android:id="@+id/rotate180"
+                android:title="Rotate 180 \u2103"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/more_rename"
+        android:title="Rename"/>
+
+    <item
+        android:id="@+id/more_setAsWallpaper"
+        android:title="Set as wallpaper"/>
+
+    <item
+        android:id="@+id/more_details"
+        android:title="Details"/>
+
+    <item
+        android:id="@+id/more_displayFilename"
+        android:title="Display filename"/>
+</menu>
