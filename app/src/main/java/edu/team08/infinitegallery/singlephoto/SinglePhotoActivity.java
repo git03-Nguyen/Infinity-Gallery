@@ -4,19 +4,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -63,6 +71,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
     private CheckBox favoriteBox;
+    private WallpaperManager wallpaperManager;
+    private int currentPosition;
+    private PhotoView view;
+    private Bitmap imageBitmap;
+
+    private PopupMenu morePopupMenu;
 
     private CheckBox cardBox;
     private int currentPosition;
@@ -102,6 +116,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 }
             }
         });
+
+        wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+
         cardBox=findViewById(R.id.cbCard);
         cardBox.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -118,6 +135,72 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
+
+        morePopupMenu = new PopupMenu(SinglePhotoActivity.this, bottomNavigationView.findViewById(R.id.more));
+        morePopupMenu.inflate(R.menu.menu_single_photo_more);
+        morePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if(itemId == R.id.more_copyTo){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_moveTo){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_slideshow){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotateLeft){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotateRight){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotate180){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.more_rename){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_setAsWallpaper){
+//                    view = singlePhotoFragment.getImageView();
+//                    try {
+//                        wallpaperManager.setBitmap(viewToBitmap(view, view.getWidth(), view.getHeight()));
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+
+//                    try{
+//                        imageBitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+//                        DisplayMetrics displayMetrics = new DisplayMetrics();
+//                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//                        int width = displayMetrics.widthPixels;
+//                        int height = displayMetrics.heightPixels;
+//                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true);
+//                        wallpaperManager.setBitmap(imageBitmap);
+//                    }catch(IOException e){
+//                        Log.e("Error set as wallpaper: ", e.getMessage());
+//                    }
+
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    int height = metrics.heightPixels;
+                    int width = metrics.widthPixels;
+                    Bitmap tempbitMap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+                    Bitmap bitmap = Bitmap.createScaledBitmap(tempbitMap,width,height, true);
+                    wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                    wallpaperManager.suggestDesiredDimensions(width, height);
+                    try {
+                        wallpaperManager.setBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.more_details){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.more_displayFilename){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }
+
+                return true;
+            }
+        });
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.moveTrash) {
@@ -140,8 +223,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     e.printStackTrace();
                 }
 
-            } else {
-                Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            } else if(itemId == R.id.more){
+                morePopupMenu.show();
             }
 
             return true;
@@ -153,6 +236,13 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private Bitmap viewToBitmap(View view, int width, int height) {
+        Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bm);
+        view.draw(canvas);
+        return bm;
     }
 
     private Uri buildFileProviderUri(Uri uri) {
