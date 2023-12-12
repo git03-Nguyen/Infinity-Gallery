@@ -79,7 +79,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private PopupMenu morePopupMenu;
 
     private CheckBox cardBox;
-    private int currentPosition;
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
     @Override
