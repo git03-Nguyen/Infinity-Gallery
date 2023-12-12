@@ -4,13 +4,13 @@
     <string name="label_none">Không</string>
     <string name="label_brush">Bút vẽ</string>
     <string name="label_shape">Hình dạng</string>
-    <string name="label_oval">Hình oval</string>
+    <string name="label_oval">Oval</string>
     <string name="label_rectangle">Hình chữ nhật</string>
     <string name="label_line">Đường</string>
     <string name="label_arrow">Mũi tên</string>
     <string name="label_emoji">Emoji</string>
     <string name="label_sticker">Sticker</string>
-    <string name="label_eraser">Cục tẩy</string>
+    <string name="label_eraser">Tẩy</string>
     <string name="label_eraser_mode">Chế độ tẩy</string>
     <string name="label_text">Văn bản</string>
     <string name="label_filter">Bộ lọc</string>
@@ -21,12 +21,12 @@
     <string name="msg_share_image">Chia sẻ hình ảnh</string>
     <string name="delete">Xóa</string>
     <string name="save">Lưu</string>
-    <string name="dark_mode">Chế độ tối</string>
-    <string name="move_to_trash_when_delete">Chuyển đến thùng rác khi xóa</string>
-    <string name="language">Ngôn ngữ Tiếng Việt</string>
+    <string name="dark_mode">Chế độ ban đêm</string>
+    <string name="move_to_trash_when_delete">Xoá ảnh vào thùng rác</string>
+    <string name="language">Tiếng Việt</string>
     <string name="selected_photos">Đã chọn %1$d ảnh.</string>
-    <string name="no_item">Không có mục</string>
-    <string name="we_couldn_t_find_any_photos_on_your_device">Chúng tôi không thể tìm thấy bất kỳ ảnh nào trên thiết bị của bạn</string>
+    <string name="no_item">Không tìm thấy mục</string>
+    <string name="we_couldn_t_find_any_photos_on_your_device">Chúng tôi không thể tìm thấy bất kỳ ảnh nào trên thiết bị này</string>
     <string name="no_favorite_images">Không có hình ảnh yêu thích</string>
     <string name="photos_you_liked_are_shown_here">Hình ảnh bạn thích được hiển thị ở đây</string>
     <string name="no_item_found">Không tìm thấy mục</string>
@@ -36,16 +36,16 @@
     <string name="the_photos_you_deleted_will_be_collected_here">Hình ảnh bạn đã xóa sẽ được thu thập ở đây</string>
     <string name="done">Hoàn tất</string>
     <string name="please_wait">Vui lòng đợi...</string>
-    <string name="we_couldn_t_find_any_albums_on_your_device">Chúng tôi không thể tìm thấy bất kỳ album nào trên thiết bị của bạn</string>
-    <string name="eraser_size">Kích thước cục tẩy</string>
+    <string name="we_couldn_t_find_any_albums_on_your_device">Chúng tôi không thể tìm thấy bất kỳ album nào trên thiết bị này</string>
+    <string name="eraser_size">Kích thước tẩy</string>
     <string name="favorites">Yêu thích</string>
     <string name="_0_photos">0 ảnh</string>
-    <string name="privacy">Quyền riêng tư</string>
+    <string name="privacy">Riêng tư</string>
     <string name="trash_bin">Thùng rác</string>
     <string name="december_03_2023">03 tháng 12 năm 2023</string>
     <string name="selected_0">Đã chọn 0</string>
     <string name="found_nothing">Không tìm thấy gì</string>
-    <string name="sorry_we_couldn_t_find_any_matches_to_your_search">Xin lỗi, chúng tôi không thể tìm thấy bất kỳ kết quả nào cho tìm kiếm của bạn</string>
+    <string name="sorry_we_couldn_t_find_any_matches_to_your_search">Xin lỗi, chúng tôi không thể tìm thấy bất kỳ kết quả tìm kiếm nào</string>
     <string name="brush">Bút vẽ</string>
     <string name="opacity">Độ mờ</string>
     <string name="shape">Hình dạng</string>
@@ -54,20 +54,20 @@
     <string name="_29_days">29 ngày</string>
     <string name="photo_s_information">Thông tin của ảnh</string>
     <string name="size_and_date_of_image">Kích thước và Ngày của ảnh</string>
-    <string name="enter_the_saved_secure_question_and_answer_to_change_the_password">Nhập câu hỏi và câu trả lời bảo mật đã lưu để đổi mật khẩu</string>
-    <string name="answer">Câu trả lời</string>
+    <string name="enter_the_saved_secure_question_and_answer_to_change_the_password">Nhập câu hỏi bảo mật và câu trả lời đã lưu để đổi mật khẩu</string>
+    <string name="answer">Trả lời</string>
     <string name="new_password">Mật khẩu mới</string>
     <string name="show">Hiển thị</string>
     <string name="retype_new_password">Nhập lại mật khẩu mới</string>
     <string name="apply_change">Áp dụng thay đổi</string>
-    <string name="please_fill_out_your_password_to_confirm_the_authentication">Vui lòng điền mật khẩu của bạn để xác nhận xác thực</string>
+    <string name="please_fill_out_your_password_to_confirm_the_authentication">Vui lòng điền mật khẩu của bạn để xác nhận</string>
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="forgot_password">Quên mật khẩu</string>
-    <string name="finding_other_methods">Đang tìm phương pháp khác?</string>
+    <string name="finding_other_methods">Tìm phương pháp khác?</string>
     <string name="finger_print">Vân tay</string>
-    <string name="pattern">Mẫu</string>
-    <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Nhập câu hỏi và câu trả lời bảo mật mới của bạn, cùng với mật khẩu</string>
+    <string name="pattern">Hình vẽ</string>
+    <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Nhập câu hỏi bảo mật và câu trả lời mới của bạn, cùng với mật khẩu</string>
     <string name="retype_password">Nhập lại mật khẩu</string>
     <string name="sign_up">Đăng ký</string>
 
@@ -102,11 +102,11 @@
     <string name="empty_trash">Làm trống thùng rác</string>
     <string name="restore">Khôi phục</string>
 
-    <string name="search_your_photos">Nhập nội dung tìm kiếm</string>
-    <string name="confirm_deletion_title">Xác Nhận Xóa</string>
+    <string name="search_your_photos">Tìm kiếm hình ảnh</string>
+    <string name="confirm_deletion_title">Xác nhận xóa</string>
     <string name="confirm_deletion_message">Bạn có chắc chắn muốn di chuyển %1$d ảnh vào thùng rác không?</string>
     <string name="confirm_deletion_one_photo_message">Bạn có chắc chắn muốn di chuyển ảnh này vào thùng rác không?</string>
-    <string name="confirm_permanent_deletion_title">"Xác nhận Xóa Vĩnh Viễn"</string>
+    <string name="confirm_permanent_deletion_title">Xóa vĩnh viễn</string>
     <string name="confirm_permanent_deletion_message">"Bạn có chắc chắn muốn xóa vĩnh viễn bức ảnh này? Hành động này không thể hoàn tác."</string>
 
     <string name="confirm_dialog_yes">Có</string>
@@ -114,7 +114,7 @@
     <string name="confirm_hiding_title">Xác nhận ẩn</string>
     <string name="confirm_hiding_message">Bạn có chắc chắn muốn di chuyển ảnh này vào danh sách riêng tư không?</string>
     <string name="confirm_hiding_list_photos_message">Bạn có chắc chắn muốn di chuyển %1$d ảnh vào danh sách riêng tư không?</string>
-    <string name="title_october_15">Ngày 15 tháng 10, 2023</string>
+    <string name="title_october_15">15 tháng 10, 2023</string>
     <string name="subtitle_05_49_pm">05:49 CH</string>
     <string name="add_to_album">Thêm vào %1$s</string>
     <string name="confirm_move_photos">Bạn có chắc chắn muốn chuyển %1$d ảnh đến %2$s?</string>
@@ -124,10 +124,10 @@
     <string name="cancel">Hủy</string>
     <string name="num_photos">%1$d ảnh</string>
     <string name="privacy_album">Riêng tư</string>
-    <string name="privacy_registration">Thiết lập Chế độ Riêng tư</string>
-    <string name="privacy_authentication">Xác thực Quyền Riêng tư</string>
-    <string name="privacy_change_password">Thay đổi Mật khẩu Riêng tư</string>
-    <string name="confirm_the_reveal">Xác nhận Hiển thị</string>
+    <string name="privacy_registration">Thiết lập chế độ riêng tư</string>
+    <string name="privacy_authentication">Xác thực quyền riêng tư</string>
+    <string name="privacy_change_password">Thay đổi mật khẩu riêng tư</string>
+    <string name="confirm_the_reveal">Xác nhận hiển thị</string>
     <string name="confirm_reveal_all_photos">Bạn có chắc chắn muốn hiển thị tất cả các ảnh riêng tư không?</string>
     <string name="confirm_delete_all_files">Xác nhận xóa tất cả các tập tin riêng tư</string>
     <string name="confirm_delete_all_files_description">Bạn có chắc chắn muốn xóa toàn bộ các tập tin riêng tư không? Hành động này không thể hoàn tác.</string>
@@ -568,5 +568,5 @@
         <item>u+1f4cd</item>
         <item>u+1f6a9</item>
     </string-array>
-    <string name="slideshow_delay_seconds">Thời gian slideshow</string>
+    <string name="slideshow_delay_seconds">Độ trễ slideshow</string>
 </resources>
