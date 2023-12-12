@@ -41,7 +41,7 @@ public class SingleTrashActivity extends AppCompatActivity implements MainCallba
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.trashPaths, currentPosition);
+        singlePhotoFragment = SinglePhotoFragment.newInstance(this.trashPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)

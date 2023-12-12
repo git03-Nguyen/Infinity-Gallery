@@ -33,8 +33,13 @@
         android:title="Rename"/>
 
     <item
-        android:id="@+id/more_setAsWallpaper"
-        android:title="Set as wallpaper"/>
+        android:id="@+id/more_setAsHomeScreen"
+        android:title="Set as Home screen"/>
+
+    <item
+        android:id="@+id/more_setAsLockScreen"
+        android:title="Set as Lock screen"/>
+
 
     <item
         android:id="@+id/more_details"

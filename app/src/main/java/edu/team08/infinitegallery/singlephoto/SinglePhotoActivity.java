@@ -10,11 +10,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -53,9 +55,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private CheckBox favoriteBox;
     private WallpaperManager wallpaperManager;
     private int currentPosition;
-    private PhotoView view;
-    private Bitmap imageBitmap;
-
     private PopupMenu morePopupMenu;
 
     @Override
@@ -73,7 +72,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, photoPaths, currentPosition);
+        singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
@@ -118,41 +117,54 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.more_rename){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-                } else if(itemId == R.id.more_setAsWallpaper){
-//                    view = singlePhotoFragment.getImageView();
-//                    try {
-//                        wallpaperManager.setBitmap(viewToBitmap(view, view.getWidth(), view.getHeight()));
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
+                } else if(itemId == R.id.more_setAsHomeScreen){
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            DisplayMetrics metrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                            int height = metrics.heightPixels;
+                            int width = metrics.widthPixels;
+                            Bitmap bitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+                            wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                            wallpaperManager.suggestDesiredDimensions(width, height);
+                            bitmap = centerCropWallpaper(bitmap, wallpaperManager.getDesiredMinimumWidth(), wallpaperManager.getDesiredMinimumHeight());
+                            try {
+                                wallpaperManager.setBitmap(bitmap);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    };
 
-//                    try{
-//                        imageBitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
-//                        DisplayMetrics displayMetrics = new DisplayMetrics();
-//                        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//                        int width = displayMetrics.widthPixels;
-//                        int height = displayMetrics.heightPixels;
-//                        imageBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, true);
-//                        wallpaperManager.setBitmap(imageBitmap);
-//                    }catch(IOException e){
-//                        Log.e("Error set as wallpaper: ", e.getMessage());
-//                    }
-
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                    int height = metrics.heightPixels;
-                    int width = metrics.widthPixels;
-                    Bitmap tempbitMap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
-                    Bitmap bitmap = Bitmap.createScaledBitmap(tempbitMap,width,height, true);
-                    wallpaperManager.setWallpaperOffsetSteps(1, 1);
-                    wallpaperManager.suggestDesiredDimensions(width, height);
-                    try {
-                        wallpaperManager.setBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    thread.start();
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_setAsLockScreen){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Thread thread = new Thread(){
+                            @Override
+                            public void run() {
+                                DisplayMetrics metrics = new DisplayMetrics();
+                                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                                int height = metrics.heightPixels;
+                                int width = metrics.widthPixels;
+                                Bitmap bitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+                                wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                                wallpaperManager.suggestDesiredDimensions(width, height);
+                                bitmap = centerCropWallpaper(bitmap, wallpaperManager.getDesiredMinimumWidth(), wallpaperManager.getDesiredMinimumHeight());
+                                try {
+                                    wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        };
+
+                        thread.start();
+                        Toast.makeText(SinglePhotoActivity.this, "Set as Lockscreen", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SinglePhotoActivity.this, "Lock screen wallpaper not supported", Toast.LENGTH_SHORT).show();
+                    }
                 }else if(itemId == R.id.more_details){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.more_displayFilename){
@@ -200,11 +212,31 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private Bitmap viewToBitmap(View view, int width, int height) {
-        Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
-        view.draw(canvas);
-        return bm;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent intent = getIntent();
+        intent.putExtra("currentPosition", currentPosition);
+    }
+
+    private Bitmap centerCropWallpaper(Bitmap wallpaper, int desiredWidth, int desiredHeight){
+        float scale = (float) desiredHeight / wallpaper.getHeight();
+        int scaledWidth = (int) (scale * wallpaper.getWidth());
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int imageCenterWidth = scaledWidth /2;
+        int widthToCut = imageCenterWidth - deviceWidth / 2;
+        int leftWidth = scaledWidth - widthToCut;
+        Bitmap scaledWallpaper = Bitmap.createScaledBitmap(wallpaper, scaledWidth, desiredHeight, false);
+        Bitmap croppedWallpaper = Bitmap.createBitmap(
+                scaledWallpaper,
+                widthToCut,
+                0,
+                leftWidth,
+                desiredHeight
+        );
+        return croppedWallpaper;
     }
 
     private Uri buildFileProviderUri(Uri uri) {

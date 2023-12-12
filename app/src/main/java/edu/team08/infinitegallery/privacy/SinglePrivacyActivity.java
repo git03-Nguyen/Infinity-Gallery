@@ -39,7 +39,7 @@ public class SinglePrivacyActivity extends AppCompatActivity {
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, this.privatePathList, currentPosition);
+        singlePhotoFragment = SinglePhotoFragment.newInstance(this.privatePathList, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
