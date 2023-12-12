@@ -364,8 +364,8 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
                 case CAMERA_REQUEST:
                     photoEditor.clearAllViews();
                     Bitmap photo = (Bitmap) (data != null ? data.getExtras().get("data") : null);
-                    //Bitmap scaledPhoto = Bitmap.createScaledBitmap(photo, photoEditorView.getWidth(), photoEditorView.getHeight(), false);
-                    photoEditorView.getSource().setImageBitmap(photo);
+                    Bitmap scaledPhoto = Bitmap.createScaledBitmap(photo, photoEditorView.getWidth(), photoEditorView.getHeight(), false);
+                    photoEditorView.getSource().setImageBitmap(scaledPhoto);
                     break;
                 case PICK_REQUEST:
                     photoEditor.clearAllViews();

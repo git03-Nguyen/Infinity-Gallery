@@ -565,4 +565,6 @@
         <item>u+1f4cd</item>
         <item>u+1f6a9</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
