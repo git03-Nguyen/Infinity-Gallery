@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_login_background"
+    tools:context=".privacy.PrivacyLoginByPatternActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarForPrivacyPattern"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Pattern Authentication"
+        app:titleMarginStart="30dp"
+        android:layout_marginBottom="180dp"
+        />
+
+    <TextView
+        android:id="@+id/privacyPattern_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Draw your custom pattern to login"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+    <com.andrognito.patternlockview.PatternLockView
+        android:id="@+id/login_patternView"
+        android:contentDescription="The pattern lock view"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        app:dotCount="4"
+        app:dotNormalSize="12dp"
+        app:dotSelectedSize="24dp"
+        app:pathWidth="4dp"
+        app:normalStateColor="@color/white"
+        app:correctStateColor="@color/sky_blue_color_picker"
+        app:wrongStateColor="@color/red_orange_color_picker"/>
+
+    <Button
+        android:id="@+id/resetPattern"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_corner_widget"
+        android:text="CLEAR PATTERN"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
+</LinearLayout>

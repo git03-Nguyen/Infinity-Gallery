@@ -18,6 +18,9 @@
     <item
         android:id="@+id/privacymenu_ClearPassword"
         android:title="@string/clear_password" />
+    <item
+        android:id="@+id/privacymenu_SetOrClearPattern"
+        android:title="Set / Clear Pattern" />
 
     <item
         android:id="@+id/privacymenu_DeleteAll"
