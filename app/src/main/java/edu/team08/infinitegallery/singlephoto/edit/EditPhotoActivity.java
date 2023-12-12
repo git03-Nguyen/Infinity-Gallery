@@ -133,7 +133,7 @@ public class EditPhotoActivity extends BaseActivity implements ShapeFragment.Pro
 
         shapeFragment = new ShapeFragment();
         shapeBuilder = new ShapeBuilder();
-        editToolAdapter = new EditToolAdapter(this);
+        editToolAdapter = new EditToolAdapter(getBaseContext(),this);
         emojiFragment = new EmojiFragment();
         stickerFragment = new StickerFragment();
         saveFileHelper = new FileSaveHelper(this);

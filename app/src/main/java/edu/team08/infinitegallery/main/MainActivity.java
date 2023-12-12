@@ -22,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
@@ -51,6 +52,14 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        if (AppConfig.getInstance(MainActivity.this).getSelectedLanguage())
+        {
+          Locale locale=new Locale("vi");
+          Locale.setDefault(locale);
+          getResources().getConfiguration().setLocale(locale);
+            getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -181,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private void trashMultiplePhotos(File[] files) {
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Deletion",
-                "Are you sure to move ${n} photos to the trash?".replace("${n}", String.valueOf(files.length)),
+                getString(R.string.confirm_deletion_title),
+                getString(R.string.confirm_deletion_message,files.length),
                 new Runnable() {
 
                     @Override
@@ -210,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private void hideMultiplePhotos(File[] files) {
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Hiding",
-                "Are you sure to move ${n} photos to the privacy list?".replace("${n}", String.valueOf(files.length)),
+                getString(R.string.confirm_hiding_title),
+                getString(R.string.confirm_hiding_list_photos_message,files.length),
                 new Runnable() {
                     @Override
                     public void run() {

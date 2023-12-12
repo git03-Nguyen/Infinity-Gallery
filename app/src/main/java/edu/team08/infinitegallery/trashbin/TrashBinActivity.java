@@ -95,8 +95,8 @@ public class TrashBinActivity extends AppCompatActivity {
         }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm empty trash bin",
-                "Are you sure to empty the trash bin? This action cannot be undone.",
+                getResources().getString(R.string.confirm_empty_trash_bin),
+                getResources().getString(R.string.confirm_empty_trash_bin_description),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -122,8 +122,8 @@ public class TrashBinActivity extends AppCompatActivity {
         }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Restore",
-                "Are you sure to restore all photos?",
+                getResources().getString(R.string.confirm_restore),
+                getResources().getString(R.string.confirm_restore_description),
                 new Runnable() {
                     @Override
                     public void run() {

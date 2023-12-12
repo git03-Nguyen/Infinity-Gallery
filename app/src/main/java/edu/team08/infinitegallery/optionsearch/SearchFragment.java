@@ -2,18 +2,17 @@ package edu.team08.infinitegallery.optionsearch;
 
 import android.content.Context;
 import android.database.Cursor;
-
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.fragment.app.Fragment;
@@ -23,22 +22,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.StringUtils;
-import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
+import edu.team08.infinitegallery.singlephoto.FaceOnLiveService;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class SearchFragment extends Fragment {
-
 
     private Context context;
     private SearchView searchView;
@@ -52,6 +54,9 @@ public class SearchFragment extends Fragment {
     List<PhotoInfo> resultOfSearching;
     List<File> tempResult;
 
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Handler handler = new Handler(Looper.getMainLooper());
+
     public SearchFragment(Context context) {
         this.context = context;
     }
@@ -63,8 +68,10 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        resultOfSearching = new ArrayList<>();
+        tempResult = new ArrayList<>();
 
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -90,51 +97,32 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        executor.shutdown();
+    }
+    @Override
     public void onResume() {
         super.onResume();
-        photoList = null;
-        performSearch(searchView.getQuery().toString());
-        ((MainActivity) context).changeStatusBar();
-    }
-    private void performSearch(String query) {
-
-        if (photoList == null) {
-            readAllImages();
-        }
-
-        resultOfSearching = new ArrayList<>();
-
-        if (query.isEmpty()) {
-            showAllPictures();
-            return;
-        }
-
-        for (PhotoInfo photoInfo : photoList) {
-            if (photoInfo.getFile().getName().toLowerCase().contains(query.toLowerCase())) {
-                resultOfSearching.add(photoInfo);
-                //Log.d("Đã tìm thấy file photo: ",photoInfo.getFile().getName());
-                //  break statement to stop adding the same photoInfo multiple times
+        executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                readAllImages();
+//                String path = "/storage/emulated/0/Pictures/cccd.jpg";
+//                File photoFile = new File(path);
+//                postCurrentImage("cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P", photoFile);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAllPictures();
+                    }
+                });
             }
-            String address= StringUtils.removeAccent(photoInfo.getAddress());
-            Log.d("Address no accent: ",address);
-            if (address.toLowerCase().contains(query.toLowerCase())) {
-                resultOfSearching.add(photoInfo);
-                //Log.d("Đã tìm thấy vị trí: ",photoInfo.getAddress());
-
-            }
-        }
-
-
-        // Convert PhotoInfo objects to File objects
-        tempResult = new ArrayList<>();
-        for (PhotoInfo photoInfo : resultOfSearching) {
-            tempResult.add(photoInfo.getFile());
-        }
-
-        showAllPictures();
+        });
     }
-
     private void readAllImages() {
+
         photoList = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -160,7 +148,6 @@ public class SearchFragment extends Fragment {
                     longitude = coordinates[1];
                     Log.d("ExifCoordinates", "Latitude: " + latitude + ", Longitude: " + longitude);
                     LocationHelper.reverseCoordinatesToAddress(latitude, longitude, new LocationHelper.ReverseGeocodeCallback() {
-//                        String address="";
                         @Override
                         public void onSuccess(String formattedAddress,PhotoInfo photoInfo) {
                             // Use the formatted address here
@@ -174,7 +161,7 @@ public class SearchFragment extends Fragment {
 
                         @Override
                         public void onFailure(Throwable t) {
-                            Log.d("Photo infomation:",photoInfo.getAddress());
+                            Log.d("Photo information:",photoInfo.getAddress());
                             photoList.add(photoInfo);
                             // Handle failure here
                             t.printStackTrace();
@@ -210,7 +197,37 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    private void performSearch(String query) {
 
 
+        if (photoList == null) {
+            readAllImages();
+        }
+
+        resultOfSearching = new ArrayList<>();
+
+        if (query.isEmpty()) {
+            showAllPictures();
+            return;
+        }
+
+        for (PhotoInfo photoInfo : photoList) {
+            String fileName = photoInfo.getFile().getName().toLowerCase();
+            String address = StringUtils.removeAccent(photoInfo.getAddress()).toLowerCase();
+
+            if (fileName.contains(query.toLowerCase()) || address.contains(query.toLowerCase())) {
+                resultOfSearching.add(photoInfo);
+            }
+        }
+
+        // Convert PhotoInfo objects to File objects
+        tempResult = new ArrayList<>();
+        for (PhotoInfo photoInfo : resultOfSearching) {
+            tempResult.add(photoInfo.getFile());
+            Log.d("Path of file",photoInfo.getFile().getPath());
+        }
+
+        showAllPictures();
+    }
 
 }

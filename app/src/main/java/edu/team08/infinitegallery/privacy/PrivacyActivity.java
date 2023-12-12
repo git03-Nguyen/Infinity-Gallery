@@ -1,7 +1,9 @@
 package edu.team08.infinitegallery.privacy;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,19 +93,26 @@ public class PrivacyActivity extends AppCompatActivity {
         } else if (itemId == R.id.privacymenu_ResetPassword) {
             Intent myIntent = new Intent(PrivacyActivity.this, PrivacySignupActivity.class);
             startActivity(myIntent, null);
+            finish();
         }
-//        else if (itemId == R.id.privacymenu_ClearPassword) {
-//            SharedPreferences mPref = getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = mPref.edit();
-//            editor.putString("PASS", "null");
-//            editor.commit();
-//
-//        }
+        else if (itemId == R.id.privacymenu_ClearPassword) {
+            SharedPreferences mPref = getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mPref.edit();
+            editor.remove("PASS");
+            editor.apply();
+            Toast.makeText(getApplicationContext(), "Clear password successfully", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.privacymenu_SetOrClearPattern) {
+            Intent myIntent = new Intent(PrivacyActivity.this, PrivacyChangePatternActivity.class);
+            startActivity(myIntent, null);
+            Toast.makeText(PrivacyActivity.this,
+                    "Change pattern successfully", Toast.LENGTH_SHORT).show();
+        }
         else if (itemId == R.id.privacymenu_DeleteAll) {
             this.deleteAllPrivateFiles();
         } else if (itemId == R.id.privacymenu_Settings) {
             Intent myIntent = new Intent(PrivacyActivity.this, SettingsActivity.class);
             startActivity(myIntent, null);
+            finish();
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -121,8 +130,8 @@ public class PrivacyActivity extends AppCompatActivity {
 
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm The Reveal",
-                "Are you sure to reveal all the private photos?",
+                getResources().getString(R.string.confirm_the_reveal),
+                getResources().getString(R.string.confirm_reveal_all_photos),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -154,8 +163,8 @@ public class PrivacyActivity extends AppCompatActivity {
         }
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm deleting all the private files",
-                "Are you sure to delete the whole private files? This action cannot be undone.",
+                getResources().getString(R.string.confirm_delete_all_files),
+                getResources().getString(R.string.confirm_delete_all_files_description),
                 new Runnable() {
                     @Override
                     public void run() {

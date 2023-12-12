@@ -7,5 +7,5 @@
     <item
         android:id="@+id/restore"
         android:icon="@drawable/ic_trash_restore_24"
-        android:title="Restore"/>
+        android:title="@string/restore"/>
 </menu>

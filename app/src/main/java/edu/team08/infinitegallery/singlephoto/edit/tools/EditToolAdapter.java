@@ -1,6 +1,7 @@
 package edu.team08.infinitegallery.singlephoto.edit.tools;
 
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +15,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.settings.AppConfig;
 
 public class EditToolAdapter extends RecyclerView.Adapter<EditToolAdapter.ViewHolder>{
     private OnItemSelected mOnItemSelected;
     private List<ToolModel> mToolList = new ArrayList();
+    Context context;
 
-    public EditToolAdapter(OnItemSelected onItemSelected){
+    public EditToolAdapter(Context context,OnItemSelected onItemSelected){
         mOnItemSelected = onItemSelected;
 
-        mToolList.add(new ToolModel("Shape", R.drawable.ic_oval, ToolType.SHAPE));
-        mToolList.add(new ToolModel("Text", R.drawable.ic_text, ToolType.TEXT));
-        mToolList.add(new ToolModel("Eraser", R.drawable.ic_eraser, ToolType.ERASER));
-        mToolList.add(new ToolModel("Filter", R.drawable.ic_photo_filter, ToolType.FILTER));
-        mToolList.add(new ToolModel("Emoji", R.drawable.ic_insert_emoticon, ToolType.EMOJI));
-        mToolList.add(new ToolModel("Sticker", R.drawable.ic_sticker, ToolType.STICKER));
+        // Original ToolModel names
+        String shapeName = "Shape";
+        String textName = "Text";
+        String eraserName = "Eraser";
+        String filterName = "Filter";
+        String emojiName = "Emoji";
+        String stickerName = "Sticker";
+
+        if (AppConfig.getInstance(context).getSelectedLanguage()) {
+            // Vietnamese names
+            shapeName = "Hình dạng";
+            textName = "Văn bản";
+            eraserName = "Cục tẩy";
+            filterName = "Bộ lọc";
+            emojiName = "Cảm xúc";
+            stickerName = "Nhãn dán";
+        }
+
+        mToolList.add(new ToolModel(shapeName, R.drawable.ic_oval, ToolType.SHAPE));
+        mToolList.add(new ToolModel(textName, R.drawable.ic_text, ToolType.TEXT));
+        mToolList.add(new ToolModel(eraserName, R.drawable.ic_eraser, ToolType.ERASER));
+        mToolList.add(new ToolModel(filterName, R.drawable.ic_photo_filter, ToolType.FILTER));
+        mToolList.add(new ToolModel(emojiName, R.drawable.ic_insert_emoticon, ToolType.EMOJI));
+        mToolList.add(new ToolModel(stickerName, R.drawable.ic_sticker, ToolType.STICKER));
     }
 
     public interface OnItemSelected{
