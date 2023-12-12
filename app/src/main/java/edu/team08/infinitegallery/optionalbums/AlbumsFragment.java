@@ -83,7 +83,7 @@ public class AlbumsFragment extends Fragment {
 
     private void addNewAlbum() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Create New Album");
+        builder.setTitle(getResources().getString(R.string.create_new_album));
 
         // Set up the input field
         final EditText input = new EditText(context);
@@ -91,7 +91,7 @@ public class AlbumsFragment extends Fragment {
         builder.setView(input);
 
         // Set up the positive and negative buttons
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.create), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String albumName = input.getText().toString().trim();
@@ -108,7 +108,7 @@ public class AlbumsFragment extends Fragment {
 
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

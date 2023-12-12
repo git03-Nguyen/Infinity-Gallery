@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="No item"
+                android:text="@string/no_item"
                 android:textSize="16sp"
                 android:textColor="?colorSecondary" />
 
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="We couldn't find any albums on your device"
+                android:text="@string/we_couldn_t_find_any_albums_on_your_device"
                 android:textSize="14sp" />
 
         </LinearLayout>

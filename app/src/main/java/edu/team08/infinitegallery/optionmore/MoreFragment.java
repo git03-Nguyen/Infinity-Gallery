@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,17 +114,25 @@ public class MoreFragment extends Fragment {
     }
 
     boolean isHavingPassword() {
-        SharedPreferences mPref = context.getSharedPreferences(PrivacyLoginActivity.PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences mPref = context.getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
 
         String password = mPref.getString(PrivacyLoginActivity.PREF_PASS_NAME, null);
-        return (null != password);
+//        return (null != password);
+        boolean state = mPref.contains("PASS")
+                || (password != null)
+                ;
+        Toast.makeText(this.context, "Password state: " + state, Toast.LENGTH_SHORT).show();
+        Log.d("PASSWORD_STATE", "The password: " + mPref.getString("PASS", null));
+        return state;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        favText.setText(String.valueOf(getPhotosSize("favorite.db", "FAVORITE")) + " photos");
-        trashText.setText(String.valueOf(getPhotosSize("trash_bin.db", "TRASH_BIN")) + " photos");
+        String numFavPhoto=getResources().getString(R.string.num_photos,getPhotosSize("favorite.db", "FAVORITE"));
+        favText.setText(numFavPhoto );
+        String numbTrashPhoto=getResources().getString(R.string.num_photos,getPhotosSize("trash_bin.db", "TRASH_BIN"));
+        trashText.setText(numbTrashPhoto);
         ((MainActivity) context).changeStatusBar();
     }
 

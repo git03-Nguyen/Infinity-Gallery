@@ -12,7 +12,7 @@
         android:id="@+id/toolbarForPrivacyPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Privacy Authentication"
+        app:title="@string/privacy_authentication"
         app:titleMarginStart="30dp"/>
 
     <ImageView android:layout_width="150dp"
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:textSize="16sp"
         android:textStyle="italic"
-        android:text="Please fill out your password to confirm the authentication"
+        android:text="@string/please_fill_out_your_password_to_confirm_the_authentication"
         />
 
     <LinearLayout
@@ -46,7 +46,7 @@
             android:layout_weight="5"
             android:padding="10dp"
             android:background="@drawable/round_corner_widget"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:layout_margin="10dp" />
 
@@ -54,7 +54,7 @@
             android:id="@+id/showHideButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Show️"
+            android:text="@string/show"
             android:layout_marginTop="8dp"
             android:padding="10dp"
             android:background="@drawable/round_corner_widget"/>
@@ -72,7 +72,7 @@
             android:id="@+id/login_Login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="@string/login"
             android:padding="10dp"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/round_corner_widget"/>
@@ -81,7 +81,7 @@
             android:id="@+id/login_Forgot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot password"
+            android:text="@string/forgot_password"
             android:padding="10dp"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/round_corner_widget"/>
@@ -95,7 +95,7 @@
         android:textSize="16sp"
         android:textStyle="italic"
         android:layout_marginTop="10dp"
-        android:text="Finding other methods ?"
+        android:text="@string/finding_other_methods"
         />
 
     <LinearLayout
@@ -104,6 +104,7 @@
         android:gravity="center">
 
         <ImageButton
+            android:id="@+id/login_FingerprintLogin"
             android:layout_width="60dp"
             android:scaleType="fitCenter"
             android:layout_marginTop="10dp"
@@ -111,11 +112,12 @@
             android:layout_marginHorizontal="10dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:contentDescription="Finger Print"
+            android:contentDescription="@string/finger_print"
             android:src="@drawable/ic_login_fingerprint_24"
             android:background="@drawable/round_corner_widget"/>
 
         <ImageButton
+            android:id="@+id/login_PatternLogin"
             android:layout_width="60dp"
             android:scaleType="fitCenter"
             android:layout_marginTop="10dp"
@@ -123,7 +125,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:contentDescription="Pattern"
+            android:contentDescription="@string/pattern"
             android:src="@drawable/ic_login_pattern_24"
             android:background="@drawable/round_corner_widget"/>
 

@@ -24,7 +24,7 @@
             android:id="@+id/albumName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Album name"
+            android:text="@string/album_name"
             android:paddingStart="5dp"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"
             android:paddingStart="5dp"
-            android:text="0 photos" />
+            android:text="@string/_0_photos" />
 
 
     </LinearLayout>

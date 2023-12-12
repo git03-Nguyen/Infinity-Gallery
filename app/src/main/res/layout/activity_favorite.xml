@@ -12,7 +12,7 @@
         android:id="@+id/toolbarFavorite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Favorites"
+        app:title="@string/favorites"
         app:titleMarginStart="30dp" />
 
     <LinearLayout
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="No favorite images"
+                    android:text="@string/no_favorite_images"
                     android:textSize="16sp"
                     android:textColor="?colorSecondary" />
 
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Photos you liked are shown here"
+                    android:text="@string/photos_you_liked_are_shown_here"
                     android:textSize="14sp" />
 
             </LinearLayout>

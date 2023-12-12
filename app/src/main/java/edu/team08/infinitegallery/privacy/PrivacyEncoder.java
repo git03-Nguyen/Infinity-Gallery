@@ -5,8 +5,8 @@ import android.util.Log;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
-public class PrivacyEncodingPassword {
-    private static String bytesToHex(byte[] hash) {
+public class PrivacyEncoder {
+    private static String convertBytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         int length = hash.length;
         for (int i = 0; i < length; ++i) {
@@ -20,12 +20,12 @@ public class PrivacyEncodingPassword {
         return hexString.toString();
     }
 
-    public static String SHA256(String originalString) {
+    public static String SHA256_hashing(String originalString) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHash = digest.digest(
                     originalString.getBytes(StandardCharsets.UTF_8));
-            return bytesToHex(encodedHash);
+            return convertBytesToHex(encodedHash);
         } catch (Exception e) {
             Log.e("Error in hashing!", e.getMessage());
         }
