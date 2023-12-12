@@ -59,13 +59,18 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
         albumName = new File(folderPath).getName();
 
         toolbar = findViewById(R.id.toolbarAddPhotos);
-        toolbar.setTitle("Add to ${AlbumName}".replace("${AlbumName}", albumName));
+
+        String formatText=getResources().getString(R.string.add_to_album,albumName);
+//        toolbar.setTitle("Add to ${AlbumName}".replace("${AlbumName}", albumName));
+        toolbar.setTitle(formatText);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         numberOfSelected = 0;
         txtNumberOfSelected = findViewById(R.id.txtNumberOfSelected);
-        txtNumberOfSelected.setText("Selected ${num} photos.".replace("${num}", "0"));
+        String formattedText=getResources().getString(R.string.selected_photos,0);
+//        txtNumberOfSelected.setText("Selected ${num} photos.".replace("${num}", "0"));
+        txtNumberOfSelected.setText(formattedText);
         viewSwitcher = findViewById(R.id.viewSwitcher);
         recyclerView = findViewById(R.id.recView);
 
@@ -148,10 +153,11 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
             if (selectedItemsId.valueAt(i)) list.add(allPhotos.get(selectedItemsId.keyAt(i)));
         }
 
-        String title = "Move photos";
-        String message = "Are you sure to move ${num} photos to ${albumName}?"
-                .replace("${num}", String.valueOf(numberOfSelected))
-                .replace("${albumName}", new File(folderPath).getName());
+        String title = getResources().getString(R.string.move_photos);
+//        String message = "Are you sure to move ${num} photos to ${albumName}?"
+//                .replace("${num}", String.valueOf(numberOfSelected))
+//                .replace("${albumName}", new File(folderPath).getName());
+        String message=getResources().getString(R.string.confirm_move_photos,numberOfSelected,new File(folderPath).getName());
         ConfirmDialogBuilder.showConfirmDialog(this, title, message
                 , () -> {
                     Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(AddPhotoActivity.this, "Hiding ...", () -> {
@@ -191,7 +197,9 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
         switch (sender) {
             case "NUMBER OF SELECTIONS":
                 numberOfSelected = Integer.parseInt(request);
-                txtNumberOfSelected.setText("Selected ${num} photos.".replace("${num}", request));
+                String formattedText=getResources().getString(R.string.selected_photos,numberOfSelected);
+                txtNumberOfSelected.setText(formattedText);
+//                txtNumberOfSelected.setText("Selected ${num} photos.".replace("${num}", request));
                 break;
 
             default: break;

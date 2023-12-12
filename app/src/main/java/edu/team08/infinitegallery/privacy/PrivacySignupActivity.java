@@ -50,10 +50,10 @@ public class PrivacySignupActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_signup_form);
+        setContentView(R.layout.privacy_modify_password_form);
 
         //set toolbar
-        setSupportActionBar(findViewById(R.id.toolbarForPrivacySignup));
+        setSupportActionBar(findViewById(R.id.toolbarForPrivacyModifyingPassword));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeActivity();
@@ -116,6 +116,7 @@ public class PrivacySignupActivity extends AppCompatActivity {
                     Intent intent = new Intent(PrivacySignupActivity.this, PrivacyLoginActivity.class);
                     startActivity(intent);
                     Toast.makeText(PrivacySignupActivity.this, "Create password successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(PrivacySignupActivity.this, _errorMsg, Toast.LENGTH_SHORT).show();
                 }
@@ -130,8 +131,8 @@ public class PrivacySignupActivity extends AppCompatActivity {
                 getSharedPreferences("SECURE_PREF", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPref.edit();
         try {
-            editor.putString("SECURE_QUES", PrivacyEncodingPassword.SHA256(selectedQuestion));
-            editor.putString("SECURE_ANS", PrivacyEncodingPassword.SHA256(enteredAnswer));
+            editor.putString("SECURE_QUES", PrivacyEncoder.SHA256_hashing(selectedQuestion));
+            editor.putString("SECURE_ANS", PrivacyEncoder.SHA256_hashing(enteredAnswer));
 
             editor.commit();
         } catch (Exception e) {
@@ -165,7 +166,7 @@ public class PrivacySignupActivity extends AppCompatActivity {
                 getSharedPreferences(PrivacyLoginActivity.PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPref.edit();
         try {
-            editor.putString(PrivacyLoginActivity.PREF_PASS_NAME, PrivacyEncodingPassword.SHA256(_password));
+            editor.putString(PrivacyLoginActivity.PREF_PASS_NAME, PrivacyEncoder.SHA256_hashing(_password));
             editor.commit();
         } catch (Exception e) {
             Log.e("Error in hashing!", e.getMessage());

@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="No item"
+                    android:text="@string/no_item"
                     android:textSize="16sp"
                     android:textColor="?colorSecondary" />
 
@@ -42,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="We couldn't find any photos on your device"
+                    android:text="@string/we_couldn_t_find_any_photos_on_your_device"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:text="December 03, 2023"
+                    android:text="@string/december_03_2023"
                     android:textColor="@color/white"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:shadowColor="@color/black"
@@ -112,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:text="Selected 0"
+                    android:text="@string/selected_0"
                     android:textColor="@color/white"
                     style="@style/TextAppearance.AppCompat.Title"
                     android:shadowColor="@color/black"

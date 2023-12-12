@@ -2,6 +2,7 @@ package edu.team08.infinitegallery.singlephoto;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,18 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.io.IOException;
 
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SinglePhotoFragment extends Fragment {
 

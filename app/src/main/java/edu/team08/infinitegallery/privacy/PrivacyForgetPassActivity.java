@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -45,15 +47,19 @@ public class PrivacyForgetPassActivity extends AppCompatActivity {
     private Button _showRetypeButton;
     private Button _applyChangeButton;
     private Spinner _secureQuesSpinner;
+    private TextView _description;
 
     //on- methods
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_forget_password_form);
+//        setContentView(R.layout.privacy_forget_password_form);
 
+        setContentView(R.layout.privacy_modify_password_form);
         //set toolbar
-        setSupportActionBar(findViewById(R.id.toolbarForPrivacyForgetPassword));
+//        setSupportActionBar(findViewById(R.id.toolbarForPrivacyForgetPassword));
+        setSupportActionBar(findViewById(R.id.toolbarForPrivacyModifyingPassword));
+        getSupportActionBar().setTitle("PRIVACY CHANGING PASSWORD");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initializeActivity();
@@ -61,13 +67,16 @@ public class PrivacyForgetPassActivity extends AppCompatActivity {
 
     //functional methods
     private void initializeActivity() {
+         _description = (TextView) findViewById(R.id.modifyingPrivacyPassword_description);
         _passwordField = (EditText) findViewById(R.id.passwordField);
         _retypePasswordField = (EditText) findViewById(R.id.retypePasswordField);
         _secureAnsField = (EditText) findViewById(R.id.secure_ans);
         _showHideButton = (Button) findViewById(R.id.showTypeButton);
         _showRetypeButton = (Button) findViewById(R.id.showRetypeButton);
-        _applyChangeButton = (Button) findViewById(R.id.change_applyChange);
+        _applyChangeButton = (Button) findViewById(R.id.signup_Signup);
         _secureQuesSpinner = findViewById(R.id.secure_ques_spinner);
+
+        _description.setText("Enter the saved secure question and answer to change the password");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, securityQuestions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -106,18 +115,20 @@ public class PrivacyForgetPassActivity extends AppCompatActivity {
             }
         });
 
+        _applyChangeButton.setText("Apply change");
         _applyChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (checkCorrespondingPassword()) {
                     SharedPreferences mPref = getSharedPreferences("PASSWORD", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = mPref.edit();
-                    editor.putString("PASS", PrivacyEncodingPassword.SHA256(_password));
+                    editor.putString("PASS", PrivacyEncoder.SHA256_hashing(_password));
                     editor.commit();
 
                     Intent intent = new Intent(PrivacyForgetPassActivity.this, PrivacyLoginActivity.class);
                     startActivity(intent);
                     Toast.makeText(PrivacyForgetPassActivity.this, "Change password successfully", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     Toast.makeText(PrivacyForgetPassActivity.this, _errorMsg, Toast.LENGTH_SHORT).show();
                 }
@@ -135,8 +146,8 @@ public class PrivacyForgetPassActivity extends AppCompatActivity {
         String cur_selectedQuestion = _secureQuesSpinner.getSelectedItem().toString();
         String cur_enteredAnswer = _secureAnsField.getText().toString().toLowerCase().trim();
 
-        if(!PrivacyEncodingPassword.SHA256(cur_selectedQuestion).equals(selectedQuestion)
-        || (!PrivacyEncodingPassword.SHA256(cur_enteredAnswer).equals(enteredAnswer))) {
+        if(!PrivacyEncoder.SHA256_hashing(cur_selectedQuestion).equals(selectedQuestion)
+        || (!PrivacyEncoder.SHA256_hashing(cur_enteredAnswer).equals(enteredAnswer))) {
             _errorMsg = "Error: the secure question or answer is not corresponding with the saved data.";
             return false;
         }

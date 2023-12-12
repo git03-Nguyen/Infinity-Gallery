@@ -11,7 +11,7 @@
         android:id="@+id/toolbarForPrivacy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Privacy Album"
+        app:title="@string/privacy_album"
         app:titleMarginStart="30dp" />
 
         <ViewSwitcher
@@ -37,7 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="No item found"
+                    android:text="@string/no_item_found"
                     android:textSize="16sp"
                     android:textColor="?colorSecondary" />
 
@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="The photos you set to be private will be collected here"
+                    android:text="@string/the_photos_you_set_to_be_private_will_be_collected_here"
                     android:textSize="14sp" />
 
             </LinearLayout>

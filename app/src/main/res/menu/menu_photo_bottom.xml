@@ -3,21 +3,30 @@
     <item
         android:id="@+id/hide"
         android:icon="@drawable/ic_photo_hide_24"
-        android:title="Hide"/>
+        android:title="@string/hide"/>
     <item
         android:id="@+id/moveTrash"
         android:icon="@drawable/ic_photo_delete_24"
-        android:title="Delete"/>
+        android:title="@string/delete"/>
     <item
         android:id="@+id/edit"
         android:icon="@drawable/ic_photo_edit_24"
-        android:title="Edit"/>
+        android:title="@string/edit"/>
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_photo_share_24"
-        android:title="Share"/>
+        android:title="@string/share"/>
     <item
         android:id="@+id/more"
         android:icon="@drawable/ic_photo_more_24"
-        android:title="More"/>
+        android:title="@string/more">
+<!--        <menu>-->
+<!--            <item-->
+<!--                android:id="@+id/collage"-->
+<!--                android:title="Collage" />-->
+<!--            <item-->
+<!--                android:id="@+id/copy"-->
+<!--                android:title="Copy to" />-->
+<!--        </menu>-->
+    </item>
 </menu>

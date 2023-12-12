@@ -28,16 +28,27 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 
+import edu.team08.infinitegallery.settings.AppConfig;
+import edu.team08.infinitegallery.singlephoto.RecognizeCard.CardInfo;
+import edu.team08.infinitegallery.singlephoto.RecognizeCard.DriverLicenseCard;
+import edu.team08.infinitegallery.singlephoto.RecognizeCard.IDCard;
+import edu.team08.infinitegallery.singlephoto.RecognizeCard.PassportCard;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 
@@ -47,6 +58,15 @@ import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class SinglePhotoActivity extends AppCompatActivity implements MainCallbacks {
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
@@ -56,6 +76,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private WallpaperManager wallpaperManager;
     private int currentPosition;
     private PopupMenu morePopupMenu;
+
+    private CheckBox cardBox;
+    private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +108,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 boolean isChecked = favoriteBox.isChecked();
                 if (isChecked) {
                     addToFavorite();
+
                 } else {
                     removeFromFavorite();
                 }
@@ -93,6 +117,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 
+        cardBox=findViewById(R.id.cbCard);
+        cardBox.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                boolean isChecked = cardBox.isChecked();
+                if (isChecked) {
+                    Log.d("CardBox", "Clicked: " + cardBox.isChecked());
+                    Log.d("PhotoPaths",photoPaths[currentPosition]);
+                    File photoFile = new File(photoPaths[currentPosition]);
+                    postCurrentImage(photoFile);
+                }
+            }
+        });
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
@@ -271,11 +308,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             }
 
             if(date != null && topToolbarPhoto != null){
-                SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-                topToolbarPhoto.setTitle(dateFormat.format(date));
-                topToolbarPhoto.setSubtitle(timeFormat.format(date));
-            }
+                if (AppConfig.getInstance(this).getSelectedLanguage()) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("vi"));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format), new Locale("vi"));
+                    topToolbarPhoto.setTitle(dateFormat.format(date));
+                    topToolbarPhoto.setSubtitle(timeFormat.format(date));
+                }
+                else {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format));
+                    topToolbarPhoto.setTitle(dateFormat.format(date));
+                    topToolbarPhoto.setSubtitle(timeFormat.format(date));
+                }
+        }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -311,8 +356,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         // Build a confirmation dialog with a progress bar
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Deletion",
-                "Are you sure to move this photo to the trash?",
+                getString(R.string.confirm_deletion_title),
+                getString(R.string.confirm_deletion_one_photo_message),
                 new Runnable() {
 
                     @Override
@@ -339,8 +384,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Hiding",
-                "Are you sure to move this photo to the privacy list ?",
+                getString(R.string.confirm_hiding_title),
+                getString(R.string.confirm_hiding_message),
                 new Runnable() {
                     @Override
                     public void run() {
@@ -374,4 +419,143 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         setFavoriteForToolbar(photoPaths[currentPosition]);
     }
 
+    private void showBottomSheet(CardInfo card) {
+        // Tạo và hiển thị BottomSheetFragment
+        BottomSheetFragment bottomSheetFragment=BottomSheetFragment.newInstance(card);
+        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+    }
+
+    public void postCurrentImage(File photoFile) {
+        File currentFile = photoFile;
+        if (currentFile != null) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.faceonlive.com/")
+                    .build();
+
+            FaceOnLiveService service = retrofit.create(FaceOnLiveService.class);
+
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/jpeg"), currentFile);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", currentFile.getName(), reqFile);
+
+            Call<ResponseBody> call = service.postImage(API_KEY_INFO, body);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful())    {
+                        try {
+                            String jsonString = response.body().string();
+                            CardInfo cardInfo= handleJsonResponse(jsonString);
+                            if (cardInfo == null || cardInfo.getCardType() == null) {
+                                Toast.makeText(getBaseContext(), "This is not a valid card, unable to retrieve information.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                showBottomSheet(cardInfo);
+                            }
+                            cardBox.setChecked(false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getBaseContext(), "An error occurred while processing the response.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.d("Info Card id", "Response not successful: " + response.code() + " " + response.message());
+                        Toast.makeText(getBaseContext(), "This is not a valid card, unable to retrieve information.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Handle the failure
+                }
+            });
+        }
+
+    }
+    public CardInfo handleJsonResponse(String jsonString)
+    {
+        CardInfo objCard=null;
+        try{
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONObject dataObject = jsonObject.getJSONObject("data");
+
+            String countryName = dataObject.getString("countryName");
+            String documentName = dataObject.getString("documentName");
+            Log.d("Info Card id", "Document Name: " + documentName);
+            if ("Id Card".equals(documentName))
+            {
+                JSONObject nationObject = dataObject.getJSONObject("nation");
+                JSONObject ocrObject=dataObject.getJSONObject("ocr");
+                String name = nationObject.optString("name","undefined");
+                if ("undefined".equals(name)){
+                    name=ocrObject.optString("name","undefined");
+                }
+                Log.d("Name person: ",name);
+                String address=nationObject.optString("address","undefined");
+                String gender=nationObject.optString("sex","undefined");
+                String nationality=nationObject.optString("nationality","undefined");
+                if ("undefined".equals(nationality)){
+                    nationality=ocrObject.optString("nationality","undefined");
+                }
+                String dob=ocrObject.optString("dateOfBirth","undefined");
+                String dateExpired=ocrObject.optString("dateOfExpiry","undefined");
+                String documentIDNumber=ocrObject.optString("documentNumber","undefined");
+
+                 objCard=new IDCard(documentIDNumber,countryName,name,dob,nationality,dateExpired,address,gender);
+
+
+                Log.d("Info Card id", "Country Name: " + countryName);
+                Log.d("Info Card id", "Document Name: " + documentName);
+                Log.d("Info Card id", "Name: " + name);
+                Log.d("Date of birth: ",dob);
+
+                Log.d("Document Number: ",documentIDNumber);
+            }
+           else if ("Passport".equals(documentName))
+            {
+                JSONObject ocrObject=dataObject.getJSONObject("ocr");
+                String  name=ocrObject.optString("name","undefined");
+                String dob=ocrObject.optString("dateOfBirth","undefined");
+                String dateExpired=ocrObject.optString("dateOfExpiry","undefined");
+                String documentIDNumber=ocrObject.optString("documentNumber","undefined");
+                String nationality=ocrObject.optString("nationality","undefined");
+                String issueStateCode=ocrObject.optString( "issuingStateCode","undefined");
+
+                objCard=new PassportCard(documentIDNumber,countryName,name,dob,nationality,dateExpired,issueStateCode);
+                Log.d("Info Card id", "Country Name: " + countryName);
+                Log.d("Info Card id", "Document Name: " + documentName);
+                Log.d("Info Card id", "Name: " + name);
+                Log.d("Date of birth: ",dob);
+                Log.d("Document Number: ",documentIDNumber);
+            }
+           else if ("Driver Licence".equals(documentName))
+            {
+                JSONObject nationObject = dataObject.optJSONObject("nation");
+                JSONObject ocrObject=dataObject.getJSONObject("ocr");
+                String name, address,nationality;
+                if (nationObject!=null)
+                {
+                    name= nationObject.optString("name","undefined");
+                    nationality=nationObject.optString("nationality","undefined");
+                    address=nationObject.optString("address","undefined");
+                }
+                else {
+                    name=ocrObject.optString("name","undefined");
+                    nationality=ocrObject.optString("nationality","undefined");
+                    address=ocrObject.optString("address","undefined");
+                }
+
+
+                String dob=ocrObject.optString("dateOfBirth","undefined");
+                String dateExpired=ocrObject.optString("dateOfExpiry","undefined");
+                String documentIDNumber=ocrObject.optString("documentNumber","undefined");
+                String driverLicenseClass=ocrObject.optString("dlClass","undefined");
+
+                objCard=new DriverLicenseCard(documentIDNumber,countryName,name,dob,nationality,dateExpired,driverLicenseClass,address);
+                Log.d("Driver class: ",driverLicenseClass);
+
+            }
+        }
+        catch ( JSONException e) {
+            e.printStackTrace();
+        }
+        return objCard;
+    }
 }
