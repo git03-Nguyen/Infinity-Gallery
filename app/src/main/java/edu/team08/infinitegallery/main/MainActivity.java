@@ -219,8 +219,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private void hideMultiplePhotos(File[] files) {
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
-                "Confirm Hiding",
-                "Are you sure to move ${n} photos to the privacy list?".replace("${n}", String.valueOf(files.length)),
+                getString(R.string.confirm_hiding_title),
+                getString(R.string.confirm_hiding_list_photos_message,files.length),
                 new Runnable() {
                     @Override
                     public void run() {

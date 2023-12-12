@@ -107,11 +107,13 @@
     <string name="confirm_deletion_title">Confirm Deletion</string>
     <string name="confirm_deletion_message">Are you sure to move %1$d photos to the trash?</string>
     <string name="confirm_deletion_one_photo_message">Are you sure to move this photo to the trash?</string>
-
+    <string name="confirm_permanent_deletion_title">Confirm Permanent Deletion</string>
+    <string name="confirm_permanent_deletion_message">"Are you sure to permanently delete this photo? This action cannot be undone."</string>
     <string name="confirm_dialog_yes">Yes</string>
     <string name="confirm_dialog_no">No</string>
     <string name="confirm_hiding_title">Confirm Hiding</string>
     <string name="confirm_hiding_message">Are you sure to move this photo to the privacy list?</string>
+    <string name="confirm_hiding_list_photos_message">Are you sure to move  %1$d photos to the privacy list?</string>
     <string name="title_october_15">October 15, 2023</string>
     <string name="subtitle_05_49_pm">05:49 PM</string>
     <string name="add_to_album">Add to %1$s</string>
@@ -135,6 +137,19 @@
     <string name="confirm_restore_description">Are you sure to restore all photos?</string>
     <string name="date_format">MMMM d, yyyy</string>
     <string name="time_format">hh:mm a</string>
+
+    <string name="tag_type">Card type: </string>
+    <string name="country">Country: </string>
+    <string name="card_id">Card ID: </string>
+    <string name="expiration_date">Valid until: </string>
+    <string name="full_name">Full name: </string>
+    <string name="nationality">Nationality: </string>
+    <string name="dob">Date of birth: </string>
+    <string name="gender">Gender: </string>
+    <string name="address">Address: </string>
+    <string name="issuing_state_code">Issuing state code: </string>
+    <string name="driver_class">Driver class: </string>
+    <string name="expiration_date_no_limit">No expiration</string>
 
     <string-array name="choice_items">
         <item>1 seconds</item>

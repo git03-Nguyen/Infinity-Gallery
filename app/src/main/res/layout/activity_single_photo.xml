@@ -26,6 +26,15 @@
             android:layout_marginEnd="16dp"
             android:button="@drawable/sl_checkbox_favorite"
             android:buttonTint="@drawable/sl_tint_checkbox_favorite" />
+        <CheckBox
+            android:id="@+id/cbCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="50dp"
+            android:button="@drawable/sl_checkbox_card"
+            android:buttonTint="@drawable/sl_tint_checkbox_favorite" />
     </RelativeLayout>
 
 
