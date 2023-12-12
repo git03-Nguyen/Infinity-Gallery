@@ -54,7 +54,7 @@
     <string name="photo_s_information">Photo\'s information</string>
     <string name="size_and_date_of_image">Size and Date of Image</string>
     <string name="enter_the_saved_secure_question_and_answer_to_change_the_password">Enter the saved secure question and answer to change the password</string>
-    <string name="asnwer">Asnwer</string>
+    <string name="answer">Answer</string>
     <string name="new_password">New Password</string>
     <string name="show">Show</string>
     <string name="retype_new_password">Retype New Password</string>
@@ -66,7 +66,6 @@
     <string name="finding_other_methods">Finding other methods ?</string>
     <string name="finger_print">Finger Print</string>
     <string name="pattern">Pattern</string>
-    <string name="answer">Answer</string>
     <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Enter your new secure question and answer, along with the password</string>
     <string name="retype_password">Retype Password</string>
     <string name="sign_up">Sign up</string>
@@ -123,7 +122,7 @@
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
     <string name="num_photos">%1$d photos</string>
-    <string name="privacy_album">Privacy Album</string>
+    <string name="privacy_album">Privacy</string>
     <string name="privacy_registration">Privacy Registration</string>
     <string name="privacy_authentication">Privacy Authentication</string>
     <string name="privacy_change_password">Privacy Password Change</string>
@@ -150,6 +149,7 @@
     <string name="issuing_state_code">Issuing state code: </string>
     <string name="driver_class">Driver class: </string>
     <string name="expiration_date_no_limit">No expiration</string>
+    <string name="slideshow_delay_seconds">Slideshow delay seconds</string>
 
     <string-array name="choice_items">
         <item>1 seconds</item>

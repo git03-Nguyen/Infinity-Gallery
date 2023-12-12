@@ -19,6 +19,9 @@
         android:id="@+id/columns"
         android:title="@string/columns" >
         <menu>
+            <item
+                android:id="@+id/column_2"
+                android:title="2 columns" />
 
             <item
                 android:id="@+id/column_3"
@@ -56,6 +59,10 @@
     <item
         android:id="@+id/sortBy"
         android:title="@string/sort_by" />
+
+    <item
+        android:id="@+id/slideshow"
+        android:title="Slideshow" />
 
     <item
         android:id="@+id/rename"

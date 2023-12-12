@@ -55,7 +55,7 @@
     <string name="photo_s_information">Thông tin của ảnh</string>
     <string name="size_and_date_of_image">Kích thước và Ngày của ảnh</string>
     <string name="enter_the_saved_secure_question_and_answer_to_change_the_password">Nhập câu hỏi và câu trả lời bảo mật đã lưu để đổi mật khẩu</string>
-    <string name="asnwer">Câu trả lời</string>
+    <string name="answer">Câu trả lời</string>
     <string name="new_password">Mật khẩu mới</string>
     <string name="show">Hiển thị</string>
     <string name="retype_new_password">Nhập lại mật khẩu mới</string>
@@ -67,7 +67,6 @@
     <string name="finding_other_methods">Đang tìm phương pháp khác?</string>
     <string name="finger_print">Vân tay</string>
     <string name="pattern">Mẫu</string>
-    <string name="answer">Câu trả lời</string>
     <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Nhập câu hỏi và câu trả lời bảo mật mới của bạn, cùng với mật khẩu</string>
     <string name="retype_password">Nhập lại mật khẩu</string>
     <string name="sign_up">Đăng ký</string>
@@ -569,4 +568,5 @@
         <item>u+1f4cd</item>
         <item>u+1f6a9</item>
     </string-array>
+    <string name="slideshow_delay_seconds">Thời gian slideshow</string>
 </resources>

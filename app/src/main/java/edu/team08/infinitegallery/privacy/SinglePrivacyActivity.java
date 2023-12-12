@@ -17,9 +17,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
+import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
 
-public class SinglePrivacyActivity extends AppCompatActivity {
+public class SinglePrivacyActivity extends AppCompatActivity implements MainCallbacks {
     //Properties and attributes
     SinglePhotoFragment singlePhotoFragment;
     private BottomNavigationView bottomNavigationView;
@@ -45,7 +46,6 @@ public class SinglePrivacyActivity extends AppCompatActivity {
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
                 .commit();
 
-        // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -77,7 +77,10 @@ public class SinglePrivacyActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onEmitMsgFromFragToMain(String sender, String request) {
 
+    }
     //functional methods
     private void revealPhoto() {
         int currentPosition = singlePhotoFragment.getCurrentPosition();

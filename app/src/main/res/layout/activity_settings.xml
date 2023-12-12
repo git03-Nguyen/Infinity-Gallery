@@ -19,25 +19,111 @@
         android:paddingHorizontal="15dp"
         android:layout_weight="1">
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sTrashMode"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/move_to_trash_when_delete"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="2dp">
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sNightMode"
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/sTrashMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/move_to_trash_when_delete"
+                android:textSize="18sp"
+                android:padding="5dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dark_mode"
-            android:textSize="18sp" />
+            android:text="@string/language"
+            android:textSize="18sp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="2dp" >
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/languageMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/language"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="2dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dark_mode"
+            android:textSize="18sp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="2dp">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/sNightMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dark_mode"
+                android:textSize="18sp"
+                android:padding="5dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/slideshow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="10dp"
+            android:layout_margin="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/slideshow_delay_seconds"
+                        android:textSize="18sp"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/durationText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1s"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/durationBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:min="1"
+                    android:max="10"
+                    style="@style/SeekBarWithoutSteps"/>
+
+            </LinearLayout>
+
+
+
+        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>
 

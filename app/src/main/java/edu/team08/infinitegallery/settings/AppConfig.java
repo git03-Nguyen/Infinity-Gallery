@@ -27,6 +27,7 @@ public class AppConfig {
         editor.putBoolean(NIGHT_MODE, getNightMode());
         editor.putBoolean(TRASH_MODE, getTrashMode());
         editor.putBoolean(VIETNAMESE_LANGUAGE,getSelectedLanguage());
+        editor.putInt(TIME_LAPSE, getTimeLapse());
         editor.apply();
     }
 
@@ -38,7 +39,7 @@ public class AppConfig {
         return sharedPreferences.getBoolean(TRASH_MODE, true);
     }
 
-    public String getTimeLapse() { return sharedPreferences.getString(TIME_LAPSE, "1 seconds");}
+    public int getTimeLapse() { return sharedPreferences.getInt(TIME_LAPSE, 1);}
 
     public boolean getSelectedLanguage() {
         return sharedPreferences.getBoolean(VIETNAMESE_LANGUAGE, false); // Default false
@@ -59,11 +60,11 @@ public class AppConfig {
         editor.apply();
     }
 
-    public void setTimeLapse(String value) {
+    public void setTimeLapse(int value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (getTimeLapse().equalsIgnoreCase(value)) return;
+        if (getTimeLapse() == value) return;
         editor.remove(TIME_LAPSE);
-        editor.putString(TIME_LAPSE, value);
+        editor.putInt(TIME_LAPSE, value);
         editor.apply();
     }
     public void setSelectedLanguage(boolean value) {
