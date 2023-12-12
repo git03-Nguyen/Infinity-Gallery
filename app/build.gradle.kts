@@ -50,5 +50,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.7.2")
     implementation("androidx.biometric:biometric:1.1.0")
+    implementation("com.andrognito.patternlockview:patternlockview:1.0.0")
 }
 

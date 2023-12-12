@@ -101,6 +101,11 @@ public class PrivacyActivity extends AppCompatActivity {
             editor.remove("PASS");
             editor.apply();
             Toast.makeText(getApplicationContext(), "Clear password successfully", Toast.LENGTH_SHORT).show();
+        } else if (itemId == R.id.privacymenu_SetOrClearPattern) {
+            Intent myIntent = new Intent(PrivacyActivity.this, PrivacyChangePatternActivity.class);
+            startActivity(myIntent, null);
+            Toast.makeText(PrivacyActivity.this,
+                    "Change pattern successfully", Toast.LENGTH_SHORT).show();
         }
         else if (itemId == R.id.privacymenu_DeleteAll) {
             this.deleteAllPrivateFiles();

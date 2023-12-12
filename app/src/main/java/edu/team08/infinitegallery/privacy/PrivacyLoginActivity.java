@@ -132,7 +132,6 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         _fingerPrintButton = (ImageButton) findViewById(R.id.login_FingerprintLogin);
         _patternButton = (ImageButton) findViewById(R.id.login_PatternLogin);
 
-
         //Click Button to show/hide password field
         _showHideButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,6 +185,17 @@ public class PrivacyLoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(checkAvailableBiometric()) {
                     biometricPrompt.authenticate(promptInfo);
+                }
+            }
+        });
+
+        _patternButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isHavingPattern()) {
+                    Intent intent = new Intent(PrivacyLoginActivity.this, PrivacyLoginByPatternActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -252,5 +262,16 @@ public class PrivacyLoginActivity extends AppCompatActivity {
         }
 
         return result;
+    }
+
+    boolean isHavingPattern() {
+        SharedPreferences mPref = this.getSharedPreferences("PATTERN_PASSWORD", Context.MODE_PRIVATE);
+
+        String password = mPref.getString("PASS", null);
+        boolean state = mPref.contains("PASS") || (password != null);
+
+        Toast.makeText(PrivacyLoginActivity.this, "Pattern state: " + state, Toast.LENGTH_SHORT).show();
+        Log.d("PATTERN_STATE", "The pattern password: " + mPref.getString("PASS", null));
+        return state;
     }
 }
