@@ -49,6 +49,8 @@ public class PhotosFragment extends Fragment {
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
 
+    public PhotosFragment(){}
+
     public PhotosFragment(Context context) {
         this.context = context;
     }
