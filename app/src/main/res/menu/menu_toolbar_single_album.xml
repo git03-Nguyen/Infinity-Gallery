@@ -21,7 +21,7 @@
         <menu>
             <item
                 android:id="@+id/column_2"
-                android:title="2 columns" />
+                android:title="@string/_2_columns" />
 
             <item
                 android:id="@+id/column_3"

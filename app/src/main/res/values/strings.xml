@@ -568,4 +568,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="copy_to">Copy to</string>
+    <string name="move_to">Move to</string>
+    <string name="slideshow">Slideshow</string>
+    <string name="rotate">Rotate</string>
+    <string name="rotate_left">Rotate left</string>
+    <string name="rotate_right">Rotate right</string>
+    <string name="rotate_180_u00b0">Rotate 180°</string>
+    <string name="set_as_home_screen">Set as Home screen</string>
+    <string name="set_as_lock_screen">Set as Lock screen</string>
+    <string name="details">Details</string>
+    <string name="recognize_card">Recognize card by OCR</string>
 </resources>
