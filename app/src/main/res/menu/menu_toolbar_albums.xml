@@ -36,9 +36,6 @@
                 android:id="@+id/column_4"
                 android:title="@string/_4_columns" />
 
-            <item
-                android:id="@+id/column_5"
-                android:title="@string/_5_columns" />
         </menu>
     </item>
 
