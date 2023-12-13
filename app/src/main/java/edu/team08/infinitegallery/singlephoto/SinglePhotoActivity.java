@@ -1,28 +1,42 @@
 
 package edu.team08.infinitegallery.singlephoto;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
 import android.app.WallpaperManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
+import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
+
+import com.drew.metadata.png.PngDirectory;
+import com.github.chrisbanes.photoview.PhotoView;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONException;
@@ -31,18 +45,22 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 
+import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.CardInfo;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.DriverLicenseCard;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.IDCard;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.PassportCard;
+import edu.team08.infinitegallery.singlephoto.album.PhotoAndAlbumsActivity;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 
@@ -51,6 +69,7 @@ import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 
+import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -70,6 +89,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private WallpaperManager wallpaperManager;
     private int currentPosition;
     private PopupMenu morePopupMenu;
+    private final int MOVE_TO = 1;
+    private final int COPY_TO = 2;
+
 
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
@@ -79,13 +101,28 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         setContentView(R.layout.activity_single_photo);
 
         Intent intent = getIntent();
+        String[] tempPaths = new String[0];
         if (intent.hasExtra("photoPaths")) {
-            this.photoPaths = intent.getStringArrayExtra("photoPaths");
+            tempPaths = intent.getStringArrayExtra("photoPaths");
+            List<String> list = new ArrayList<String>();
+            for(int i = 0; i < tempPaths.length; i++){
+                File file = new File(tempPaths[i]);
+                if(file.exists()){
+                    list.add(tempPaths[i]);
+                }
+            }
+            photoPaths = list.toArray(new String[0]);
         }
+
+        if(photoPaths.length == 0) onBackPressed();
 
         currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
+        }
+
+        if(photoPaths.length < tempPaths.length){
+            if(currentPosition >= photoPaths.length) currentPosition = 0;
         }
 
         singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
@@ -121,11 +158,20 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
                 if(itemId == R.id.more_copyTo){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, PhotoAndAlbumsActivity.class);
+                    myIntent.putExtra("option", "more_copyTo");
+                    myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                    startActivityForResult(myIntent, COPY_TO);
+
                 } else if(itemId == R.id.more_moveTo){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, PhotoAndAlbumsActivity.class);
+                    myIntent.putExtra("option", "more_moveTo");
+                    myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                    startActivityForResult(myIntent, MOVE_TO);
                 } else if(itemId == R.id.more_slideshow){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, SlideShowActivity.class);
+                    myIntent.putExtra("photoPaths", photoPaths);
+                    startActivity(myIntent);
                 }else if(itemId == R.id.rotateLeft){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.rotateRight){
@@ -133,6 +179,40 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 }else if(itemId == R.id.rotate180){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.more_rename){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SinglePhotoActivity.this);
+                    builder.setTitle("Rename");
+
+                    EditText input = new EditText(SinglePhotoActivity.this);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(input);
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String rename = input.getText().toString();
+                            File currentFile = new File(photoPaths[currentPosition]);
+                            File newFile = new File(currentFile.getParent(), rename);
+                            if(newFile.exists()){
+                                Toast.makeText(SinglePhotoActivity.this, rename + " file is existed", Toast.LENGTH_SHORT);
+                            } else{
+                                if(currentFile.renameTo(newFile)){
+                                    photoPaths[currentPosition] = newFile.getAbsolutePath();
+                                    Toast.makeText(SinglePhotoActivity.this,"Rename successfully", Toast.LENGTH_SHORT);
+                                }else{
+                                    Toast.makeText(SinglePhotoActivity.this,"Rename failed", Toast.LENGTH_SHORT);
+                                }
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 } else if(itemId == R.id.more_setAsHomeScreen){
                     Thread thread = new Thread(){
@@ -183,9 +263,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                         Toast.makeText(SinglePhotoActivity.this, "Lock screen wallpaper not supported", Toast.LENGTH_SHORT).show();
                     }
                 }else if(itemId == R.id.more_details){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-                }else if(itemId == R.id.more_displayFilename){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SinglePhotoActivity.this);
+                    builder.setTitle("Details");
+                    View detailsView = View.inflate(SinglePhotoActivity.this, R.layout.information_details, null);
+                    createDetailsView(detailsView, photoPaths[currentPosition]);
+                    builder.setView(detailsView);
+                    builder.show();
                 }
                 else if (itemId==R.id.more_recognizeCard){
                     File photoFile = new File(photoPaths[currentPosition]);
@@ -234,6 +317,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        recreate();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         Intent intent = getIntent();
@@ -275,6 +364,62 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
                 new File(path)
         );
+    }
+
+    private void createDetailsView(View detailsView, String filePath){
+        try {
+            Metadata metadata = ImageMetadataReader.readMetadata(new File(filePath));
+            String title = null;
+            String lastModified = null;
+            String dateTaken = null;
+            String size = null;
+            String height = null;
+            String width = null;
+            String path = photoPaths[currentPosition];
+
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    if(title == null && tag.toString().toLowerCase().contains("[file] file name")){
+                        title = tag.getDescription();
+                    }
+
+                    if(lastModified == null && tag.toString().toLowerCase().contains("modified date")){
+                        lastModified = tag.getDescription();
+                    }
+
+                    if(dateTaken == null && tag.toString().toLowerCase().contains("date/time original")){
+                        dateTaken = tag.getDescription();
+                    }
+
+                    if(size == null && tag.toString().toLowerCase().contains("file size")){
+                        size = tag.getDescription();
+                    }
+
+                    if(width == null && tag.toString().toLowerCase().contains("width")){
+                        width = tag.getDescription();
+                    }
+
+                    if(height == null && tag.toString().toLowerCase().contains("height")){
+                        height = tag.getDescription();
+                    }
+                }
+            }
+
+            if(lastModified == null) lastModified = "";
+            if(dateTaken == null) dateTaken = lastModified;
+
+            ((TextView)detailsView.findViewById(R.id.title)).setText("Title: " +title);
+            ((TextView)detailsView.findViewById(R.id.lastModified)).setText("Last modified: " + lastModified);
+            ((TextView)detailsView.findViewById(R.id.dateTaken)).setText("Date taken: " + dateTaken);
+            ((TextView)detailsView.findViewById(R.id.size)).setText("Size: " + size);
+            ((TextView)detailsView.findViewById(R.id.resolution)).setText("Resolution: " + width + "x" + height);
+            ((TextView)detailsView.findViewById(R.id.path)).setText("Path: " + path);
+
+        } catch (ImageProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setDateForToolbar(String filePath){

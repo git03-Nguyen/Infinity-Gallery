@@ -1,5 +1,6 @@
-package edu.team08.infinitegallery.optionalbums;
+package edu.team08.infinitegallery.singlephoto.album;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,17 +13,19 @@ import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,75 +35,80 @@ import java.util.List;
 import java.util.Map;
 
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.main.MainActivity;
-import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.optionalbums.AlbumFolder;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 
-public class AlbumsFragment extends Fragment {
-    private Context context;
-    private RecyclerView albumsRecView;
-    private AlbumsAdapter albumsAdapter;
+
+public class PhotoAndAlbumsActivity extends AppCompatActivity {
+    private GridView gridView;
     private AlbumFolder[] albumFolders;
+    private PhotoAndAlbumAdapter albumsAdapter;
     private ViewSwitcher viewSwitcher;
-    private int spanCount;
-
-    public AlbumsFragment(){
-        //required empty constructor
-    }
-
-    public static AlbumsFragment newInstance() {
-        AlbumsFragment albumsFragment = new AlbumsFragment();
-        return albumsFragment;
-    }
+    private String option;
+    private String photoPath;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.context = getActivity();
-        this.spanCount = 3;
+        setContentView(R.layout.activity_photo_and_albums);
+
+        Intent intent = getIntent();
+
+        if(intent.hasExtra("option")){
+            option = intent.getStringExtra("option");
+        }
+
+        if(intent.hasExtra("photoPath")){
+            photoPath = intent.getStringExtra("photoPath");
+        }
+
+        this.viewSwitcher = findViewById(R.id.photoAndAlbumsViewSwitcher);
+        this.gridView = findViewById(R.id.photoAndAlbumsGridView);
+        this.albumFolders = getAllAlbumFolders();
+
+        displayFolderAlbums();
+
+        toolbar = findViewById(R.id.photoAndAlbumsToolbar);
+
+        if(option.equals("more_copyTo")){
+            toolbar.setTitle("Copy To");
+        }else if(option.equals("more_moveTo")){
+            toolbar.setTitle("Move To");
+        }
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_albums, container, false);
-        Toolbar toolbar = rootView.findViewById(R.id.toolbarAlbums);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_photo_and_albums, menu);
+        return true;
+    }
 
-        toolbar.setOnMenuItemClickListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.menuAlbumsSettings) {
-                Intent myIntent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(myIntent, null);
-            } else if (itemId == R.id.menuAlbumsAdd) {
-                addNewAlbum();
-            } else if (itemId == R.id.column_2) {
-                this.spanCount = 2;
-                displayFolderAlbums();
-            } else if (itemId == R.id.column_3) {
-                this.spanCount = 3;
-                displayFolderAlbums();
-            } else if (itemId == R.id.column_4) {
-                this.spanCount = 4;
-                displayFolderAlbums();
-            } else {
-                Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        });
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+       int itemId = item.getItemId();
+       if(itemId == R.id.photoAndAlbumsMenuAlbumsAdd){
+           addNewAlbum();
+       } else if(itemId == android.R.id.home){
+           onBackPressed();
+       }
+       return true;
+    }
 
-        this.viewSwitcher = rootView.findViewById(R.id.viewSwitcher);
-        this.albumsRecView = rootView.findViewById(R.id.recViewAlbums);
-        this.albumFolders = getAllAlbumFolders();
-        displayFolderAlbums();
-
-        return rootView;
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void addNewAlbum() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PhotoAndAlbumsActivity.this);
         builder.setTitle(getResources().getString(R.string.create_new_album));
 
         // Set up the input field
-        final EditText input = new EditText(context);
+        final EditText input = new EditText(PhotoAndAlbumsActivity.this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
@@ -116,7 +124,7 @@ public class AlbumsFragment extends Fragment {
                     createNewAlbum(albumName);
                 } else {
                     // Handle the case where the input is empty
-                    Toast.makeText(context, "Album name cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhotoAndAlbumsActivity.this, "Album name cannot be empty", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -141,14 +149,14 @@ public class AlbumsFragment extends Fragment {
         // Check if the albumName already exists in Infinity-Albums
         File newAlbumFolder = new File(albumsFolder, albumName);
         if (newAlbumFolder.exists()) {
-            Toast.makeText(context, "Album " + albumName + " already exists!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PhotoAndAlbumsActivity.this, "Album " + albumName + " already exists!", Toast.LENGTH_SHORT).show();
         } else {
             // Create the new album folder
             if (newAlbumFolder.mkdirs()) {
-                Toast.makeText(context, "Album " + albumName + " created!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhotoAndAlbumsActivity.this, "Album " + albumName + " created!", Toast.LENGTH_SHORT).show();
                 onResume();
             } else {
-                Toast.makeText(context, "Failed to create album " + albumName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhotoAndAlbumsActivity.this, "Failed to create album " + albumName, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -158,7 +166,6 @@ public class AlbumsFragment extends Fragment {
         super.onResume();
         this.albumFolders = getAllAlbumFolders();
         displayFolderAlbums();
-        ((MainActivity) context).changeStatusBar();
     }
 
     public AlbumFolder[] getAllAlbumFolders() {
@@ -203,21 +210,27 @@ public class AlbumsFragment extends Fragment {
             albumFolders.add(new AlbumFolder(photos.toArray(new File[0]), folder));
         }
 
+        File currentFolder = new File(photoPath).getParentFile();
+        for(int i = 0; i < albumFolders.size(); i++){
+            if(currentFolder != null && currentFolder.getName().equals(albumFolders.get(i).getFolder().getName())){
+                albumFolders.remove(i);
+                i--;
+            }
+        }
+
         // Convert the list to an array and return
         return albumFolders.toArray(new AlbumFolder[0]);
     }
 
     private void displayFolderAlbums() {
-       if (this.albumFolders.length > 0) {
-            if (albumsRecView.getId() == viewSwitcher.getNextView().getId()) {
+        if (this.albumFolders.length > 0) {
+            if (gridView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-           albumsAdapter = new AlbumsAdapter(context, this.albumFolders, spanCount);
-           albumsRecView.setAdapter(albumsAdapter);
-           GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
-           albumsRecView.setLayoutManager(gridLayoutManager);
+            albumsAdapter = new PhotoAndAlbumAdapter(PhotoAndAlbumsActivity.this, this.albumFolders, photoPath);
+            gridView.setAdapter(albumsAdapter);
         } else {
-            if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
+            if (R.id.photoAndAlbumsEmptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
         }
@@ -233,7 +246,7 @@ public class AlbumsFragment extends Fragment {
                 uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
             }
 
-            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            cursor = getContentResolver().query(uri, projection, null, null, null);
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             while (cursor.moveToNext()) {
                 String photoPath = cursor.getString(columnIndex);
@@ -248,4 +261,7 @@ public class AlbumsFragment extends Fragment {
         return photoFiles.toArray(new File[0]);
     }
 
+    public String getOption(){
+        return option;
+    }
 }
