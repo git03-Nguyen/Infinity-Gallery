@@ -116,8 +116,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         }
 
         if(photoPaths.length < tempPaths.length){
-            currentPosition--;
-            if(currentPosition < 0) currentPosition = photoPaths.length - 1;
+            if(currentPosition >= photoPaths.length) currentPosition = 0;
         }
 
         singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
