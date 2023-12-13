@@ -43,6 +43,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private List<File> allPhotos;
     private final int spanCount;
     private boolean selectionMode;
+    public boolean selectedAll;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -72,6 +73,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
         this.selectionMode = false;
+        this.selectedAll = false;
     }
 
     @NonNull
@@ -87,6 +89,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         return new ViewHolder(rootView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PhotosAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // Get item path at current position
@@ -165,6 +168,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.txtSizeAndDateImage.append(sdf.format(photo.lastModified()));
         }
 
+        if (selectedAll) {
+            selectedItemsIds.put(position, true);
+        }
+
         if(selectedItemsIds.get(position)) {
             holder.itemView.setBackgroundColor(0x993BF566);
             holder.checkbox.setVisibility(View.VISIBLE);
@@ -178,6 +185,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
             holder.imageItem.clearColorFilter();
         }
+
+
+
     }
 
     @Override
@@ -204,6 +214,21 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         ((MainCallbacks) context).onEmitMsgFromFragToMain("NUMBER OF SELECTIONS", String.valueOf(getSelectionsCount()));
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void selectAll() {
+        selectedItemsIds.clear();
+        selectedAll = true;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void unSelectAll() {
+        selectedItemsIds.clear();
+        selectedAll = false;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     public void removeAllSelections() {
         selectedItemsIds.clear();
         notifyDataSetChanged();

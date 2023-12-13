@@ -15,13 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,10 +37,11 @@ import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class AlbumsFragment extends Fragment {
     private Context context;
-    private GridView gridView;
-    private AlbumFolder[] albumFolders;
+    private RecyclerView albumsRecView;
     private AlbumsAdapter albumsAdapter;
+    private AlbumFolder[] albumFolders;
     private ViewSwitcher viewSwitcher;
+    private int spanCount;
 
     public AlbumsFragment(){
         //required empty constructor
@@ -54,6 +56,7 @@ public class AlbumsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
+        this.spanCount = 3;
     }
 
     @Override
@@ -69,6 +72,15 @@ public class AlbumsFragment extends Fragment {
                 startActivity(myIntent, null);
             } else if (itemId == R.id.menuAlbumsAdd) {
                 addNewAlbum();
+            } else if (itemId == R.id.column_2) {
+                this.spanCount = 2;
+                displayFolderAlbums();
+            } else if (itemId == R.id.column_3) {
+                this.spanCount = 3;
+                displayFolderAlbums();
+            } else if (itemId == R.id.column_4) {
+                this.spanCount = 4;
+                displayFolderAlbums();
             } else {
                 Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -76,7 +88,7 @@ public class AlbumsFragment extends Fragment {
         });
 
         this.viewSwitcher = rootView.findViewById(R.id.viewSwitcher);
-        this.gridView = rootView.findViewById(R.id.gridView);
+        this.albumsRecView = rootView.findViewById(R.id.recViewAlbums);
         this.albumFolders = getAllAlbumFolders();
         displayFolderAlbums();
 
@@ -197,11 +209,13 @@ public class AlbumsFragment extends Fragment {
 
     private void displayFolderAlbums() {
        if (this.albumFolders.length > 0) {
-            if (gridView.getId() == viewSwitcher.getNextView().getId()) {
+            if (albumsRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-           albumsAdapter = new AlbumsAdapter(context, this.albumFolders);
-           gridView.setAdapter(albumsAdapter);
+           albumsAdapter = new AlbumsAdapter(context, this.albumFolders, spanCount);
+           albumsRecView.setAdapter(albumsAdapter);
+           GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
+           albumsRecView.setLayoutManager(gridLayoutManager);
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
@@ -233,6 +247,5 @@ public class AlbumsFragment extends Fragment {
 
         return photoFiles.toArray(new File[0]);
     }
-
 
 }

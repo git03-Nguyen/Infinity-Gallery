@@ -62,6 +62,12 @@
         <item name="iconTint">@color/white</item>
     </style>
 
+    <style name="MyIconButtonCancelReversedStyle" parent="Widget.Material3.Button.IconButton" >
+        <item name="icon">@drawable/ic_close_24</item>
+        <item name="endIconCheckable">false</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
     <style name="Theme.MyTheme.AllPhotosTheme" parent="Theme.MyTheme">
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>

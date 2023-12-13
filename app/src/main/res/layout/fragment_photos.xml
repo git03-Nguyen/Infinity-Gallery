@@ -62,8 +62,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_gradient_black_for_all_photos_status_bar"
             android:clickable="false"
-            android:focusable="false"
-            >
+            android:focusable="false" >
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarPhotos"
