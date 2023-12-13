@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         setSelectionFeaturesForAllPhotos();
 
         photosFragment = PhotosFragment.newInstance(MainActivity.this);
-        albumsFragment = AlbumsFragment.newInstance(MainActivity.this);
+        albumsFragment = AlbumsFragment.newInstance();
         searchFragment = SearchFragment.newInstance(MainActivity.this);
         moreFragment = MoreFragment.newInstance(MainActivity.this);
         currentFragment = photosFragment;

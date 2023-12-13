@@ -1,5 +1,6 @@
 
 package edu.team08.infinitegallery.singlephoto;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -37,18 +38,22 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 
+import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.CardInfo;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.DriverLicenseCard;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.IDCard;
 import edu.team08.infinitegallery.singlephoto.RecognizeCard.PassportCard;
+import edu.team08.infinitegallery.singlephoto.album.PhotoAndAlbumsActivity;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 
@@ -57,6 +62,7 @@ import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 
+import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -76,6 +82,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private WallpaperManager wallpaperManager;
     private int currentPosition;
     private PopupMenu morePopupMenu;
+    private final int MOVE_TO = 1;
+    private final int COPY_TO = 2;
+
 
     private CheckBox cardBox;
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
@@ -86,13 +95,29 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         setContentView(R.layout.activity_single_photo);
 
         Intent intent = getIntent();
+        String[] tempPaths = new String[0];
         if (intent.hasExtra("photoPaths")) {
-            this.photoPaths = intent.getStringArrayExtra("photoPaths");
+            tempPaths = intent.getStringArrayExtra("photoPaths");
+            List<String> list = new ArrayList<String>();
+            for(int i = 0; i < tempPaths.length; i++){
+                File file = new File(tempPaths[i]);
+                if(file.exists()){
+                    list.add(tempPaths[i]);
+                }
+            }
+            photoPaths = list.toArray(new String[0]);
         }
+
+        if(photoPaths.length == 0) onBackPressed();
 
         currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
+        }
+
+        if(photoPaths.length < tempPaths.length){
+            currentPosition--;
+            if(currentPosition < 0) currentPosition = photoPaths.length - 1;
         }
 
         singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
@@ -141,11 +166,20 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
                 if(itemId == R.id.more_copyTo){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, PhotoAndAlbumsActivity.class);
+                    myIntent.putExtra("option", "more_copyTo");
+                    myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                    startActivityForResult(myIntent, COPY_TO);
+
                 } else if(itemId == R.id.more_moveTo){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, PhotoAndAlbumsActivity.class);
+                    myIntent.putExtra("option", "more_moveTo");
+                    myIntent.putExtra("photoPath", photoPaths[currentPosition]);
+                    startActivityForResult(myIntent, MOVE_TO);
                 } else if(itemId == R.id.more_slideshow){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    Intent myIntent = new Intent(SinglePhotoActivity.this, SlideShowActivity.class);
+                    myIntent.putExtra("photoPaths", photoPaths);
+                    startActivity(myIntent);
                 }else if(itemId == R.id.rotateLeft){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.rotateRight){
@@ -247,6 +281,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        recreate();
     }
 
     @Override
