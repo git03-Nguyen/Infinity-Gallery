@@ -9,10 +9,6 @@
         android:icon="@drawable/ic_albums_add_24" />
 
     <item
-        android:id="@+id/menuAlbumsCamera"
-        android:title="@string/camera" />
-
-    <item
         android:id="@+id/menuAlbumsSortBy"
         android:title="@string/sort_by" >
         <menu
