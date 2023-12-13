@@ -22,6 +22,8 @@ import android.widget.ViewSwitcher;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,9 +38,9 @@ import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class AlbumsFragment extends Fragment {
     private Context context;
-    private GridView gridView;
+    private RecyclerView albumsRecView;
+    private AlbumsRecAdapter albumsRecAdapter;
     private AlbumFolder[] albumFolders;
-    private AlbumsAdapter albumsAdapter;
     private ViewSwitcher viewSwitcher;
 
     public AlbumsFragment(Context context) {
@@ -74,7 +76,7 @@ public class AlbumsFragment extends Fragment {
         });
 
         this.viewSwitcher = rootView.findViewById(R.id.viewSwitcher);
-        this.gridView = rootView.findViewById(R.id.gridView);
+        this.albumsRecView = rootView.findViewById(R.id.recViewAlbums);
         this.albumFolders = getAllAlbumFolders();
         displayFolderAlbums();
 
@@ -195,11 +197,13 @@ public class AlbumsFragment extends Fragment {
 
     private void displayFolderAlbums() {
        if (this.albumFolders.length > 0) {
-            if (gridView.getId() == viewSwitcher.getNextView().getId()) {
+            if (albumsRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-           albumsAdapter = new AlbumsAdapter(context, this.albumFolders);
-           gridView.setAdapter(albumsAdapter);
+           albumsRecAdapter = new AlbumsRecAdapter(context, this.albumFolders, 3);
+           albumsRecView.setAdapter(albumsRecAdapter);
+           GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+           albumsRecView.setLayoutManager(gridLayoutManager);
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
