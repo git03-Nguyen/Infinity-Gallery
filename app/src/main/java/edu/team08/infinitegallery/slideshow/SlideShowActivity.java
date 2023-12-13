@@ -49,19 +49,31 @@ public class SlideShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_slideshow);
 
         Intent intent = getIntent();
+        toolbar = findViewById(R.id.toolbarSlideshow);
+
         if (intent.hasExtra("folderPath")) {
             folderPath = intent.getStringExtra("folderPath");
+            albumName = new File(folderPath).getName();
+            getAllPhotosOfFolder(folderPath);
+            toolbar.setTitle("Slide of ${AlbumName}".replace("${AlbumName}", albumName));
         }
+
+        if(intent.hasExtra("photoPaths")){
+            String[] photoPaths = intent.getStringArrayExtra("photoPaths");
+            allPhotos = new ArrayList<File>();
+            for(int i = 0; i < photoPaths.length; i++){
+                allPhotos.add(new File(photoPaths[i]));
+            }
+
+            toolbar.setTitle("Slideshow");
+        }
+
         delayedValue = AppConfig.getInstance(this).getTimeLapse();
-        albumName = new File(folderPath).getName();
-        getAllPhotosOfFolder(folderPath);
+
         allPhotos.add(0, allPhotos.get(allPhotos.size() - 1));
         allPhotos.add(allPhotos.get(1));
         photoSize = allPhotos.size();
 
-        // Set value to each element in Slideshow
-        toolbar = findViewById(R.id.toolbarSlideshow);
-        toolbar.setTitle("Slide of ${AlbumName}".replace("${AlbumName}", albumName));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

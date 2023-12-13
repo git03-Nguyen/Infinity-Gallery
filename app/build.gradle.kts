@@ -51,5 +51,3 @@ dependencies {
     implementation("androidx.biometric:biometric:1.1.0")
     implementation("com.andrognito.patternlockview:patternlockview:1.0.0")
 }
-
-
