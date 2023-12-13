@@ -198,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
                     @Override
                     public void run() {
-                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(MainActivity.this, "Deleting ...", () -> {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(MainActivity.this, "Deleting ...",
+                                () -> {
                                     try {
                                         TrashBinManager trashBinManager = new TrashBinManager(MainActivity.this);
                                         for (File file: files) {
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                                 },
                                 () -> {
                                     photosFragment.toggleSelectionMode();
+                                    photosFragment.onResume();
                                 });
 
                     }
@@ -240,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                                 },
                                 () -> {
                                     photosFragment.toggleSelectionMode();
+                                    photosFragment.onResume();
                                 });
 
                     }

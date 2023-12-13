@@ -143,17 +143,16 @@ public class PhotosFragment extends Fragment {
 
     public void toggleSelectionMode() {
         photosAdapter.toggleSelectionMode();
+        // Change the layout (toolbar)
+        toggleToolbarForSelection();
         if (photosAdapter.getSelectionMode()) {
-            // Change the layout (toolbar)
-            toggleToolbarForSelection();
+
             // Call activity to change layout (nav bar)
             ((MainCallbacks) context).onEmitMsgFromFragToMain("SELECTION MODE", "1");
         } else {
-            // Change the layout (top bar)
-            toggleToolbarForSelection();
+
             // Call activity to change layout (nav bar)
             ((MainCallbacks) context).onEmitMsgFromFragToMain("SELECTION MODE", "0");
-            onResume();
         }
     }
 
