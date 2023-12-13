@@ -2,17 +2,9 @@ package edu.team08.infinitegallery.optionalbums;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.DisplayMetrics;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,15 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.util.List;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
-import edu.team08.infinitegallery.main.MainActivity;
-import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
-import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
-public class AlbumsRecAdapter extends RecyclerView.Adapter<AlbumsRecAdapter.ViewHolder> {
+public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
     private Context context;
     private AlbumFolder[] albumFolders;
     private int spanCount;
@@ -41,7 +29,7 @@ public class AlbumsRecAdapter extends RecyclerView.Adapter<AlbumsRecAdapter.View
         rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album, parent, false);
 
         Glide.with(context).clear(rootView);
-        return new AlbumsRecAdapter.ViewHolder(rootView);
+        return new AlbumsAdapter.ViewHolder(rootView);
     }
 
     @Override
@@ -106,7 +94,7 @@ public class AlbumsRecAdapter extends RecyclerView.Adapter<AlbumsRecAdapter.View
         }
     }
 
-    public AlbumsRecAdapter(Context context, AlbumFolder[] albumFolders, int spanCount) {
+    public AlbumsAdapter(Context context, AlbumFolder[] albumFolders, int spanCount) {
         this.context = context;
         this.albumFolders = albumFolders;
         this.spanCount = spanCount;

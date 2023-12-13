@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
@@ -39,7 +38,7 @@ import edu.team08.infinitegallery.settings.SettingsActivity;
 public class AlbumsFragment extends Fragment {
     private Context context;
     private RecyclerView albumsRecView;
-    private AlbumsRecAdapter albumsRecAdapter;
+    private AlbumsAdapter albumsAdapter;
     private AlbumFolder[] albumFolders;
     private ViewSwitcher viewSwitcher;
     private int spanCount;
@@ -211,8 +210,8 @@ public class AlbumsFragment extends Fragment {
             if (albumsRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-           albumsRecAdapter = new AlbumsRecAdapter(context, this.albumFolders, spanCount);
-           albumsRecView.setAdapter(albumsRecAdapter);
+           albumsAdapter = new AlbumsAdapter(context, this.albumFolders, spanCount);
+           albumsRecView.setAdapter(albumsAdapter);
            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
            albumsRecView.setLayoutManager(gridLayoutManager);
         } else {

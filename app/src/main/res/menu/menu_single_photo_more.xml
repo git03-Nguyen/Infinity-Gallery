@@ -49,6 +49,6 @@
         android:id="@+id/more_displayFilename"
         android:title="Display filename"/>
     <item
-        android:id="@+id/more_recoginzeCard"
+        android:id="@+id/more_recognizeCard"
         android:title="Recognize Card"/>
 </menu>
