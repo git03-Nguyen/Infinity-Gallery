@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 public class MoreFragment extends Fragment {
     private static final int SETTINGS_REQUEST_CODE = 1;
     private Context context;
+    private GridLayout gridLayout;
     private SquareImageButton btnTrashBin;
     private SquareImageButton btnPrivacy;
     private SquareImageButton btnFavorite;
@@ -73,6 +76,8 @@ public class MoreFragment extends Fragment {
             }
             return true;
         });
+
+        gridLayout = rootView.findViewById(R.id.gridLayout);
 
         btnPrivacy = rootView.findViewById(R.id.btn_privacy);
         btnPrivacy.setOnClickListener(new View.OnClickListener() {
