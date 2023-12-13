@@ -1,4 +1,4 @@
-package edu.team08.infinitegallery.singlephoto.RecognizeCard;
+package edu.team08.infinitegallery.singlephoto.recognition;
 
 public class IDCard extends CardInfo {
     private String address;

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,9 +20,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +34,6 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
-
-import com.drew.metadata.png.PngDirectory;
-import com.github.chrisbanes.photoview.PhotoView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -54,12 +52,11 @@ import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
 
-import edu.team08.infinitegallery.optionalbums.SingleAlbumActivity;
 import edu.team08.infinitegallery.settings.AppConfig;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.CardInfo;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.DriverLicenseCard;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.IDCard;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.PassportCard;
+import edu.team08.infinitegallery.singlephoto.recognition.CardInfo;
+import edu.team08.infinitegallery.singlephoto.recognition.DriverLicenseCard;
+import edu.team08.infinitegallery.singlephoto.recognition.IDCard;
+import edu.team08.infinitegallery.singlephoto.recognition.PassportCard;
 import edu.team08.infinitegallery.singlephoto.album.PhotoAndAlbumsActivity;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
@@ -184,7 +181,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                     EditText input = new EditText(SinglePhotoActivity.this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    input.setText(new File(photoPaths[currentPosition]).getName());
                     builder.setView(input);
+                    input.selectAll();
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override

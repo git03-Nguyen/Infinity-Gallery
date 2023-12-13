@@ -1,7 +1,6 @@
 package edu.team08.infinitegallery.singlephoto;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +10,11 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.w3c.dom.Text;
-
-import java.sql.Driver;
-
 import edu.team08.infinitegallery.R;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.CardInfo;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.DriverLicenseCard;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.IDCard;
-import edu.team08.infinitegallery.singlephoto.RecognizeCard.PassportCard;
+import edu.team08.infinitegallery.singlephoto.recognition.CardInfo;
+import edu.team08.infinitegallery.singlephoto.recognition.DriverLicenseCard;
+import edu.team08.infinitegallery.singlephoto.recognition.IDCard;
+import edu.team08.infinitegallery.singlephoto.recognition.PassportCard;
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
     private String tagType;

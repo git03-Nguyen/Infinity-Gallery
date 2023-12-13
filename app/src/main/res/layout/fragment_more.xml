@@ -81,7 +81,7 @@
                 android:id="@+id/txtPrivacyPhotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/_0_photos"
+                android:text="@string/x_photos"
                 android:paddingStart="5dp"
                 style="@style/ShapeAppearance.Material3.Corner.ExtraSmall"/>
 

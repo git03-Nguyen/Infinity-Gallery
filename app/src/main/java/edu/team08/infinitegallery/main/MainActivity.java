@@ -82,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     protected void onPause() {
         super.onPause();
-        runOnUiThread(() -> {
-            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
-                getWindow().getDecorView().setSystemUiVisibility(0);
-            } else {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-        });
+//        runOnUiThread(() -> {
+//            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
+//                getWindow().getDecorView().setSystemUiVisibility(0);
+//            } else {
+//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//            }
+//        });
     }
 
     private void initApp() {
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
     private void shareMultiplePhotos(File[] files) {
         if (files.length == 0) return;
-        // TODO: implement sharing multiple files feature
+
         ArrayList<Uri> uris = new ArrayList<>();
         for(File file: files){
             Uri photoURI = FileProvider.getUriForFile(this,
@@ -197,9 +197,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         shareIntent.setType("image/*");
         shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)));
+        startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)), 1002);
 
-        Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1002) {
+            photosFragment.toggleSelectionMode();
+        }
     }
 
     private Uri buildFileProviderUri(Uri uri) {

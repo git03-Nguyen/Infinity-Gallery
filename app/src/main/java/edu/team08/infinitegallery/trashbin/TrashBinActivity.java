@@ -74,8 +74,6 @@ public class TrashBinActivity extends AppCompatActivity {
             this.finish();
         } else if (itemId == R.id.menuTrashBinRestoreAll) {
             this.restoreAllPhotos();
-        } else if (itemId == R.id.menuTrashBinSelect) {
-            Toast.makeText(getApplicationContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
         } else if (itemId == R.id.menuTrashBinEmpty) {
             this.emptyTrashBin();
         } else if (itemId == R.id.menuTrashBinSettings) {

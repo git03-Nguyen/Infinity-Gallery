@@ -2,20 +2,26 @@ package edu.team08.infinitegallery.optionalbums;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +37,13 @@ import java.util.List;
 
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
+import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
@@ -102,7 +109,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             } else if (itemId == R.id.multipleMoveTrash) {
                 trashMultiplePhotos(files);
             } else if (itemId == R.id.multipleShare) {
-                //shareMultiplePhotos(files);
+                shareMultiplePhotos(files);
             } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -187,6 +194,79 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 null);
     }
 
+    private void shareMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
+
+        ArrayList<Uri> uris = new ArrayList<>();
+        for(File file: files){
+            Uri photoURI = FileProvider.getUriForFile(this,
+                    this.getApplicationContext().getPackageName() + ".fileprovider", file);
+
+            uris.add(buildFileProviderUri(photoURI));
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setType("image/*");
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)), 1002);
+
+    }
+
+    private Uri buildFileProviderUri(Uri uri) {
+        if (FileSaveHelper.isSdkHigherThan28()) {
+            return uri;
+        }
+
+        String path = uri.getPath();
+        if (path == null) {
+            throw new IllegalArgumentException("URI Path Expected");
+        }
+
+        return FileProvider.getUriForFile(
+                this,
+                EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
+                new File(path)
+        );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1002) {
+            toggleSelectionMode();
+        }
+    }
+
+    private void deleteAlbum() {
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                getString(R.string.confirm_deletion_title),
+                getString(R.string.are_you_sure_to_delete_this_album_to_the_trash),
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SingleAlbumActivity.this, "Deleting ...",
+                                () -> {
+                                    try {
+                                        TrashBinManager trashBinManager = new TrashBinManager(SingleAlbumActivity.this);
+                                        for (File file: photoFiles) {
+                                            trashBinManager.moveToTrash(file);
+                                        }
+                                        new File(folderPath).delete();
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
+                                    finish();
+                                });
+
+                    }
+                },
+                null);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -202,6 +282,10 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_single_album, menu);
+        if (!new File(folderPath).getParentFile().getName().equals("Infinity-Albums")) {
+            menu.removeItem(R.id.rename);
+            menu.removeItem(R.id.deleteAlbum);
+        }
         return true;
     }
 
@@ -239,6 +323,47 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             if (photoFiles.size() > 0) {
                 toggleSelectionMode();
             }
+        } else if (itemId == R.id.deleteAlbum) {
+            deleteAlbum();
+        } else if (itemId == R.id.rename) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SingleAlbumActivity.this);
+            builder.setTitle("Rename");
+
+            EditText input = new EditText(SingleAlbumActivity.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setText(albumName);
+            builder.setView(input);
+            input.selectAll();
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String rename = input.getText().toString();
+                    File currentFile = new File(folderPath);
+                    File newFile = new File(currentFile.getParent(), rename);
+                    if(newFile.exists()){
+                        Toast.makeText(SingleAlbumActivity.this, rename + " file is existed", Toast.LENGTH_SHORT);
+                    } else {
+                        if(currentFile.renameTo(newFile)){
+                            folderPath = newFile.getAbsolutePath();
+                            albumName = rename;
+                            toolbar.setTitle(albumName);
+                        }else{
+                            Toast.makeText(SingleAlbumActivity.this,"Rename failed", Toast.LENGTH_SHORT);
+                        }
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+        } else if (itemId == R.id.deleteAlbum) {
+            // TODO: should delete recursively before delete directory
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);

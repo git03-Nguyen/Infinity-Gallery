@@ -44,6 +44,10 @@ public class TrashBinManager {
     }
 
     public void moveFile(File src, File dst) throws IOException {
+        if (!dst.getParentFile().exists()) {
+            dst.getParentFile().mkdirs();
+        }
+
         if (dst.exists()) {
             // If the destination file already exists, rename it with a postfix
             dst = getUniqueDestination(dst);
