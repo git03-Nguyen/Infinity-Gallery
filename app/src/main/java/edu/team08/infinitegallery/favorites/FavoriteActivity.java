@@ -60,7 +60,7 @@ public class FavoriteActivity extends AppCompatActivity implements MainCallbacks
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_photos, menu);
+        getMenuInflater().inflate(R.menu.menu_toolbar_favorites, menu);
         return true;
     }
 
