@@ -2,6 +2,7 @@ package edu.team08.infinitegallery.main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -16,12 +17,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.R;
@@ -34,6 +37,8 @@ import edu.team08.infinitegallery.optionphotos.PhotosFragment;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.optionsearch.SearchFragment;
 import edu.team08.infinitegallery.settings.AppConfig;
+import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
+import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class MainActivity extends AppCompatActivity implements MainCallbacks {
@@ -181,7 +186,37 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     private void shareMultiplePhotos(File[] files) {
         if (files.length == 0) return;
         // TODO: implement sharing multiple files feature
+        ArrayList<Uri> uris = new ArrayList<>();
+        for(File file: files){
+            Uri photoURI = FileProvider.getUriForFile(this,
+                    this.getApplicationContext().getPackageName() + ".fileprovider", file);
+
+            uris.add(buildFileProviderUri(photoURI));
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setType("image/*");
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)));
+
         Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
+    }
+
+    private Uri buildFileProviderUri(Uri uri) {
+        if (FileSaveHelper.isSdkHigherThan28()) {
+            return uri;
+        }
+
+        String path = uri.getPath();
+        if (path == null) {
+            throw new IllegalArgumentException("URI Path Expected");
+        }
+
+        return FileProvider.getUriForFile(
+                this,
+                EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
+                new File(path)
+        );
     }
 
     private void trashMultiplePhotos(File[] files) {
