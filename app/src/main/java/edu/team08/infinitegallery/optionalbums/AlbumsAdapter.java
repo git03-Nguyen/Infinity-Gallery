@@ -2,70 +2,58 @@ package edu.team08.infinitegallery.optionalbums;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.SquareImageButton;
 
-// TODO: implement albums adapter
-public class AlbumsAdapter extends BaseAdapter {
-
+public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder> {
     private Context context;
     private AlbumFolder[] albumFolders;
+    private int spanCount;
 
-    public AlbumsAdapter(Context context, AlbumFolder[] albumFolders) {
-        this.context = context;
-        this.albumFolders = albumFolders;
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View rootView;
+        rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album, parent, false);
+
+        Glide.with(context).clear(rootView);
+        return new AlbumsAdapter.ViewHolder(rootView);
     }
 
     @Override
-    public int getCount() {
-        if (this.albumFolders == null) return 0;
-        return this.albumFolders.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album, parent, false);
-        }
-
-        SquareImageButton btnAlbum = convertView.findViewById(R.id.squareBtnAlbum);
-        TextView txtAlbumName = convertView.findViewById(R.id.albumName);
-        TextView txtNumOfPhotos = convertView.findViewById(R.id.numberOfPhotos);
-
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AlbumFolder currentFolder = this.albumFolders[position];
 
         if (currentFolder.getNumberOfPhotos() == 0) {
-            btnAlbum.setImageResource(R.drawable.img_image_error);
+            Glide.with(context)
+                    .load(R.drawable.img_image_error)
+                    .placeholder(R.drawable.img_image_placeholder)
+                    .into(holder.btnAlbum);
         } else {
-            Bitmap myBitmap = BitmapFactory.decodeFile(currentFolder.getPhotos()[currentFolder.getNumberOfPhotos()-1].getAbsolutePath());
-            btnAlbum.setImageBitmap(myBitmap);
+            Glide.with(context)
+                    .load(currentFolder.getPhotos()[currentFolder.getNumberOfPhotos()-1])
+                    .placeholder(R.drawable.img_image_placeholder)
+                    .into(holder.btnAlbum);
         }
-        btnAlbum.setBackgroundResource(R.drawable.sl_bg_button_private_album);
-        txtAlbumName.setText(currentFolder.getFolder().getName());
+
+        holder.btnAlbum.setBackgroundResource(R.drawable.sl_bg_button_private_album);
+        holder.txtAlbumName.setText(currentFolder.getFolder().getName());
         String formatText=context.getResources().getString(R.string.num_photos,currentFolder.getNumberOfPhotos());
 //        txtNumOfPhotos.setText(currentFolder.getNumberOfPhotos() + " photos");
-        txtNumOfPhotos.setText(formatText);
-        btnAlbum.setOnClickListener(new View.OnClickListener() {
+        holder.txtNumOfPhotos.setText(formatText);
+        holder.btnAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(context, SingleAlbumActivity.class);
@@ -81,6 +69,35 @@ public class AlbumsAdapter extends BaseAdapter {
             }
         });
 
-        return convertView;
+//        DisplayMetrics displaymetrics = new DisplayMetrics();
+//        ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+//        int size = displaymetrics.widthPixels / spanCount;
+//        holder.btnAlbum.setLayoutParams(new LinearLayout.LayoutParams(size, size));
     }
+
+    @Override
+    public int getItemCount() {
+        if (this.albumFolders == null) return 0;
+        return this.albumFolders.length;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private SquareImageButton btnAlbum;
+        private TextView txtAlbumName;
+        private TextView txtNumOfPhotos;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            btnAlbum = itemView.findViewById(R.id.squareBtnAlbum);
+            txtAlbumName = itemView.findViewById(R.id.albumName);
+            txtNumOfPhotos = itemView.findViewById(R.id.numberOfPhotos);
+        }
+    }
+
+    public AlbumsAdapter(Context context, AlbumFolder[] albumFolders, int spanCount) {
+        this.context = context;
+        this.albumFolders = albumFolders;
+        this.spanCount = spanCount;
+    }
+
 }
