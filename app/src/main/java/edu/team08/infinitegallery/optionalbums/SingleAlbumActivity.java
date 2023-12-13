@@ -2,19 +2,23 @@ package edu.team08.infinitegallery.optionalbums;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -39,6 +43,7 @@ import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.slideshow.SlideShowActivity;
@@ -249,6 +254,10 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar_single_album, menu);
+        if (!new File(folderPath).getParentFile().getName().equals("Infinity-Albums")) {
+            menu.removeItem(R.id.rename);
+            menu.removeItem(R.id.deleteAlbum);
+        }
         return true;
     }
 
@@ -286,6 +295,45 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             if (photoFiles.size() > 0) {
                 toggleSelectionMode();
             }
+        } else if (itemId == R.id.rename) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SingleAlbumActivity.this);
+            builder.setTitle("Rename");
+
+            EditText input = new EditText(SingleAlbumActivity.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            input.setText(albumName);
+            builder.setView(input);
+            input.selectAll();
+
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String rename = input.getText().toString();
+                    File currentFile = new File(folderPath);
+                    File newFile = new File(currentFile.getParent(), rename);
+                    if(newFile.exists()){
+                        Toast.makeText(SingleAlbumActivity.this, rename + " file is existed", Toast.LENGTH_SHORT);
+                    } else {
+                        if(currentFile.renameTo(newFile)){
+                            folderPath = newFile.getAbsolutePath();
+                            albumName = rename;
+                            toolbar.setTitle(albumName);
+                        }else{
+                            Toast.makeText(SingleAlbumActivity.this,"Rename failed", Toast.LENGTH_SHORT);
+                        }
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+        } else if (itemId == R.id.deleteAlbum) {
+
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);

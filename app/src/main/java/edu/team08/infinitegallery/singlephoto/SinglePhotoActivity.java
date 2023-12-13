@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -179,7 +181,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                     EditText input = new EditText(SinglePhotoActivity.this);
                     input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    input.setText(new File(photoPaths[currentPosition]).getName());
                     builder.setView(input);
+                    input.selectAll();
 
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override

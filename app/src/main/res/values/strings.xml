@@ -580,4 +580,5 @@
     <string name="details">Details</string>
     <string name="recognize_card">Recognize card by OCR</string>
     <string name="x_photos">x photos</string>
+    <string name="delete_album">Delete album</string>
 </resources>

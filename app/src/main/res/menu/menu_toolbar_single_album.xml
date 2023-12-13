@@ -39,24 +39,6 @@
     </item>
 
     <item
-        android:id="@+id/viewAs"
-        android:title="@string/view_as" >
-
-        <menu>
-
-            <item
-                android:id="@+id/viewAsTimeline"
-                android:title="@string/timeline" />
-
-            <item
-                android:id="@+id/viewAsGrid"
-                android:title="@string/grid" />
-
-        </menu>
-
-    </item>
-
-    <item
         android:id="@+id/sortBy"
         android:title="@string/sort_by" />
 
@@ -67,6 +49,10 @@
     <item
         android:id="@+id/rename"
         android:title="@string/rename" />
+
+    <item
+        android:id="@+id/deleteAlbum"
+        android:title="@string/delete_album" />
 
     <item
         android:id="@+id/settings"
