@@ -24,7 +24,7 @@
                 android:title="Rotate right"/>
             <item
                 android:id="@+id/rotate180"
-                android:title="Rotate 180 \u2103"/>
+                android:title="Rotate 180 \u00B0"/>
         </menu>
     </item>
 

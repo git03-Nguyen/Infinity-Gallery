@@ -82,4 +82,8 @@ public class ViewPagerAdapter extends PagerAdapter {
         this.photoFiles = newPhotoFiles;
         notifyDataSetChanged();
     }
+
+    public void rotate(int angle){
+        zoomViewImage.setRotationBy(angle);
+    }
 }

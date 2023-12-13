@@ -173,11 +173,11 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     myIntent.putExtra("photoPaths", photoPaths);
                     startActivity(myIntent);
                 }else if(itemId == R.id.rotateLeft){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    singlePhotoFragment.rotate(-90);
                 }else if(itemId == R.id.rotateRight){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    singlePhotoFragment.rotate(90);
                 }else if(itemId == R.id.rotate180){
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                    singlePhotoFragment.rotate(180);
                 }else if(itemId == R.id.more_rename){
                     AlertDialog.Builder builder = new AlertDialog.Builder(SinglePhotoActivity.this);
                     builder.setTitle("Rename");
@@ -212,8 +212,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     });
 
                     builder.show();
-
-                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 } else if(itemId == R.id.more_setAsHomeScreen){
                     Thread thread = new Thread(){
                         @Override
