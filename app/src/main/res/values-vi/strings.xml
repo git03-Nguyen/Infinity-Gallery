@@ -582,4 +582,5 @@
     <string name="set_as_lock_screen">Đặt làm màn hình khoá</string>
     <string name="details">Chi tiết</string>
     <string name="recognize_card">Nhận dạng thẻ OCR</string>
+    <string name="x_photos">x ảnh</string>
 </resources>
