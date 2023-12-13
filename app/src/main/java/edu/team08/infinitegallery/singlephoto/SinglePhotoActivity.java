@@ -77,7 +77,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private int currentPosition;
     private PopupMenu morePopupMenu;
 
-    private CheckBox cardBox;
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
     @Override
@@ -117,19 +116,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 
-        cardBox=findViewById(R.id.cbCard);
-        cardBox.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                boolean isChecked = cardBox.isChecked();
-                if (isChecked) {
-                    Log.d("CardBox", "Clicked: " + cardBox.isChecked());
-                    Log.d("PhotoPaths",photoPaths[currentPosition]);
-                    File photoFile = new File(photoPaths[currentPosition]);
-                    postCurrentImage(photoFile);
-                }
-            }
-        });
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
@@ -206,6 +192,10 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
                 }else if(itemId == R.id.more_displayFilename){
                     Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }
+                else if (itemId==R.id.more_recoginzeCard){
+                    File photoFile = new File(photoPaths[currentPosition]);
+                    postCurrentImage(photoFile);
                 }
 
                 return true;
@@ -437,10 +427,14 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/jpeg"), currentFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", currentFile.getName(), reqFile);
 
+            // Create a progress dialog
+            Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(this, "Recognizing Card...", null, null);
+
             Call<ResponseBody> call = service.postImage(API_KEY_INFO, body);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    progressDialog.dismiss();
                     if (response.isSuccessful())    {
                         try {
                             String jsonString = response.body().string();
@@ -450,7 +444,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                             } else {
                                 showBottomSheet(cardInfo);
                             }
-                            cardBox.setChecked(false);
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(getBaseContext(), "An error occurred while processing the response.", Toast.LENGTH_SHORT).show();
@@ -463,11 +456,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle the failure
+                    progressDialog.dismiss();
+                    Toast.makeText(getBaseContext(), "This is not a valid card, unable to retrieve information.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
-
     }
     public CardInfo handleJsonResponse(String jsonString)
     {
