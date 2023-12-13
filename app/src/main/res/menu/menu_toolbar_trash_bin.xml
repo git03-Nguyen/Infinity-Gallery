@@ -9,10 +9,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menuTrashBinSelect"
-        android:title="@string/select" />
-
-    <item
         android:id="@+id/menuTrashBinEmpty"
         android:title="@string/empty_trash" />
 
