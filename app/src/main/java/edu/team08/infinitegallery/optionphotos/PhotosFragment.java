@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import androidx.appcompat.widget.Toolbar;
@@ -49,7 +50,7 @@ public class PhotosFragment extends Fragment {
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
 
-    public PhotosFragment(){}
+    public PhotosFragment() {}
 
     public PhotosFragment(Context context) {
         this.context = context;
@@ -127,6 +128,15 @@ public class PhotosFragment extends Fragment {
             toggleSelectionMode();
         });
         checkBoxAll = photosFragment.findViewById(R.id.checkboxAll);
+        checkBoxAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                photosAdapter.selectAll();
+                setNumberOfSelectedFiles(photoFiles.size());
+            } else {
+                photosAdapter.unSelectAll();
+                setNumberOfSelectedFiles(0);
+            }
+        });
         // TODO: set onclick for checkBoxAll
 
         return photosFragment;
@@ -158,6 +168,7 @@ public class PhotosFragment extends Fragment {
             this.toolbar.setVisibility(View.VISIBLE);
             this.selectionToolbar.setVisibility(View.GONE);
         }
+        this.checkBoxAll.setChecked(false);
     }
 
     @Override
@@ -234,7 +245,7 @@ public class PhotosFragment extends Fragment {
     }
 
     public void setNumberOfSelectedFiles(int number) {
-        String formattedText=getResources().getString(R.string.selected_photos,photosAdapter.getSelectionsCount());
+        String formattedText=getResources().getString(R.string.selected_photos, number);
         this.txtNumberOfSelectedFiles.setText(formattedText);
     }
 

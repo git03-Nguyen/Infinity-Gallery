@@ -43,6 +43,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     private List<File> allPhotos;
     private final int spanCount;
     private boolean selectionMode;
+    private boolean selectedAll;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageItem;
@@ -72,6 +73,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         selectedItemsIds = new SparseBooleanArray();
         this.spanCount = spanCount;
         this.selectionMode = false;
+        this.selectedAll = false;
     }
 
     @NonNull
@@ -165,6 +167,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.txtSizeAndDateImage.append(sdf.format(photo.lastModified()));
         }
 
+        if (selectedAll) {
+            selectedItemsIds.put(position, true);
+        }
+
         if(selectedItemsIds.get(position)) {
             holder.itemView.setBackgroundColor(0x993BF566);
             holder.checkbox.setVisibility(View.VISIBLE);
@@ -178,6 +184,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
             holder.imageItem.clearColorFilter();
         }
+
+
+
     }
 
     @Override
@@ -202,6 +211,18 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         }
         notifyItemChanged(position);
         ((MainCallbacks) context).onEmitMsgFromFragToMain("NUMBER OF SELECTIONS", String.valueOf(getSelectionsCount()));
+    }
+
+    public void selectAll() {
+        selectedItemsIds.clear();
+        selectedAll = true;
+        notifyDataSetChanged();
+    }
+
+    public void unSelectAll() {
+        selectedItemsIds.clear();
+        selectedAll = false;
+        notifyDataSetChanged();
     }
 
     public void removeAllSelections() {
