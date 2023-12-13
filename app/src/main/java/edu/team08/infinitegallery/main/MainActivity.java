@@ -183,11 +183,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void shareMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         // TODO: implement sharing multiple files feature
         Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
     }
 
     private void trashMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 getString(R.string.confirm_deletion_title),
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void hideMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 getString(R.string.confirm_hiding_title),

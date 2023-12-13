@@ -137,7 +137,6 @@ public class PhotosFragment extends Fragment {
                 setNumberOfSelectedFiles(0);
             }
         });
-        // TODO: set onclick for checkBoxAll
 
         return photosFragment;
     }
@@ -232,16 +231,20 @@ public class PhotosFragment extends Fragment {
     }
 
     public File[] getSelectedFiles() {
-        if (photosAdapter.getSelectionMode()) {
-            List<File> list = new ArrayList<>();
-            SparseBooleanArray selectedItemsId = photosAdapter.getSelectedIds();
-            for (int i = 0; i < selectedItemsId.size(); i++) {
-                if (selectedItemsId.valueAt(i)) list.add(photoFiles.get(selectedItemsId.keyAt(i)));
-            }
-            return list.toArray(new File[0]);
-        } else {
+        if (!photosAdapter.getSelectionMode()) {
             return new File[0];
         }
+
+        if (photosAdapter.selectedAll) {
+            return photoFiles.toArray(new File[0]);
+        }
+
+        List<File> list = new ArrayList<>();
+        SparseBooleanArray selectedItemsId = photosAdapter.getSelectedIds();
+        for (int i = 0; i < selectedItemsId.size(); i++) {
+            if (selectedItemsId.valueAt(i)) list.add(photoFiles.get(selectedItemsId.keyAt(i)));
+        }
+        return list.toArray(new File[0]);
     }
 
     public void setNumberOfSelectedFiles(int number) {
