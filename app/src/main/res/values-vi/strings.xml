@@ -569,4 +569,17 @@
         <item>u+1f6a9</item>
     </string-array>
     <string name="slideshow_delay_seconds">Độ trễ slideshow</string>
+    <string name="hello_blank_fragment">Fragment trống</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="copy_to">Sao chép tới</string>
+    <string name="move_to">Di chuyển tới</string>
+    <string name="slideshow">Trình chiếu</string>
+    <string name="rotate">Xoay</string>
+    <string name="rotate_left">Xoay trái</string>
+    <string name="rotate_right">Xoay phải</string>
+    <string name="rotate_180_u00b0">Xoay 180°</string>
+    <string name="set_as_home_screen">Đặt làm màn hình nền</string>
+    <string name="set_as_lock_screen">Đặt làm màn hình khoá</string>
+    <string name="details">Chi tiết</string>
+    <string name="recognize_card">Nhận dạng thẻ OCR</string>
 </resources>

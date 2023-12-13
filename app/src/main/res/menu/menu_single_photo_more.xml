@@ -2,50 +2,50 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/more_copyTo"
-        android:title="Copy to"/>
+        android:title="@string/copy_to"/>
 
     <item
         android:id="@+id/more_moveTo"
-        android:title="Move to"/>
+        android:title="@string/move_to"/>
 
     <item
         android:id="@+id/more_slideshow"
-        android:title="Slideshow"/>
+        android:title="@string/slideshow"/>
 
     <item
         android:id="@+id/more_rotate"
-        android:title="Rotate">
+        android:title="@string/rotate">
         <menu>
             <item
                 android:id="@+id/rotateLeft"
-                android:title="Rotate left"/>
+                android:title="@string/rotate_left"/>
             <item
                 android:id="@+id/rotateRight"
-                android:title="Rotate right"/>
+                android:title="@string/rotate_right"/>
             <item
                 android:id="@+id/rotate180"
-                android:title="Rotate 180 \u00B0"/>
+                android:title="@string/rotate_180_u00b0"/>
         </menu>
     </item>
 
     <item
         android:id="@+id/more_rename"
-        android:title="Rename"/>
+        android:title="@string/rename"/>
 
     <item
         android:id="@+id/more_setAsHomeScreen"
-        android:title="Set as Home screen"/>
+        android:title="@string/set_as_home_screen"/>
 
     <item
         android:id="@+id/more_setAsLockScreen"
-        android:title="Set as Lock screen"/>
+        android:title="@string/set_as_lock_screen"/>
 
 
     <item
         android:id="@+id/more_details"
-        android:title="Details"/>
+        android:title="@string/details"/>
 
     <item
         android:id="@+id/more_recognizeCard"
-        android:title="Recognize Card"/>
+        android:title="@string/recognize_card"/>
 </menu>
