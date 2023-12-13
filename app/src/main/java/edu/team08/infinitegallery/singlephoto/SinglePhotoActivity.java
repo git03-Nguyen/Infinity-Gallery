@@ -426,12 +426,22 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             ExifSubIFDDirectory exifDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             FileSystemDirectory fileDir = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
             Date date = null;
-            
+
+            for (Directory directory : metadata.getDirectories()) {
+                for (Tag tag : directory.getTags()) {
+                    Log.d("TAG", tag.toString());
+                }
+            }
+
             if(exifDir != null) {
                 date = exifDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-            }else if(fileDir != null){
+            }
+
+            if(date == null && fileDir != null){
                 date = fileDir.getDate(FileSystemDirectory.TAG_FILE_MODIFIED_DATE);
-            }else{
+            }
+
+            if(date == null){
                 for (Directory directory : metadata.getDirectories()) {
                     for (Tag tag : directory.getTags()) {
                         if(tag.toString().toLowerCase().contains("date")){
@@ -441,7 +451,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     }
                     if(date != null) break;
                 }
-
             }
 
             if(date != null && topToolbarPhoto != null){
@@ -461,7 +470,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
