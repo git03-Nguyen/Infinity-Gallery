@@ -426,12 +426,22 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             ExifSubIFDDirectory exifDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             FileSystemDirectory fileDir = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
             Date date = null;
+            
             if(exifDir != null) {
                 date = exifDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
             }else if(fileDir != null){
                 date = fileDir.getDate(FileSystemDirectory.TAG_FILE_MODIFIED_DATE);
             }else{
-                //TODO: how to handle in case the photo don't have Exif tag and File tag.
+                for (Directory directory : metadata.getDirectories()) {
+                    for (Tag tag : directory.getTags()) {
+                        if(tag.toString().toLowerCase().contains("date")){
+                            date = directory.getDate(tag.getTagType());
+                            if(date != null) break;
+                        }
+                    }
+                    if(date != null) break;
+                }
+
             }
 
             if(date != null && topToolbarPhoto != null){
