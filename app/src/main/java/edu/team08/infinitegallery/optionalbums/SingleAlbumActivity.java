@@ -14,8 +14,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +39,8 @@ import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
+import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.slideshow.SlideShowActivity;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
@@ -102,7 +106,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             } else if (itemId == R.id.multipleMoveTrash) {
                 trashMultiplePhotos(files);
             } else if (itemId == R.id.multipleShare) {
-                //shareMultiplePhotos(files);
+                shareMultiplePhotos(files);
             } else {
                 Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -185,6 +189,49 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                     }
                 },
                 null);
+    }
+
+    private void shareMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
+
+        ArrayList<Uri> uris = new ArrayList<>();
+        for(File file: files){
+            Uri photoURI = FileProvider.getUriForFile(this,
+                    this.getApplicationContext().getPackageName() + ".fileprovider", file);
+
+            uris.add(buildFileProviderUri(photoURI));
+        }
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.setType("image/*");
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.msg_share_image)), 1002);
+
+    }
+
+    private Uri buildFileProviderUri(Uri uri) {
+        if (FileSaveHelper.isSdkHigherThan28()) {
+            return uri;
+        }
+
+        String path = uri.getPath();
+        if (path == null) {
+            throw new IllegalArgumentException("URI Path Expected");
+        }
+
+        return FileProvider.getUriForFile(
+                this,
+                EditPhotoActivity.FILE_PROVIDER_AUTHORITY,
+                new File(path)
+        );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1002) {
+            toggleSelectionMode();
+        }
     }
 
     @Override
