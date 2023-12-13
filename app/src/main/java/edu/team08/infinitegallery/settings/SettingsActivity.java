@@ -82,6 +82,24 @@ public class SettingsActivity extends AppCompatActivity {
                 restartMainActivity();
             }
         });
+
+        durationBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                AppConfig.getInstance(SettingsActivity.this).setTimeLapse(progress);
+                durationText.setText(String.valueOf(progress) + "s");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void setLocale(String languageCode) {
