@@ -82,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     protected void onPause() {
         super.onPause();
-        runOnUiThread(() -> {
-            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
-                getWindow().getDecorView().setSystemUiVisibility(0);
-            } else {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-        });
+//        runOnUiThread(() -> {
+//            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
+//                getWindow().getDecorView().setSystemUiVisibility(0);
+//            } else {
+//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//            }
+//        });
     }
 
     private void initApp() {
