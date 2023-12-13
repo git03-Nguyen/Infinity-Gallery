@@ -1,48 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.MainActivity"
-    android:theme="@style/Theme.MyTheme">
+    android:theme="@style/Theme.MyTheme"
+    android:orientation="vertical" >
 
     <FrameLayout
         android:id="@+id/fragmentHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomNavBar" />
+        android:layout_weight="1"/>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavBar"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingVertical="8dp"
-        app:itemIconSize="28dp"
-        app:itemPaddingTop="7dp"
-        app:itemPaddingBottom="7dp"
-        app:itemTextAppearanceActiveBoldEnabled="false"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_main_bottom"
-        style="@style/BottomNavStyle"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        android:visibility="visible" />
+        android:layout_height="wrap_content" >
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/selectionBottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:paddingVertical="8dp"
-        app:itemIconSize="28dp"
-        app:itemTextAppearanceActiveBoldEnabled="false"
-        app:itemPaddingBottom="7dp"
-        app:itemPaddingTop="7dp"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_photos_selection_bottom"
-        style="@style/BottomNavPhotoStyle"
-        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        android:visibility="gone" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:itemIconSize="28dp"
+            app:itemPaddingTop="7dp"
+            app:itemPaddingBottom="7dp"
+            app:itemTextAppearanceActiveBoldEnabled="false"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/menu_main_bottom"
+            style="@style/BottomNavStyle"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:visibility="visible" />
 
-</RelativeLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/selectionBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:itemIconSize="28dp"
+            app:itemTextAppearanceActiveBoldEnabled="false"
+            app:itemPaddingBottom="7dp"
+            app:itemPaddingTop="7dp"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/menu_photos_selection_bottom"
+            style="@style/BottomNavPhotoStyle"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>

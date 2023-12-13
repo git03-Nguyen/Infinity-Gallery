@@ -333,7 +333,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
 
             builder.show();
         } else if (itemId == R.id.deleteAlbum) {
-
+            // TODO: should delete recursively before delete directory
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);
