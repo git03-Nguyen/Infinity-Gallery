@@ -51,12 +51,10 @@
 
         </LinearLayout>
 
-        <GridView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewAlbums"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gridView"
-            android:numColumns="3"
-            android:padding="5dp" />
+            android:layout_height="wrap_content" />
 
     </ViewSwitcher>
 

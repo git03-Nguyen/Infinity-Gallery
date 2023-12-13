@@ -18,6 +18,8 @@
 
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
 
+        <item name="colorTertiary">@color/gray</item>
+
 
     </style>
 

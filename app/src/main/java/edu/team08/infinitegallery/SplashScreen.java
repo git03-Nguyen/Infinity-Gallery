@@ -5,6 +5,7 @@ import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_MEDIA_IMAGES;
+import static android.Manifest.permission.SET_WALLPAPER;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
@@ -62,7 +63,6 @@ public class SplashScreen extends AppCompatActivity {
         boolean isWriteImagesAllowed = ContextCompat.checkSelfPermission(this, writePermission) == PackageManager.PERMISSION_GRANTED;
         boolean isInternetAllowed = ContextCompat.checkSelfPermission(this, internetPermission) == PackageManager.PERMISSION_GRANTED;
         boolean isNetworkStateAllowed = ContextCompat.checkSelfPermission(this, networkPermission) == PackageManager.PERMISSION_GRANTED;
-        
         result = isReadImagesAllowed && isInternetAllowed && isNetworkStateAllowed;
         
         if (SDK_INT < 29) {
@@ -130,6 +130,4 @@ public class SplashScreen extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 }

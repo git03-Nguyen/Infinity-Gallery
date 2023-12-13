@@ -22,7 +22,7 @@
     <string name="save">Save</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="move_to_trash_when_delete">Move to trash when delete</string>
-    <string name="language">VietNamese Language</string>
+    <string name="language">Vietnamese</string>
     <string name="selected_photos">Selected %1$d photos.</string>
     <string name="no_item">No item</string>
     <string name="we_couldn_t_find_any_photos_on_your_device">We couldn\'t find any photos on your device</string>
@@ -30,7 +30,7 @@
     <string name="photos_you_liked_are_shown_here">Photos you liked are shown here</string>
     <string name="no_item_found">No item found</string>
     <string name="the_photos_you_set_to_be_private_will_be_collected_here">The photos you set to be private will be collected here</string>
-    <string name="developed_by_infinity_team">Developed by Infinity Team</string>
+    <string name="developed_by_infinity_team">Developed by Group 11 - Infinity Team</string>
     <string name="items_in_trash_will_be_removed_after_30_days">Items in trash will be removed after 30 days.</string>
     <string name="the_photos_you_deleted_will_be_collected_here">The photos you deleted will be collected here</string>
     <string name="done">Done</string>
@@ -64,7 +64,7 @@
     <string name="login">Login</string>
     <string name="forgot_password">Forgot password</string>
     <string name="finding_other_methods">Finding other methods ?</string>
-    <string name="finger_print">Finger Print</string>
+    <string name="finger_print">Fingerprint</string>
     <string name="pattern">Pattern</string>
     <string name="enter_your_new_secure_question_and_answer_along_with_the_password">Enter your new secure question and answer, along with the password</string>
     <string name="retype_password">Retype Password</string>
@@ -103,14 +103,14 @@
 
     <string name="search_your_photos">Search your photos</string>
 
-    <string name="confirm_deletion_title">Confirm Deletion</string>
+    <string name="confirm_deletion_title">Confirm deletion</string>
     <string name="confirm_deletion_message">Are you sure to move %1$d photos to the trash?</string>
     <string name="confirm_deletion_one_photo_message">Are you sure to move this photo to the trash?</string>
-    <string name="confirm_permanent_deletion_title">Confirm Permanent Deletion</string>
+    <string name="confirm_permanent_deletion_title">Confirm permanent deletion</string>
     <string name="confirm_permanent_deletion_message">"Are you sure to permanently delete this photo? This action cannot be undone."</string>
     <string name="confirm_dialog_yes">Yes</string>
     <string name="confirm_dialog_no">No</string>
-    <string name="confirm_hiding_title">Confirm Hiding</string>
+    <string name="confirm_hiding_title">Confirm hiding</string>
     <string name="confirm_hiding_message">Are you sure to move this photo to the privacy list?</string>
     <string name="confirm_hiding_list_photos_message">Are you sure to move  %1$d photos to the privacy list?</string>
     <string name="title_october_15">October 15, 2023</string>
@@ -126,7 +126,7 @@
     <string name="privacy_registration">Privacy Registration</string>
     <string name="privacy_authentication">Privacy Authentication</string>
     <string name="privacy_change_password">Privacy Password Change</string>
-    <string name="confirm_the_reveal">Confirm The Reveal</string>
+    <string name="confirm_the_reveal">Confirm the reveal</string>
     <string name="confirm_reveal_all_photos">Are you sure to reveal all the private photos?</string>
     <string name="confirm_delete_all_files">Confirm deleting all the private files</string>
     <string name="confirm_delete_all_files_description">Are you sure to delete the whole private files? This action cannot be undone.</string>
@@ -565,4 +565,6 @@
         <item>u+1f4cd</item>
         <item>u+1f6a9</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

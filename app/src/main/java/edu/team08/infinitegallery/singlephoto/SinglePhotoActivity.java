@@ -4,19 +4,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
+import android.app.WallpaperManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -63,9 +73,10 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private Toolbar topToolbarPhoto;
     private String[] photoPaths;
     private CheckBox favoriteBox;
-
-    private CheckBox cardBox;
+    private WallpaperManager wallpaperManager;
     private int currentPosition;
+    private PopupMenu morePopupMenu;
+
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
     @Override
@@ -83,7 +94,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        singlePhotoFragment = new SinglePhotoFragment(this, photoPaths, currentPosition);
+        singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentHolder, singlePhotoFragment)
@@ -102,22 +113,95 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 }
             }
         });
-        cardBox=findViewById(R.id.cbCard);
-        cardBox.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                boolean isChecked = cardBox.isChecked();
-                if (isChecked) {
-                    Log.d("CardBox", "Clicked: " + cardBox.isChecked());
-                    Log.d("PhotoPaths",photoPaths[currentPosition]);
-                    File photoFile = new File(photoPaths[currentPosition]);
-                    postCurrentImage(photoFile);
-                }
-            }
-        });
+
+        wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
+
+        morePopupMenu = new PopupMenu(SinglePhotoActivity.this, bottomNavigationView.findViewById(R.id.more));
+        morePopupMenu.inflate(R.menu.menu_single_photo_more);
+        morePopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if(itemId == R.id.more_copyTo){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_moveTo){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_slideshow){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotateLeft){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotateRight){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.rotate180){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.more_rename){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_setAsHomeScreen){
+                    Thread thread = new Thread(){
+                        @Override
+                        public void run() {
+                            DisplayMetrics metrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                            int height = metrics.heightPixels;
+                            int width = metrics.widthPixels;
+                            Bitmap bitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+                            wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                            wallpaperManager.suggestDesiredDimensions(width, height);
+                            bitmap = centerCropWallpaper(bitmap, wallpaperManager.getDesiredMinimumWidth(), wallpaperManager.getDesiredMinimumHeight());
+                            try {
+                                wallpaperManager.setBitmap(bitmap);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    };
+
+                    thread.start();
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                } else if(itemId == R.id.more_setAsLockScreen){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Thread thread = new Thread(){
+                            @Override
+                            public void run() {
+                                DisplayMetrics metrics = new DisplayMetrics();
+                                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                                int height = metrics.heightPixels;
+                                int width = metrics.widthPixels;
+                                Bitmap bitmap = BitmapFactory.decodeFile(photoPaths[currentPosition]);
+                                wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                                wallpaperManager.suggestDesiredDimensions(width, height);
+                                bitmap = centerCropWallpaper(bitmap, wallpaperManager.getDesiredMinimumWidth(), wallpaperManager.getDesiredMinimumHeight());
+                                try {
+                                    wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        };
+
+                        thread.start();
+                        Toast.makeText(SinglePhotoActivity.this, "Set as Lockscreen", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SinglePhotoActivity.this, "Lock screen wallpaper not supported", Toast.LENGTH_SHORT).show();
+                    }
+                }else if(itemId == R.id.more_details){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }else if(itemId == R.id.more_displayFilename){
+                    Toast.makeText(SinglePhotoActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                }
+                else if (itemId==R.id.more_recoginzeCard){
+                    File photoFile = new File(photoPaths[currentPosition]);
+                    postCurrentImage(photoFile);
+                }
+
+                return true;
+            }
+        });
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.moveTrash) {
@@ -140,8 +224,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     e.printStackTrace();
                 }
 
-            } else {
-                Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
+            } else if(itemId == R.id.more){
+                morePopupMenu.show();
             }
 
             return true;
@@ -153,6 +237,33 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         setSupportActionBar(topToolbarPhoto);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Intent intent = getIntent();
+        intent.putExtra("currentPosition", currentPosition);
+    }
+
+    private Bitmap centerCropWallpaper(Bitmap wallpaper, int desiredWidth, int desiredHeight){
+        float scale = (float) desiredHeight / wallpaper.getHeight();
+        int scaledWidth = (int) (scale * wallpaper.getWidth());
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int deviceWidth = displayMetrics.widthPixels;
+        int imageCenterWidth = scaledWidth /2;
+        int widthToCut = imageCenterWidth - deviceWidth / 2;
+        int leftWidth = scaledWidth - widthToCut;
+        Bitmap scaledWallpaper = Bitmap.createScaledBitmap(wallpaper, scaledWidth, desiredHeight, false);
+        Bitmap croppedWallpaper = Bitmap.createBitmap(
+                scaledWallpaper,
+                widthToCut,
+                0,
+                leftWidth,
+                desiredHeight
+        );
+        return croppedWallpaper;
     }
 
     private Uri buildFileProviderUri(Uri uri) {
@@ -316,10 +427,14 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/jpeg"), currentFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", currentFile.getName(), reqFile);
 
+            // Create a progress dialog
+            Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(this, "Recognizing Card...", null, null);
+
             Call<ResponseBody> call = service.postImage(API_KEY_INFO, body);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    progressDialog.dismiss();
                     if (response.isSuccessful())    {
                         try {
                             String jsonString = response.body().string();
@@ -329,7 +444,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                             } else {
                                 showBottomSheet(cardInfo);
                             }
-                            cardBox.setChecked(false);
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(getBaseContext(), "An error occurred while processing the response.", Toast.LENGTH_SHORT).show();
@@ -342,11 +456,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle the failure
+                    progressDialog.dismiss();
+                    Toast.makeText(getBaseContext(), "This is not a valid card, unable to retrieve information.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
-
     }
     public CardInfo handleJsonResponse(String jsonString)
     {
