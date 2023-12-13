@@ -13,10 +13,6 @@
         android:title="@string/camera" />
 
     <item
-        android:id="@+id/menuAlbumsSelect"
-        android:title="@string/select" />
-
-    <item
         android:id="@+id/menuAlbumsSortBy"
         android:title="@string/sort_by" >
         <menu
@@ -27,9 +23,20 @@
     <item
         android:id="@+id/menuAlbumsColumns"
         android:title="@string/columns" >
-        <menu
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <menu>
+            <item
+                android:id="@+id/column_2"
+                android:title="@string/_2_columns" />
+
+            <item
+                android:id="@+id/column_3"
+                android:title="@string/_3_columns" />
+
+            <item
+                android:id="@+id/column_4"
+                android:title="@string/_4_columns" />
+
+        </menu>
     </item>
 
     <item

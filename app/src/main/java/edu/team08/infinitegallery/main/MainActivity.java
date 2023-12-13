@@ -54,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        if (AppConfig.getInstance(MainActivity.this).getSelectedLanguage())
-        {
+        if (AppConfig.getInstance(MainActivity.this).getSelectedLanguage()) {
           Locale locale=new Locale("vi");
           Locale.setDefault(locale);
           getResources().getConfiguration().setLocale(locale);
-            getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+          getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initApp();
@@ -90,10 +90,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        scanMediaOnStorage();
 
         bottomSelectionFeatures = findViewById(R.id.selectionBottomBar);
-        bottomSelectionFeatures.setOnItemSelectedListener(item -> {
-            Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
-            return true;
-        });
         bottomSelectionFeatures.getMenu().setGroupCheckable(0, false, true);
         setSelectionFeaturesForAllPhotos();
 
@@ -183,11 +179,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void shareMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         // TODO: implement sharing multiple files feature
         Toast.makeText(this, "Sharing", Toast.LENGTH_SHORT).show();
     }
 
     private void trashMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 getString(R.string.confirm_deletion_title),
@@ -196,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 
                     @Override
                     public void run() {
-                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(MainActivity.this, "Deleting ...", () -> {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(MainActivity.this, "Deleting ...",
+                                () -> {
                                     try {
                                         TrashBinManager trashBinManager = new TrashBinManager(MainActivity.this);
                                         for (File file: files) {
@@ -209,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                                 },
                                 () -> {
                                     photosFragment.toggleSelectionMode();
+                                    photosFragment.onResume();
                                 });
 
                     }
@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     }
 
     private void hideMultiplePhotos(File[] files) {
+        if (files.length == 0) return;
         ConfirmDialogBuilder.showConfirmDialog(
                 this,
                 getString(R.string.confirm_hiding_title),
@@ -237,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
                                 },
                                 () -> {
                                     photosFragment.toggleSelectionMode();
+                                    photosFragment.onResume();
                                 });
 
                     }

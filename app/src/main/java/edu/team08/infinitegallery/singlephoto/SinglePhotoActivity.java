@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,11 +33,11 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
+
 import com.drew.metadata.png.PngDirectory;
 import com.github.chrisbanes.photoview.PhotoView;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +93,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
     private final int COPY_TO = 2;
 
 
-    private CheckBox cardBox;
     private static final String API_KEY_INFO="cJnXPgk0ICnuhRKvxU9noCzpF8OGkV3P";
 
     @Override
@@ -150,19 +147,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
         wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 
-        cardBox=findViewById(R.id.cbCard);
-        cardBox.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                boolean isChecked = cardBox.isChecked();
-                if (isChecked) {
-                    Log.d("CardBox", "Clicked: " + cardBox.isChecked());
-                    Log.d("PhotoPaths",photoPaths[currentPosition]);
-                    File photoFile = new File(photoPaths[currentPosition]);
-                    postCurrentImage(photoFile);
-                }
-            }
-        });
         // TODO: implementations for bottom nav bar
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.getMenu().setGroupCheckable(0, false, true);
@@ -285,6 +269,10 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     createDetailsView(detailsView, photoPaths[currentPosition]);
                     builder.setView(detailsView);
                     builder.show();
+                }
+                else if (itemId==R.id.more_recognizeCard){
+                    File photoFile = new File(photoPaths[currentPosition]);
+                    postCurrentImage(photoFile);
                 }
 
                 return true;
@@ -578,10 +566,14 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/jpeg"), currentFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", currentFile.getName(), reqFile);
 
+            // Create a progress dialog
+            Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(this, "Recognizing Card...", null, null);
+
             Call<ResponseBody> call = service.postImage(API_KEY_INFO, body);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    progressDialog.dismiss();
                     if (response.isSuccessful())    {
                         try {
                             String jsonString = response.body().string();
@@ -591,7 +583,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                             } else {
                                 showBottomSheet(cardInfo);
                             }
-                            cardBox.setChecked(false);
                         } catch (IOException e) {
                             e.printStackTrace();
                             Toast.makeText(getBaseContext(), "An error occurred while processing the response.", Toast.LENGTH_SHORT).show();
@@ -604,11 +595,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Handle the failure
+                    progressDialog.dismiss();
+                    Toast.makeText(getBaseContext(), "This is not a valid card, unable to retrieve information.", Toast.LENGTH_SHORT).show();
+
                 }
             });
         }
-
     }
     public CardInfo handleJsonResponse(String jsonString)
     {
