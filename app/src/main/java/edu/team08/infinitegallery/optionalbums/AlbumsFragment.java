@@ -42,6 +42,7 @@ public class AlbumsFragment extends Fragment {
     private AlbumsRecAdapter albumsRecAdapter;
     private AlbumFolder[] albumFolders;
     private ViewSwitcher viewSwitcher;
+    private int spanCount;
 
     public AlbumsFragment(Context context) {
         this.context = context;
@@ -54,6 +55,7 @@ public class AlbumsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.spanCount = 3;
     }
 
     @Override
@@ -69,6 +71,15 @@ public class AlbumsFragment extends Fragment {
                 startActivity(myIntent, null);
             } else if (itemId == R.id.menuAlbumsAdd) {
                 addNewAlbum();
+            } else if (itemId == R.id.column_2) {
+                this.spanCount = 2;
+                displayFolderAlbums();
+            } else if (itemId == R.id.column_3) {
+                this.spanCount = 3;
+                displayFolderAlbums();
+            } else if (itemId == R.id.column_4) {
+                this.spanCount = 4;
+                displayFolderAlbums();
             } else {
                 Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
@@ -200,9 +211,9 @@ public class AlbumsFragment extends Fragment {
             if (albumsRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
-           albumsRecAdapter = new AlbumsRecAdapter(context, this.albumFolders, 3);
+           albumsRecAdapter = new AlbumsRecAdapter(context, this.albumFolders, spanCount);
            albumsRecView.setAdapter(albumsRecAdapter);
-           GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+           GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
            albumsRecView.setLayoutManager(gridLayoutManager);
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
@@ -235,6 +246,5 @@ public class AlbumsFragment extends Fragment {
 
         return photoFiles.toArray(new File[0]);
     }
-
 
 }

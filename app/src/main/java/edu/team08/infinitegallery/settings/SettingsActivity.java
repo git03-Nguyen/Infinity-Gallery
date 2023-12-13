@@ -71,13 +71,13 @@ public class SettingsActivity extends AppCompatActivity {
         languageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AppConfig.getInstance(SettingsActivity.this).setSelectedLanguage(isChecked);
                 if (isChecked) {
                     setLocale("vi");
                 } else {
                     setLocale("en");
                 }
                 // Set selected language in AppConfig
-                AppConfig.getInstance(SettingsActivity.this).setSelectedLanguage(isChecked);
 
                 restartMainActivity();
             }
@@ -106,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         getResources().getConfiguration().setLocale(locale);
-       getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+        getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
     }
 
     private void restartMainActivity() {
