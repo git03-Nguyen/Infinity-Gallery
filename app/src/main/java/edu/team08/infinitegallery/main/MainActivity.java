@@ -54,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 
-        if (AppConfig.getInstance(MainActivity.this).getSelectedLanguage())
-        {
+        if (AppConfig.getInstance(MainActivity.this).getSelectedLanguage()) {
           Locale locale=new Locale("vi");
           Locale.setDefault(locale);
           getResources().getConfiguration().setLocale(locale);
-            getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+          getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initApp();
@@ -90,10 +90,6 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
 //        scanMediaOnStorage();
 
         bottomSelectionFeatures = findViewById(R.id.selectionBottomBar);
-        bottomSelectionFeatures.setOnItemSelectedListener(item -> {
-            Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
-            return true;
-        });
         bottomSelectionFeatures.getMenu().setGroupCheckable(0, false, true);
         setSelectionFeaturesForAllPhotos();
 
