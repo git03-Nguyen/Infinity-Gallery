@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/lastModified"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Last modified: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/dateTaken"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date taken: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Size: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/resolution"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Resolution: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+    <TextView
+        android:id="@+id/path"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Path: "
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:layout_marginBottom="15dp"/>
+
+</LinearLayout>
