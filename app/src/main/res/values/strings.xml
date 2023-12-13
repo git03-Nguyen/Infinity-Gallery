@@ -581,4 +581,5 @@
     <string name="recognize_card">Recognize card by OCR</string>
     <string name="x_photos">x photos</string>
     <string name="delete_album">Delete album</string>
+    <string name="are_you_sure_to_delete_this_album_to_the_trash">Are you sure to delete this album to the trash?</string>
 </resources>

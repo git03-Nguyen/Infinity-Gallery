@@ -37,13 +37,11 @@ import java.util.List;
 
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.privacy.PrivacyManager;
 import edu.team08.infinitegallery.settings.SettingsActivity;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.EditPhotoActivity;
 import edu.team08.infinitegallery.singlephoto.edit.FileSaveHelper;
 import edu.team08.infinitegallery.slideshow.SlideShowActivity;
@@ -239,6 +237,36 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         }
     }
 
+    private void deleteAlbum() {
+        ConfirmDialogBuilder.showConfirmDialog(
+                this,
+                getString(R.string.confirm_deletion_title),
+                getString(R.string.are_you_sure_to_delete_this_album_to_the_trash),
+                new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(SingleAlbumActivity.this, "Deleting ...",
+                                () -> {
+                                    try {
+                                        TrashBinManager trashBinManager = new TrashBinManager(SingleAlbumActivity.this);
+                                        for (File file: photoFiles) {
+                                            trashBinManager.moveToTrash(file);
+                                        }
+                                        new File(folderPath).delete();
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                },
+                                () -> {
+                                    finish();
+                                });
+
+                    }
+                },
+                null);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -295,6 +323,8 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             if (photoFiles.size() > 0) {
                 toggleSelectionMode();
             }
+        } else if (itemId == R.id.deleteAlbum) {
+            deleteAlbum();
         } else if (itemId == R.id.rename) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SingleAlbumActivity.this);
             builder.setTitle("Rename");
