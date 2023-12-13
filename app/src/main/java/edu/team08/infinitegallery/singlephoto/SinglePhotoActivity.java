@@ -427,12 +427,6 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             FileSystemDirectory fileDir = metadata.getFirstDirectoryOfType(FileSystemDirectory.class);
             Date date = null;
 
-            for (Directory directory : metadata.getDirectories()) {
-                for (Tag tag : directory.getTags()) {
-                    Log.d("TAG", tag.toString());
-                }
-            }
-
             if(exifDir != null) {
                 date = exifDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
             }
