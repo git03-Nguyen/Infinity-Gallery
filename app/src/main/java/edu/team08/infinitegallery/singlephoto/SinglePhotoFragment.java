@@ -116,7 +116,7 @@ public class SinglePhotoFragment extends Fragment {
         return currentPosition;
     }
 
-    public PhotoView getImageView(){
-        return adapter.getZoomViewImage();
+    public void rotate(int angle){
+        adapter.rotate(angle);
     }
 }
