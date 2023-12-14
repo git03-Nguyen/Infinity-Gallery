@@ -127,7 +127,7 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
                 uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
             }
 
-            cursor = this.getContentResolver().query(uri, projection, null, null, null);
+            cursor = this.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED);
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             while (cursor.moveToNext()) {
                 String photoPath = cursor.getString(columnIndex);
@@ -153,22 +153,28 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
             if (selectedItemsId.valueAt(i)) list.add(allPhotos.get(selectedItemsId.keyAt(i)));
         }
 
-        String title = getResources().getString(R.string.move_photos);
-//        String message = "Are you sure to move ${num} photos to ${albumName}?"
-//                .replace("${num}", String.valueOf(numberOfSelected))
-//                .replace("${albumName}", new File(folderPath).getName());
-        String message=getResources().getString(R.string.confirm_move_photos,numberOfSelected,new File(folderPath).getName());
-        ConfirmDialogBuilder.showConfirmDialog(this, title, message
-                , () -> {
-                    Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(AddPhotoActivity.this, "Hiding ...", () -> {
-                                moveToAlbum(list);
-                            },
-                            () -> {
-                                finish();
-                            });
-                }
-                , () -> {
-
+        ConfirmDialogBuilder.showAddPhotoDialog(AddPhotoActivity.this, numberOfSelected, new File(folderPath).getName(),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(AddPhotoActivity.this, "Moving ...", () -> {
+                                    moveToAlbum(list);
+                                },
+                                () -> {
+                                    finish();
+                                });
+                    }
+                },
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(AddPhotoActivity.this, "Copying ...", () -> {
+                                    copyToAlbum(list);
+                                },
+                                () -> {
+                                    finish();
+                                });
+                    }
                 });
 
         return true;
@@ -185,6 +191,24 @@ public class AddPhotoActivity extends AppCompatActivity implements MainCallbacks
                 // Move the file to /folderPath/fileName
                 try {
                     trashBinManager.moveFile(file, newFile);
+                } catch (IOException e) {
+                    Toast.makeText(this, "There are some errors!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private void copyToAlbum(List<File> files) {
+        TrashBinManager trashBinManager = new TrashBinManager(this);
+        File folder = new File(folderPath);
+
+        for (File file : files) {
+            // Check if the folder already contains the file, and skip if it does
+            File newFile = new File(folder, file.getName());
+            if (!newFile.exists()) {
+                // Move the file to /folderPath/fileName
+                try {
+                    trashBinManager.copyFile(file, newFile);
                 } catch (IOException e) {
                     Toast.makeText(this, "There are some errors!", Toast.LENGTH_SHORT).show();
                 }

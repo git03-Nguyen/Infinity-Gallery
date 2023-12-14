@@ -405,12 +405,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             if(lastModified == null) lastModified = "";
             if(dateTaken == null) dateTaken = lastModified;
 
-            ((TextView)detailsView.findViewById(R.id.title)).setText("Title: " +title);
-            ((TextView)detailsView.findViewById(R.id.lastModified)).setText("Last modified: " + lastModified);
-            ((TextView)detailsView.findViewById(R.id.dateTaken)).setText("Date taken: " + dateTaken);
-            ((TextView)detailsView.findViewById(R.id.size)).setText("Size: " + size);
-            ((TextView)detailsView.findViewById(R.id.resolution)).setText("Resolution: " + width + "x" + height);
-            ((TextView)detailsView.findViewById(R.id.path)).setText("Path: " + path);
+            ((TextView)detailsView.findViewById(R.id.title)).setText(getString(R.string.title) + title);
+            ((TextView)detailsView.findViewById(R.id.lastModified)).setText(getString(R.string.last_modified) + lastModified);
+            ((TextView)detailsView.findViewById(R.id.dateTaken)).setText(getString(R.string.date_taken) + dateTaken);
+            ((TextView)detailsView.findViewById(R.id.size)).setText(getString(R.string.size) + size);
+            ((TextView)detailsView.findViewById(R.id.resolution)).setText(getString(R.string.resolution) + width + " x " + height);
+            ((TextView)detailsView.findViewById(R.id.path)).setText(getString(R.string.path) + path);
 
         } catch (ImageProcessingException e) {
             throw new RuntimeException(e);
