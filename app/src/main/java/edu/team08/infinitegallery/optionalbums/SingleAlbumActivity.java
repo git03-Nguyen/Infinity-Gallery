@@ -82,7 +82,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             this.folderPath = intent.getStringExtra("folderPath");
         }
 
-        getAllPhotos();
+        getAllPhotosOfFolder(folderPath);
 
         this.toolbar = findViewById(R.id.topToolbarAlbum);
         this.toolbar.setTitle(this.albumName);
@@ -374,7 +374,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
 
             builder.show();
         } else if (itemId == R.id.sortBy) {
-            // TODO: should delete recursively before delete directory
+
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
             return super.onOptionsItemSelected(item);
@@ -408,7 +408,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
 
     private List<File> filterImageFiles(File[] files) {
         List<File> imageFiles = new ArrayList<>();
-        String[] validExtensions = {".jpg", ".jpeg", ".png", ".gif"};
+        String[] validExtensions = {".jpg", ".jpeg", ".png", ".gif", ".webp"};
 
         Arrays.stream(files)
                 .filter(file -> file.isFile() && hasValidExtension(file, validExtensions))
