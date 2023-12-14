@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.DataBridge;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
@@ -32,9 +33,10 @@ public class SinglePrivacyActivity extends AppCompatActivity implements MainCall
         setContentView(R.layout.activity_single_privacy);
 
         Intent intent = getIntent();
-        if (intent.hasExtra("photoPaths")) {
-            this.privatePathList = intent.getStringArrayExtra("photoPaths");
-        }
+//        if (intent.hasExtra("photoPaths")) {
+//            this.privatePathList = intent.getStringArrayExtra("photoPaths");
+//        }
+        this.privatePathList = DataBridge.photos;
         int currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
