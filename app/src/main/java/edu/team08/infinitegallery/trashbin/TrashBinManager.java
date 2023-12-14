@@ -107,8 +107,9 @@ public class TrashBinManager {
     public File[] getTrashFiles() {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
         String[] projection = {"TRASH_NAME"};
+        String orderBy = "DELETE_DATE DESC"; // Sort by DELETE_DATE in descending order
         // Query the database to get all trash file names
-        Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, projection, null, null, null, null, orderBy);
 
         List<String> trashFileNames = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {

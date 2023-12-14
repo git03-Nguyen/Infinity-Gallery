@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -55,6 +58,9 @@ public class PhotosFragment extends Fragment {
     MaterialButton btnTurnOffSelectionMode;
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
+    private Parcelable recylerViewState;
+    boolean firstTime;
+
 
     public PhotosFragment() {}
 
@@ -70,6 +76,7 @@ public class PhotosFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firstTime = true;
 //        ((MainActivity) context).getWindow().setStatusBarColor(Color.TRANSPARENT);
 
     }
@@ -124,6 +131,7 @@ public class PhotosFragment extends Fragment {
             } else {
                 //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
+
             return true;
         });
 
@@ -173,7 +181,7 @@ public class PhotosFragment extends Fragment {
         }
     }
 
-    private void toggleToolbarForSelection() {
+    public void toggleToolbarForSelection() {
         if (photosAdapter.getSelectionMode()) {
             this.toolbar.setVisibility(View.GONE);
             this.selectionToolbar.setVisibility(View.VISIBLE);
@@ -191,17 +199,26 @@ public class PhotosFragment extends Fragment {
         super.onResume();
         readAllImages();
         showAllPictures();
+        if (firstTime) {
+            firstTime = false;
+            photosRecView.scrollToPosition(photoFiles.size() - 1);
+        } else {
+            photosRecView.getLayoutManager().onRestoreInstanceState(recylerViewState);
+        }
         ((MainActivity) context).changeStatusBar();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        if (photosRecView.getLayoutManager() != null) {
+            recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
+        }
         ((MainActivity) context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
     private void readAllImages() {
-        // TODO: maybe other thread, and only reload if have some changes in files
         photoFiles = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -237,8 +254,6 @@ public class PhotosFragment extends Fragment {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
             photosRecView.setLayoutManager(gridLayoutManager);
             setSpanSize();
-
-            photosRecView.scrollToPosition(photoFiles.size() - 1);
 
             GridLayoutManager layoutManager = ((GridLayoutManager)photosRecView.getLayoutManager());
             int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
