@@ -39,6 +39,7 @@ import java.util.List;
 
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.FileLastModifiedComparator;
+import edu.team08.infinitegallery.helpers.FileNameComparator;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
@@ -305,6 +306,12 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             Intent myIntent = new Intent(SingleAlbumActivity.this, AddPhotoActivity.class);
             myIntent.putExtra("folderPath", folderPath);
             startActivity(myIntent, null);
+        } else if (itemId == R.id.sortByDate) {
+            Collections.sort(photoFiles, new FileLastModifiedComparator());
+            showAllPhotos();
+        } else if (itemId == R.id.sortByName) {
+            Collections.sort(photoFiles, new FileNameComparator());
+            showAllPhotos();
         } else if (itemId == R.id.column_2) {
             spanCount = 2;
             showAllPhotos();
