@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,7 +83,7 @@ public class PrivacyManager {
         String[] projection = {"PHOTO_NAME"};
 
         // Query the database to get all privacy file names
-        Cursor cursor = db.query(PRIVACY_TABLENAME, projection, null, null, null, null, null);
+        Cursor cursor = db.query(PRIVACY_TABLENAME, projection, null, null, null, null, MediaStore.Images.Media.DATE_MODIFIED);
 
         List<String> privacy_filename_list = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
