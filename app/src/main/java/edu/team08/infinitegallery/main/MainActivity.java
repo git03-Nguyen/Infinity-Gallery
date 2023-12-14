@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
           Locale.setDefault(locale);
           getResources().getConfiguration().setLocale(locale);
           getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+        } else {
+            Locale locale=new Locale("en");
+            Locale.setDefault(locale);
+            getResources().getConfiguration().setLocale(locale);
+            getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
         }
 
         super.onCreate(savedInstanceState);
@@ -74,21 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     protected void onResume() {
         super.onResume();
-        runOnUiThread(() -> {
-            scanMediaOnStorage(null);
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        runOnUiThread(() -> {
-//            if (AppConfig.getInstance(MainActivity.this).getNightMode()) {
-//                getWindow().getDecorView().setSystemUiVisibility(0);
-//            } else {
-//                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-//            }
-//        });
+        onEmitMsgFromFragToMain("UPDATE", "");
     }
 
     private void initApp() {
@@ -314,6 +305,12 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             case "NUMBER OF SELECTIONS":
                 int selectionsCount = Integer.parseInt(request);
                 photosFragment.setNumberOfSelectedFiles(selectionsCount);
+                break;
+
+            case "UPDATE":
+                runOnUiThread(() -> {
+                    scanMediaOnStorage(null);
+                });
                 break;
 
             default: break;

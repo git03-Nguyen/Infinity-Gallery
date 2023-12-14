@@ -33,9 +33,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
+import edu.team08.infinitegallery.helpers.FileLastModifiedComparator;
+import edu.team08.infinitegallery.helpers.FileNameComparator;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
@@ -302,6 +306,12 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             Intent myIntent = new Intent(SingleAlbumActivity.this, AddPhotoActivity.class);
             myIntent.putExtra("folderPath", folderPath);
             startActivity(myIntent, null);
+        } else if (itemId == R.id.sortByDate) {
+            Collections.sort(photoFiles, new FileLastModifiedComparator());
+            showAllPhotos();
+        } else if (itemId == R.id.sortByName) {
+            Collections.sort(photoFiles, new FileNameComparator());
+            showAllPhotos();
         } else if (itemId == R.id.column_2) {
             spanCount = 2;
             showAllPhotos();
@@ -363,7 +373,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             });
 
             builder.show();
-        } else if (itemId == R.id.deleteAlbum) {
+        } else if (itemId == R.id.sortBy) {
             // TODO: should delete recursively before delete directory
         } else {
             Toast.makeText(this, item.getTitle(), Toast.LENGTH_SHORT).show();
@@ -419,16 +429,21 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         }
         this.photoFiles = new ArrayList<>();
         if (photosPaths != null) {
-            for (String path: photosPaths) {
+            for (String path : photosPaths) {
                 this.photoFiles.add(new File(path));
             }
+
+            // Use the custom comparator to sort the File objects by last modified date
+            Collections.sort(photoFiles, new FileLastModifiedComparator());
         }
+
     }
 
     private void showAllPhotos() {
         photosAdapter = new PhotosAdapter(this, photoFiles, spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
+        photosRecView.scrollToPosition(photoFiles.size() - 1);
     }
 
     @Override

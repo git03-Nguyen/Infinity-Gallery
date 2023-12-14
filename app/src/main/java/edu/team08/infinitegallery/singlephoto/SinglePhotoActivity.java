@@ -461,7 +461,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                 }
         }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

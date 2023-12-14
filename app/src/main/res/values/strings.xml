@@ -582,4 +582,6 @@
     <string name="x_photos">x photos</string>
     <string name="delete_album">Delete album</string>
     <string name="are_you_sure_to_delete_this_album_to_the_trash">Are you sure to delete this album to the trash?</string>
+    <string name="sort_by_date">Sort by date</string>
+    <string name="sort_by_name">Sort by name</string>
 </resources>
