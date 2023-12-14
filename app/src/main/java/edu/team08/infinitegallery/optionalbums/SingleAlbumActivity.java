@@ -403,6 +403,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         File folder = new File(folderPath);
         if (folder == null || !folder.isDirectory()) return;
         this.photoFiles = filterImageFiles(folder.listFiles());
+        Collections.sort(this.photoFiles, new FileLastModifiedComparator());
     }
 
     private List<File> filterImageFiles(File[] files) {
