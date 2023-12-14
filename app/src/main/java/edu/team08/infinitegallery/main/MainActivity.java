@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
           Locale.setDefault(locale);
           getResources().getConfiguration().setLocale(locale);
           getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
+        } else {
+            Locale locale=new Locale("en");
+            Locale.setDefault(locale);
+            getResources().getConfiguration().setLocale(locale);
+            getResources().updateConfiguration(getResources().getConfiguration(), getResources().getDisplayMetrics());
         }
 
         super.onCreate(savedInstanceState);
