@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -27,12 +29,16 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.settings.SettingsActivity;
 
 public class PhotosFragment extends Fragment {
@@ -72,6 +78,17 @@ public class PhotosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View photosFragment = inflater.inflate(R.layout.fragment_photos, container, false);
         photosRecView = photosFragment.findViewById(R.id.recViewPhotos);
+        photosRecView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager layoutManager = ((GridLayoutManager)photosRecView.getLayoutManager());
+                int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+                // TODO: get the photo and set the time
+                setTimeline(firstVisiblePosition);
+            }
+        });
+
         viewSwitcher = photosFragment.findViewById(R.id.viewSwitcher);
 
         // TODO: update functionalities in toolbar
@@ -194,7 +211,7 @@ public class PhotosFragment extends Fragment {
                 uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
             }
 
-            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            cursor = context.getContentResolver().query(uri, projection, null, null, MediaStore.Images.Media.DATE_MODIFIED);
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             while (cursor.moveToNext()) {
                 String photoPath = cursor.getString(columnIndex);
@@ -220,13 +237,34 @@ public class PhotosFragment extends Fragment {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, spanCount);
             photosRecView.setLayoutManager(gridLayoutManager);
             setSpanSize();
-            this.txtPhotosTitle.setText(getString(R.string.december_03_2023)); // TODO: set by the first image on the window view
+
+            photosRecView.scrollToPosition(photoFiles.size() - 1);
+
+            GridLayoutManager layoutManager = ((GridLayoutManager)photosRecView.getLayoutManager());
+            int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+            setTimeline(firstVisiblePosition);
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();
             }
             this.txtPhotosTitle.setText("");
         }
+    }
+
+    private void setTimeline(int position) {
+        if (position < 0 || position >= photoFiles.size()) return;
+        File photo = photoFiles.get(position);
+        Date date = new Date(photo.lastModified());
+
+        if (AppConfig.getInstance(context).getSelectedLanguage()) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("vi"));
+            this.txtPhotosTitle.setText(dateFormat.format(date));
+        }
+        else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
+            this.txtPhotosTitle.setText(dateFormat.format(date));
+        }
+
     }
 
     public File[] getSelectedFiles() {
