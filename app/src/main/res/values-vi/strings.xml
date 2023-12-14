@@ -587,4 +587,9 @@
     <string name="are_you_sure_to_delete_this_album_to_the_trash">Bạn có chắc chắn muốn xoá album này vào thùng rác?</string>
     <string name="sort_by_date">Theo ngày</string>
     <string name="sort_by_name">Theo tên</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="move_selected_photos">Di chuyển ảnh</string>
+    <string name="copy_photos">Sao chép ảnh</string>
+    <string name="confirm_copy_photos">Bạn có chắc chắn muốn chép %1$d ảnh đến %2$s?</string>
 </resources>

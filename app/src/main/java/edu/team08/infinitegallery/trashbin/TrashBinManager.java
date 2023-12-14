@@ -65,6 +65,27 @@ public class TrashBinManager {
         src.delete();
     }
 
+    public void copyFile(File src, File dst) throws IOException {
+        if (!dst.getParentFile().exists()) {
+            dst.getParentFile().mkdirs();
+        }
+
+        if (dst.exists()) {
+            // If the destination file already exists, rename it with a postfix
+            dst = getUniqueDestination(dst);
+        }
+
+        FileChannel inChannel = new FileInputStream(src).getChannel();
+        FileChannel outChannel = new FileOutputStream(dst).getChannel();
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        }
+        finally {
+            if (inChannel != null) inChannel.close();
+            if (outChannel != null) outChannel.close();
+        }
+    }
+
     private File getUniqueDestination(File originalDst) {
         File dst = originalDst;
         int postfix = 1;
