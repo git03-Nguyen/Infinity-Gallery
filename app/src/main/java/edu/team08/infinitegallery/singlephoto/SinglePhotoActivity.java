@@ -452,8 +452,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     topToolbarPhoto.setSubtitle(timeFormat.format(date));
                 }
                 else {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
-                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format));
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("en"));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format), new Locale("en"));
                     topToolbarPhoto.setTitle(dateFormat.format(date));
                     topToolbarPhoto.setSubtitle(timeFormat.format(date));
                 }
