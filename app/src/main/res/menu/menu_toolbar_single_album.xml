@@ -40,11 +40,24 @@
 
     <item
         android:id="@+id/sortBy"
-        android:title="@string/sort_by" />
+        android:title="@string/sort_by" >
+
+        <menu>
+            <item
+                android:id="@+id/sortByDate"
+                android:title="@string/sort_by_date" />
+
+            <item
+                android:id="@+id/sortByName"
+                android:title="@string/sort_by_name" />
+
+        </menu>
+
+    </item>
 
     <item
         android:id="@+id/slideshow"
-        android:title="Slideshow" />
+        android:title="@string/slideshow" />
 
     <item
         android:id="@+id/rename"
