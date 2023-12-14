@@ -51,7 +51,7 @@ public class ConfirmDialogBuilder {
 
         CheckBox checkBox = new CheckBox(context);
         checkBox.setText(edu.team08.infinitegallery.R.string.move_selected_photos);
-        checkBox.setPadding(20, 0, 0, 0);
+        checkBox.setPadding(100, 0, 0, 0);
         builder.setView(checkBox);
 
         String optionYes = context.getString(edu.team08.infinitegallery.R.string.yes);

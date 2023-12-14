@@ -589,4 +589,10 @@
     <string name="move_selected_photos">Move selected photos</string>
     <string name="copy_photos">Copy photos</string>
     <string name="confirm_copy_photos">Are you sure to copy %1$d photos to %2$s?</string>
+    <string name="title">"Title: "</string>
+    <string name="last_modified">"Last modified: "</string>
+    <string name="date_taken">"Date taken: "</string>
+    <string name="size">"Size: "</string>
+    <string name="resolution">"Resolution: "</string>
+    <string name="path">"Path: "</string>
 </resources>
