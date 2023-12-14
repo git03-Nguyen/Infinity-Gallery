@@ -66,16 +66,16 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     BottomNavigationView bottomNavigationView;
     String albumName;
     String folderPath;
-    boolean firstTime;
     private Parcelable recylerViewState;
-
+    private boolean isSortByName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_album);
 
-        this.firstTime = true;
+        this.recylerViewState = null;
+        this.isSortByName = false;
 
         Intent intent = getIntent();
         if (intent.hasExtra("albumName")) {
@@ -84,7 +84,6 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         if (intent.hasExtra("folderPath")) {
             this.folderPath = intent.getStringExtra("folderPath");
         }
-
         getAllPhotosOfFolder(folderPath);
 
         this.toolbar = findViewById(R.id.topToolbarAlbum);
@@ -277,15 +276,15 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     @Override
     protected void onResume() {
         super.onResume();
-        if (firstTime) {
-            firstTime = false;
+        if (recylerViewState == null) {
             photosRecView.scrollToPosition(photoFiles.size() - 1);
+            recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
         } else {
             getAllPhotosOfFolder(folderPath);
             showAllPhotos();
-            photosRecView.getLayoutManager().onRestoreInstanceState(recylerViewState);
             String formatText=getResources().getString(R.string.num_photos,this.photoFiles.size());
             this.toolbar.setSubtitle(formatText);
+            photosRecView.getLayoutManager().onRestoreInstanceState(recylerViewState);
         }
     }
 
@@ -318,11 +317,18 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
             myIntent.putExtra("folderPath", folderPath);
             startActivity(myIntent, null);
         } else if (itemId == R.id.sortByDate) {
-            Collections.sort(photoFiles, new FileLastModifiedComparator());
-            showAllPhotos();
+            if (this.isSortByName) {
+                this.isSortByName = false;
+                showAllPhotos();
+                photosRecView.scrollToPosition(photoFiles.size() - 1);
+            }
         } else if (itemId == R.id.sortByName) {
-            Collections.sort(photoFiles, new FileNameComparator());
-            showAllPhotos();
+            if (!this.isSortByName) {
+                this.isSortByName = true;
+                showAllPhotos();
+                photosRecView.scrollToPosition(photoFiles.size() - 1);
+            }
+
         } else if (itemId == R.id.column_2) {
             spanCount = 2;
             showAllPhotos();
@@ -366,7 +372,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                     if(newFile.exists()){
                         Toast.makeText(SingleAlbumActivity.this, rename + " file is existed", Toast.LENGTH_SHORT);
                     } else {
-                        if(currentFile.renameTo(newFile)){
+                        if(currentFile.renameTo(newFile)) {
                             folderPath = newFile.getAbsolutePath();
                             albumName = rename;
                             toolbar.setTitle(albumName);
@@ -414,7 +420,6 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         File folder = new File(folderPath);
         if (folder == null || !folder.isDirectory()) return;
         this.photoFiles = filterImageFiles(folder.listFiles());
-        Collections.sort(this.photoFiles, new FileLastModifiedComparator());
     }
 
     private List<File> filterImageFiles(File[] files) {
@@ -434,6 +439,11 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     }
 
     private void showAllPhotos() {
+        if (this.isSortByName) {
+            Collections.sort(this.photoFiles, new FileNameComparator());
+        } else {
+            Collections.sort(this.photoFiles, new FileLastModifiedComparator());
+        }
         photosAdapter = new PhotosAdapter(this, photoFiles, spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));

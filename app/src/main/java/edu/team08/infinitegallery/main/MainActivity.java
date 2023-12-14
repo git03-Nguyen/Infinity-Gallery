@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     @Override
     protected void onResume() {
         super.onResume();
-        onEmitMsgFromFragToMain("UPDATE", "");
+//        onEmitMsgFromFragToMain("UPDATE", "");
     }
 
     private void initApp() {

@@ -27,6 +27,11 @@ public class FavoriteManager {
     }
 
     private void initFavorite() throws IOException {
+
+        // Create the database
+        SQLiteDatabase.openOrCreateDatabase(
+                context.getDatabasePath(FAVORITE_DB_NAME), null).close();
+
         if (databaseExists(FAVORITE_DB_NAME)) {
             SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                     context.getDatabasePath(FAVORITE_DB_NAME), null);
@@ -53,15 +58,7 @@ public class FavoriteManager {
 
                 cursor.close();
             }
-            return;
         }
-
-        // Create the database
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                context.getDatabasePath(FAVORITE_DB_NAME), null);
-
-        // Close the database
-        db.close();
     }
 
     public void addToFavorite(String photoPath) {

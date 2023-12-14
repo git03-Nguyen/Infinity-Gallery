@@ -212,7 +212,9 @@ public class PhotosFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
+        if (photosRecView.getLayoutManager() != null) {
+            recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
+        }
         ((MainActivity) context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
