@@ -134,6 +134,15 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             }
         });
 
+        holder.imageItem.setOnLongClickListener(v -> {
+            if (!selectionMode) {
+                toggleSelectionMode();
+                ((MainCallbacks) context).onEmitMsgFromFragToMain("SELECTION MODE", "2");
+                holder.imageItem.performClick();
+            }
+            return true;
+        });
+
         DisplayMetrics displaymetrics = new DisplayMetrics();
         // Set width and height of ImageView
         if (context instanceof TrashBinActivity) {

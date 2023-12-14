@@ -181,7 +181,7 @@ public class PhotosFragment extends Fragment {
         }
     }
 
-    private void toggleToolbarForSelection() {
+    public void toggleToolbarForSelection() {
         if (photosAdapter.getSelectionMode()) {
             this.toolbar.setVisibility(View.GONE);
             this.selectionToolbar.setVisibility(View.VISIBLE);

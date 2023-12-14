@@ -293,12 +293,16 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     public void onEmitMsgFromFragToMain(String sender, String request) {
         switch(sender) {
             case "SELECTION MODE":
-                if (request == "0") {
+                if (request.equals("0")) {
                     bottomSelectionFeatures.setVisibility(View.GONE);
                     bottomNavigationView.setVisibility(View.VISIBLE);
-                } else {
+                } else if (request.equals("1")) {
                     bottomSelectionFeatures.setVisibility(View.VISIBLE);
                     bottomNavigationView.setVisibility(View.GONE);
+                } else if (request.equals("2")) {
+                    bottomSelectionFeatures.setVisibility(View.VISIBLE);
+                    bottomNavigationView.setVisibility(View.GONE);
+                    photosFragment.toggleToolbarForSelection();
                 }
                 break;
 
