@@ -37,7 +37,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void requestAppPermissions() {
         if (checkAppPermission()) {
-            Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.permissions_granted, Toast.LENGTH_SHORT).show();
             startApplication();
             return;
         }
@@ -83,7 +83,7 @@ public class SplashScreen extends AppCompatActivity {
             boolean successful = grantResults.length > 0;
             if (successful) {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(SplashScreen.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreen.this, R.string.permissions_denied, Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 successful = successful && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
@@ -115,10 +115,10 @@ public class SplashScreen extends AppCompatActivity {
         if (requestCode == PERMISSIONS_REQUEST_CODE_2) {
             if (SDK_INT >= Build.VERSION_CODES.R) {
                 if (!Environment.isExternalStorageManager()) {
-                    Toast.makeText(this, "Permission to access files has been denied! Stopping app...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.permission_to_access_files_has_been_denied_stopping_app, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.permissions_granted, Toast.LENGTH_SHORT).show();
                     startApplication();
                 }
             }

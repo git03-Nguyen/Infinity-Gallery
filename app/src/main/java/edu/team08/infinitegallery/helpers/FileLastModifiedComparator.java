@@ -7,6 +7,6 @@ public class FileLastModifiedComparator implements Comparator<File> {
     @Override
     public int compare(File file1, File file2) {
         // Compare files based on last modified date in descending order
-        return Long.compare(file2.lastModified(), file1.lastModified());
+        return Long.compare(file1.lastModified(), file2.lastModified());
     }
 }

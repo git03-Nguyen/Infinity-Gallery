@@ -595,4 +595,7 @@
     <string name="size">"Size: "</string>
     <string name="resolution">"Resolution: "</string>
     <string name="path">"Path: "</string>
+    <string name="permissions_denied">Permissions denied!</string>
+    <string name="permissions_granted">Permissions granted!</string>
+    <string name="permission_to_access_files_has_been_denied_stopping_app">Permission to access files has been denied! Stopping app...</string>
 </resources>

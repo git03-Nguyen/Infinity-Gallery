@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import edu.team08.infinitegallery.helpers.DataBridge;
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
@@ -121,7 +122,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                         myIntent = new Intent(context, SinglePhotoActivity.class);
                     }
                     if (myIntent != null) {
-                        myIntent.putExtra("photoPaths", photoPaths);
+//                        myIntent.putExtra("photoPaths", photoPaths);
+                        DataBridge.photos = photoPaths;
                         myIntent.putExtra("currentPosition", position);
                         startActivity(context, myIntent, null);
                     }
