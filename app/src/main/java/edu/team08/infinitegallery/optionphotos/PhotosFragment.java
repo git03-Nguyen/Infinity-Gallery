@@ -261,7 +261,7 @@ public class PhotosFragment extends Fragment {
             this.txtPhotosTitle.setText(dateFormat.format(date));
         }
         else {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
+            SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("en"));
             this.txtPhotosTitle.setText(dateFormat.format(date));
         }
 
