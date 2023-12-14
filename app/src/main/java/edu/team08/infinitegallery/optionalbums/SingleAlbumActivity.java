@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +67,7 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
     String albumName;
     String folderPath;
     boolean firstTime;
+    private Parcelable recylerViewState;
 
 
     @Override
@@ -276,12 +279,20 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         super.onResume();
         if (firstTime) {
             firstTime = false;
+            photosRecView.scrollToPosition(photoFiles.size() - 1);
         } else {
             getAllPhotosOfFolder(folderPath);
             showAllPhotos();
+            photosRecView.getLayoutManager().onRestoreInstanceState(recylerViewState);
             String formatText=getResources().getString(R.string.num_photos,this.photoFiles.size());
             this.toolbar.setSubtitle(formatText);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
     }
 
     @Override
@@ -422,29 +433,10 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 .anyMatch(extension -> file.getName().toLowerCase().endsWith(extension));
     }
 
-    private void getAllPhotos() {
-        Intent intent = getIntent();
-        String[] photosPaths = null;
-        if (intent.hasExtra("photosList")) {
-            photosPaths = intent.getStringArrayExtra("photosList");
-        }
-        this.photoFiles = new ArrayList<>();
-        if (photosPaths != null) {
-            for (String path : photosPaths) {
-                this.photoFiles.add(new File(path));
-            }
-
-            // Use the custom comparator to sort the File objects by last modified date
-            Collections.sort(photoFiles, new FileLastModifiedComparator());
-        }
-
-    }
-
     private void showAllPhotos() {
         photosAdapter = new PhotosAdapter(this, photoFiles, spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(this, spanCount));
-        photosRecView.scrollToPosition(photoFiles.size() - 1);
     }
 
     @Override
@@ -464,22 +456,4 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
         this.txtNumberOfSelected.setText(formattedText);
     }
 
-    List<String> imagePathList;
-    String imagePath;
-
-    @SuppressLint("Range")
-    public void getImageFilePath(Uri uri) {
-
-        File file = new File(uri.getPath());
-        String[] filePath = file.getPath().split(":");
-        String image_id = filePath[filePath.length - 1];
-
-        Cursor cursor = getContentResolver().query(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Images.Media._ID + " = ? ", new String[]{image_id}, null);
-        if (cursor!=null) {
-            cursor.moveToFirst();
-            imagePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            imagePathList.add(imagePath);
-            cursor.close();
-        }
-    }
 }
