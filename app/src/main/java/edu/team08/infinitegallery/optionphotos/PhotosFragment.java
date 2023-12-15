@@ -1,12 +1,18 @@
 package edu.team08.infinitegallery.optionphotos;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -15,12 +21,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +44,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +56,7 @@ import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+
 
 public class PhotosFragment extends Fragment {
     int spanCount = 4;
@@ -55,6 +72,22 @@ public class PhotosFragment extends Fragment {
     MaterialButton btnTurnOffSelectionMode;
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
+    String[] permissions = {Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.CAMERA};
+    boolean permit_storage_image = false;
+    boolean permit_camera_access = false;
+    private ActivityResultLauncher<Intent> cameraLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    new ActivityResultCallback<ActivityResult>() {
+                        @Override
+                        public void onActivityResult(ActivityResult result) {
+                            if (result.getData() != null) {
+                                Bundle extras = result.getData().getExtras();
+                                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                                saveImage(imageBitmap);
+                            }
+                        }
+                    }
+            );
 
     public PhotosFragment() {}
 
@@ -109,6 +142,14 @@ public class PhotosFragment extends Fragment {
                     toggleSelectionMode();
                 }
                 
+            } else if (itemId == R.id.menuPhotosCamera) {
+                if (permit_camera_access) {
+                    openCamera();
+                }
+                else {
+                    requestPermissionCameraAccess();
+                }
+
             } else if (itemId == R.id.column_2) {
                 spanCount = 2;
                 setSpanSize();
@@ -293,5 +334,80 @@ public class PhotosFragment extends Fragment {
         photosAdapter = new PhotosAdapter(context, photoFiles, spanCount);
         photosRecView.setAdapter(photosAdapter);
         photosRecView.setLayoutManager(new GridLayoutManager(context, spanCount));
+    }
+
+    public void requestPermissionStorageImages() {
+        if (ContextCompat.checkSelfPermission(getActivity(), permissions[0]) != PackageManager.PERMISSION_GRANTED) {
+            storageImagesLauncher.launch(permissions[0]);
+        }
+        else {
+            permit_storage_image = true;
+            requestPermissionCameraAccess();
+        }
+    }
+
+    private ActivityResultLauncher<String> storageImagesLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    permit_storage_image = true;
+                }
+                else {
+                    permit_storage_image = false;
+                }
+                requestPermissionCameraAccess();
+            });
+
+    public void requestPermissionCameraAccess() {
+        if (ContextCompat.checkSelfPermission(getActivity(), permissions[1]) != PackageManager.PERMISSION_GRANTED) {
+            cameraAccessLauncher.launch(permissions[1]);
+            Toast.makeText(context, "Permission for camera requested", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            permit_camera_access = true;
+            openCamera();
+        }
+    }
+
+    private ActivityResultLauncher<String> cameraAccessLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    permit_camera_access = true;
+                }
+                else {
+                    permit_camera_access = false;
+                }
+            });
+
+    public void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraLauncher != null) {
+            cameraLauncher.launch(cameraIntent);
+        }
+    }
+
+
+
+    private void saveImage(Bitmap bitmap) {
+        File cameraDir = new File(Environment.getExternalStorageDirectory(), "Camera");
+        if (!cameraDir.exists()) {
+            cameraDir.mkdir();
+        }
+        Log.e("CameraDirectory", cameraDir.getAbsolutePath());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File imageFile = new File(cameraDir, "IMG_" + timeStamp + ".jpg");
+        try {
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(Uri.fromFile(imageFile));
+            context.sendBroadcast(mediaScanIntent);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
