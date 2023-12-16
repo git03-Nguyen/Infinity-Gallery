@@ -33,6 +33,10 @@
     </item>
 
     <item
+        android:id="@+id/menuPhotosDeleteDup"
+        android:title="Delete duplicates" />
+
+    <item
         android:id="@+id/menuPhotosSettings"
         android:title="@string/settings" />
 

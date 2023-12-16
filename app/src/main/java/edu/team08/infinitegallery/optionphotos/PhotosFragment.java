@@ -2,13 +2,16 @@ package edu.team08.infinitegallery.optionphotos;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Camera;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -45,21 +49,28 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.settings.SettingsActivity;
+import edu.team08.infinitegallery.optionphotos.PhotoFingerprint;
+import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
+import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 
 public class PhotosFragment extends Fragment {
     int spanCount = 4;
+    public static int MAX_DIFF = 1;
     Context context;
     List<File> photoFiles;
     RecyclerView photosRecView;
@@ -75,6 +86,26 @@ public class PhotosFragment extends Fragment {
     String[] permissions = {Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.CAMERA};
     boolean permit_storage_image = false;
     boolean permit_camera_access = false;
+
+    private ActivityResultLauncher<String> storageImagesLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    permit_storage_image = true;
+                }
+                else {
+                    permit_storage_image = false;
+                }
+                requestPermissionCameraAccess();
+            });
+    private ActivityResultLauncher<String> cameraAccessLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    permit_camera_access = true;
+                }
+                else {
+                    permit_camera_access = false;
+                }
+            });
     private ActivityResultLauncher<Intent> cameraLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                     new ActivityResultCallback<ActivityResult>() {
@@ -95,14 +126,16 @@ public class PhotosFragment extends Fragment {
         this.context = context;
     }
 
-    public static PhotosFragment newInstance(Context context) {
-        return new PhotosFragment(context);
+    public static PhotosFragment newInstance() {
+        PhotosFragment fragment = new PhotosFragment();
+        return fragment;
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.context = getActivity();
 //        ((MainActivity) context).getWindow().setStatusBarColor(Color.TRANSPARENT);
 
     }
@@ -149,6 +182,21 @@ public class PhotosFragment extends Fragment {
                 else {
                     requestPermissionCameraAccess();
                 }
+
+            } else if (itemId == R.id.menuPhotosDeleteDup) {
+                Dialog progressDialog = ProgressDialogBuilder.buildProgressDialog(context, "Deleting o...", () -> {
+                            // Delete duplicate images
+                            try {
+                                deleteDuplicates(context);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        () -> {
+                            Toast.makeText(context, "Deleted duplicates successfully", Toast.LENGTH_SHORT).show();
+                            readAllImages();
+                            setSpanSize();
+                        });
 
             } else if (itemId == R.id.column_2) {
                 spanCount = 2;
@@ -337,8 +385,10 @@ public class PhotosFragment extends Fragment {
     }
 
     public void requestPermissionStorageImages() {
-        if (ContextCompat.checkSelfPermission(getActivity(), permissions[0]) != PackageManager.PERMISSION_GRANTED) {
-            storageImagesLauncher.launch(permissions[0]);
+        if (ContextCompat.checkSelfPermission(context, permissions[0]) != PackageManager.PERMISSION_GRANTED) {
+            if (storageImagesLauncher != null) {
+                storageImagesLauncher.launch(permissions[0]);
+            }
         }
         else {
             permit_storage_image = true;
@@ -346,20 +396,11 @@ public class PhotosFragment extends Fragment {
         }
     }
 
-    private ActivityResultLauncher<String> storageImagesLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    permit_storage_image = true;
-                }
-                else {
-                    permit_storage_image = false;
-                }
-                requestPermissionCameraAccess();
-            });
-
     public void requestPermissionCameraAccess() {
-        if (ContextCompat.checkSelfPermission(getActivity(), permissions[1]) != PackageManager.PERMISSION_GRANTED) {
-            cameraAccessLauncher.launch(permissions[1]);
+        if (ContextCompat.checkSelfPermission(context, permissions[1]) != PackageManager.PERMISSION_GRANTED) {
+            if (cameraAccessLauncher != null) {
+                cameraAccessLauncher.launch(permissions[1]);
+            }
             Toast.makeText(context, "Permission for camera requested", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -368,24 +409,12 @@ public class PhotosFragment extends Fragment {
         }
     }
 
-    private ActivityResultLauncher<String> cameraAccessLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    permit_camera_access = true;
-                }
-                else {
-                    permit_camera_access = false;
-                }
-            });
-
     public void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraLauncher != null) {
             cameraLauncher.launch(cameraIntent);
         }
     }
-
-
 
     private void saveImage(Bitmap bitmap) {
         File cameraDir = new File(Environment.getExternalStorageDirectory(), "Camera");
@@ -409,5 +438,42 @@ public class PhotosFragment extends Fragment {
             e.printStackTrace();
         }
 
+    }
+
+    public void scanMediaOnStorage(@Nullable Runnable runnable) {
+        MediaScannerConnection.scanFile(context, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+                if (runnable != null) runnable.run();
+            }
+        });
+    }
+
+    public void deleteDuplicates(Context context) throws IOException {
+        List<PhotoFingerprint> photoFPs = new ArrayList<>();
+        TrashBinManager trashBinManager = new TrashBinManager(context);
+        // Create photoFPs to get all fingerprints
+        for (File file : photoFiles) {
+            String filePath = file.getAbsolutePath();
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            PhotoFingerprint photo = new PhotoFingerprint(filePath);
+            photo.setFinger(bitmap);
+            photoFPs.add(photo);
+        }
+        // Sort photoFPs ascending based on fingerprint value
+        Collections.sort(photoFPs);
+        for (int i = 1; i < photoFPs.size(); i++) {
+            int diff = photoFPs.get(i).hammingDist(photoFPs.get(i - 1).getFinger());
+            if (diff <= MAX_DIFF) {
+                // Delete older photo
+                if (photoFPs.get(i).isNewer(photoFPs.get(i - 1))) {
+                    trashBinManager.moveToTrash(new File(photoFPs.get(i - 1).getPath()));
+                }
+                else {
+                    trashBinManager.moveToTrash(new File(photoFPs.get(i).getPath()));
+                }
+            }
+        }
     }
 }
