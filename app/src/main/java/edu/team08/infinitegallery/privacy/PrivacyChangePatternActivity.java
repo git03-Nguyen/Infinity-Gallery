@@ -117,7 +117,13 @@ public class PrivacyChangePatternActivity extends AppCompatActivity {
 
                 passwordForPattern = myPref.getString("PASS", null);
 
-                if((!myPref.contains("PASS")) || (passwordForPattern == null)
+                if (inputPasswordInPattern.length() < 3) {
+                    patternLockView.setViewMode(PatternLockView.PatternViewMode.WRONG);
+
+                    Toast.makeText(PrivacyChangePatternActivity.this,
+                            "The pattern length must be greater than or equal to 3", Toast.LENGTH_LONG).show()
+                    ;
+                } else if((!myPref.contains("PASS")) || (passwordForPattern == null)
                 || !PrivacyEncoder.SHA256_hashing(inputPasswordInPattern).equalsIgnoreCase(passwordForPattern)) {
                     patternLockView.setViewMode(PatternLockView.PatternViewMode.CORRECT);
 

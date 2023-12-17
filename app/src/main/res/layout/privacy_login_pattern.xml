@@ -34,7 +34,7 @@
         android:contentDescription="The pattern lock view"
         android:layout_width="320dp"
         android:layout_height="320dp"
-        app:dotCount="4"
+        app:dotCount="3"
         app:dotNormalSize="12dp"
         app:dotSelectedSize="24dp"
         app:pathWidth="4dp"
