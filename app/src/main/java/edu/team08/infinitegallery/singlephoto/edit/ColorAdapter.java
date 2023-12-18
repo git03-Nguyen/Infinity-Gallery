@@ -68,7 +68,6 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ViewHolder> 
         this.onColorClickListener = onColorClickListener;
     }
 
-
     public interface OnColorClickListener {
         void onColorClickListener(Integer colorCode);
     }
