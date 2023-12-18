@@ -198,8 +198,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void performSearch(String query) {
-
-
         if (photoList == null) {
             readAllImages();
         }
@@ -211,7 +209,10 @@ public class SearchFragment extends Fragment {
             return;
         }
 
-        for (PhotoInfo photoInfo : photoList) {
+        // Create a copy of photoList to avoid ConcurrentModificationException
+        List<PhotoInfo> copyPhotoList = new ArrayList<>(photoList);
+
+        for (PhotoInfo photoInfo : copyPhotoList) {
             String fileName = photoInfo.getFile().getName().toLowerCase();
             String address = StringUtils.removeAccent(photoInfo.getAddress()).toLowerCase();
 
@@ -220,11 +221,10 @@ public class SearchFragment extends Fragment {
             }
         }
 
-        // Convert PhotoInfo objects to File objects
         tempResult = new ArrayList<>();
         for (PhotoInfo photoInfo : resultOfSearching) {
             tempResult.add(photoInfo.getFile());
-            Log.d("Path of file",photoInfo.getFile().getPath());
+            Log.d("Path of file", photoInfo.getFile().getPath());
         }
 
         showAllPictures();
