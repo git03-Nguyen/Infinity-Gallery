@@ -41,7 +41,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import edu.team08.infinitegallery.helpers.DataBridge;
@@ -94,31 +96,34 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_photo);
 
-        Intent intent = getIntent();
-//        String[] tempPaths = new String[0];
-//        if (intent.hasExtra("photoPaths")) {
-//            tempPaths = intent.getStringArrayExtra("photoPaths");
-//            List<String> list = new ArrayList<String>();
-//            for(int i = 0; i < tempPaths.length; i++){
-//                File file = new File(tempPaths[i]);
-//                if(file.exists()){
-//                    list.add(tempPaths[i]);
-//                }
-//            }
-//            photoPaths = list.toArray(new String[0]);
-//        }
+
+        String[] tempPaths = DataBridge.photos;
+        List<String> list = new ArrayList<String>();
+        for(int i = 0; i < tempPaths.length; i++){
+            File file = new File(tempPaths[i]);
+            if(file.exists()){
+                list.add(tempPaths[i]);
+            }
+        }
+
+        DataBridge.photos = list.toArray(new String[0]);
         photoPaths = DataBridge.photos;
 
-        if(photoPaths.length == 0) onBackPressed();
+        if(photoPaths.length == 0)
+        {
+            onBackPressed();
+            return;
+        }
 
         currentPosition = 0;
+        Intent intent = getIntent();
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-//        if(photoPaths.length < tempPaths.length){
-//            if(currentPosition >= photoPaths.length) currentPosition = 0;
-//        }
+        if(photoPaths.length < tempPaths.length){
+            if(currentPosition >= photoPaths.length) currentPosition = 0;
+        }
 
         singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
         getSupportFragmentManager()
