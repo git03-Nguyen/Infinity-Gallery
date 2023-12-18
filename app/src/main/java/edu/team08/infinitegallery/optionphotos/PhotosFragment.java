@@ -147,7 +147,7 @@ public class PhotosFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 GridLayoutManager layoutManager = ((GridLayoutManager)photosRecView.getLayoutManager());
-                int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+                int firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
                 // TODO: get the photo and set the time
                 setTimeline(firstVisiblePosition);
             }
@@ -340,7 +340,7 @@ public class PhotosFragment extends Fragment {
             setSpanSize();
 
             GridLayoutManager layoutManager = ((GridLayoutManager)photosRecView.getLayoutManager());
-            int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+            int firstVisiblePosition = layoutManager.findFirstCompletelyVisibleItemPosition();
             setTimeline(firstVisiblePosition);
         } else {
             if (R.id.emptyView == viewSwitcher.getNextView().getId()) {
