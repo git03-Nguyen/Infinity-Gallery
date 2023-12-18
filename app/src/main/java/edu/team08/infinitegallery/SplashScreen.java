@@ -10,17 +10,20 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 
 import edu.team08.infinitegallery.main.MainActivity;
@@ -37,7 +40,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void requestAppPermissions() {
         if (checkAppPermission()) {
-            Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.permissions_granted, Toast.LENGTH_SHORT).show();
             startApplication();
             return;
         }
@@ -83,7 +86,7 @@ public class SplashScreen extends AppCompatActivity {
             boolean successful = grantResults.length > 0;
             if (successful) {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(SplashScreen.this, "Permissions denied!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreen.this, R.string.permissions_denied, Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 successful = successful && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
@@ -115,10 +118,10 @@ public class SplashScreen extends AppCompatActivity {
         if (requestCode == PERMISSIONS_REQUEST_CODE_2) {
             if (SDK_INT >= Build.VERSION_CODES.R) {
                 if (!Environment.isExternalStorageManager()) {
-                    Toast.makeText(this, "Permission to access files has been denied! Stopping app...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.permission_to_access_files_has_been_denied_stopping_app, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Permissions granted!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.permissions_granted, Toast.LENGTH_SHORT).show();
                     startApplication();
                 }
             }
@@ -126,8 +129,14 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void startApplication() {
-        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        MediaScannerConnection.scanFile(SplashScreen.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
+            public void onScanCompleted(String path, Uri uri) {
+                Log.i("ExternalStorage", "Scanned " + path + ":");
+                Log.i("ExternalStorage", "-> uri=" + uri);
+                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

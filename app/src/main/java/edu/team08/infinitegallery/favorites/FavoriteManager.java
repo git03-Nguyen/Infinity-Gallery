@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FavoriteManager {
@@ -27,6 +29,11 @@ public class FavoriteManager {
     }
 
     private void initFavorite() throws IOException {
+
+        // Create the database
+        SQLiteDatabase.openOrCreateDatabase(
+                context.getDatabasePath(FAVORITE_DB_NAME), null).close();
+
         if (databaseExists(FAVORITE_DB_NAME)) {
             SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
                     context.getDatabasePath(FAVORITE_DB_NAME), null);
@@ -53,15 +60,7 @@ public class FavoriteManager {
 
                 cursor.close();
             }
-            return;
         }
-
-        // Create the database
-        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(
-                context.getDatabasePath(FAVORITE_DB_NAME), null);
-
-        // Close the database
-        db.close();
     }
 
     public void addToFavorite(String photoPath) {
@@ -116,6 +115,14 @@ public class FavoriteManager {
         }
 
         db.close();
+
+        Collections.sort(favorFiles, new Comparator<File>() {
+            @Override
+            public int compare(File file1, File file2) {
+                // Compare based on the last modified date in descending order (newest first)
+                return Long.compare(file2.lastModified(), file1.lastModified());
+            }
+        });
 
         return favorFiles.toArray(new File[0]);
     }

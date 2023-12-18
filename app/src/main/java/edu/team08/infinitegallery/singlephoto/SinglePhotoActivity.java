@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import android.app.Dialog;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -43,11 +41,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
+import edu.team08.infinitegallery.helpers.DataBridge;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.favorites.FavoriteManager;
@@ -98,18 +95,19 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         setContentView(R.layout.activity_single_photo);
 
         Intent intent = getIntent();
-        String[] tempPaths = new String[0];
-        if (intent.hasExtra("photoPaths")) {
-            tempPaths = intent.getStringArrayExtra("photoPaths");
-            List<String> list = new ArrayList<String>();
-            for(int i = 0; i < tempPaths.length; i++){
-                File file = new File(tempPaths[i]);
-                if(file.exists()){
-                    list.add(tempPaths[i]);
-                }
-            }
-            photoPaths = list.toArray(new String[0]);
-        }
+//        String[] tempPaths = new String[0];
+//        if (intent.hasExtra("photoPaths")) {
+//            tempPaths = intent.getStringArrayExtra("photoPaths");
+//            List<String> list = new ArrayList<String>();
+//            for(int i = 0; i < tempPaths.length; i++){
+//                File file = new File(tempPaths[i]);
+//                if(file.exists()){
+//                    list.add(tempPaths[i]);
+//                }
+//            }
+//            photoPaths = list.toArray(new String[0]);
+//        }
+        photoPaths = DataBridge.photos;
 
         if(photoPaths.length == 0) onBackPressed();
 
@@ -118,9 +116,9 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             currentPosition = intent.getIntExtra("currentPosition", 0);
         }
 
-        if(photoPaths.length < tempPaths.length){
-            if(currentPosition >= photoPaths.length) currentPosition = 0;
-        }
+//        if(photoPaths.length < tempPaths.length){
+//            if(currentPosition >= photoPaths.length) currentPosition = 0;
+//        }
 
         singlePhotoFragment = SinglePhotoFragment.newInstance(photoPaths, currentPosition);
         getSupportFragmentManager()
@@ -405,12 +403,12 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             if(lastModified == null) lastModified = "";
             if(dateTaken == null) dateTaken = lastModified;
 
-            ((TextView)detailsView.findViewById(R.id.title)).setText("Title: " +title);
-            ((TextView)detailsView.findViewById(R.id.lastModified)).setText("Last modified: " + lastModified);
-            ((TextView)detailsView.findViewById(R.id.dateTaken)).setText("Date taken: " + dateTaken);
-            ((TextView)detailsView.findViewById(R.id.size)).setText("Size: " + size);
-            ((TextView)detailsView.findViewById(R.id.resolution)).setText("Resolution: " + width + "x" + height);
-            ((TextView)detailsView.findViewById(R.id.path)).setText("Path: " + path);
+            ((TextView)detailsView.findViewById(R.id.title)).setText(getString(R.string.title) + title);
+            ((TextView)detailsView.findViewById(R.id.lastModified)).setText(getString(R.string.last_modified) + lastModified);
+            ((TextView)detailsView.findViewById(R.id.dateTaken)).setText(getString(R.string.date_taken) + dateTaken);
+            ((TextView)detailsView.findViewById(R.id.size)).setText(getString(R.string.size) + size);
+            ((TextView)detailsView.findViewById(R.id.resolution)).setText(getString(R.string.resolution) + width + " x " + height);
+            ((TextView)detailsView.findViewById(R.id.path)).setText(getString(R.string.path) + path);
 
         } catch (ImageProcessingException e) {
             throw new RuntimeException(e);
@@ -454,14 +452,14 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
                     topToolbarPhoto.setSubtitle(timeFormat.format(date));
                 }
                 else {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format));
-                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format));
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(getResources().getString(R.string.date_format), new Locale("en"));
+                    SimpleDateFormat timeFormat = new SimpleDateFormat(getResources().getString(R.string.time_format), new Locale("en"));
                     topToolbarPhoto.setTitle(dateFormat.format(date));
                     topToolbarPhoto.setSubtitle(timeFormat.format(date));
                 }
         }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

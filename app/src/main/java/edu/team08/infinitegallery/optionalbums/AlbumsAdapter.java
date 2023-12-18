@@ -58,12 +58,6 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.ViewHolder
             public void onClick(View v) {
                 Intent myIntent = new Intent(context, SingleAlbumActivity.class);
                 myIntent.putExtra("albumName", currentFolder.getFolder().getName());
-                String[] photosStr = new String[currentFolder.getNumberOfPhotos()];
-                File[] photosFiles = currentFolder.getPhotos();
-                for (int i = 0; i < photosStr.length; i++) {
-                    photosStr[i] = photosFiles[i].getAbsolutePath();
-                }
-                myIntent.putExtra("photosList", photosStr);
                 myIntent.putExtra("folderPath", currentFolder.getFolder().getAbsolutePath());
                 context.startActivity(myIntent, null);
             }

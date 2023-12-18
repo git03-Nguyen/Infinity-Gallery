@@ -65,6 +65,27 @@ public class TrashBinManager {
         src.delete();
     }
 
+    public void copyFile(File src, File dst) throws IOException {
+        if (!dst.getParentFile().exists()) {
+            dst.getParentFile().mkdirs();
+        }
+
+        if (dst.exists()) {
+            // If the destination file already exists, rename it with a postfix
+            dst = getUniqueDestination(dst);
+        }
+
+        FileChannel inChannel = new FileInputStream(src).getChannel();
+        FileChannel outChannel = new FileOutputStream(dst).getChannel();
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        }
+        finally {
+            if (inChannel != null) inChannel.close();
+            if (outChannel != null) outChannel.close();
+        }
+    }
+
     private File getUniqueDestination(File originalDst) {
         File dst = originalDst;
         int postfix = 1;
@@ -86,8 +107,9 @@ public class TrashBinManager {
     public File[] getTrashFiles() {
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(TRASH_BIN_DB_NAME), null);
         String[] projection = {"TRASH_NAME"};
+        String orderBy = "DELETE_DATE DESC"; // Sort by DELETE_DATE in descending order
         // Query the database to get all trash file names
-        Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, projection, null, null, null, null, null);
+        Cursor cursor = db.query(TRASH_BIN_TABLE_NAME, projection, null, null, null, null, orderBy);
 
         List<String> trashFileNames = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {

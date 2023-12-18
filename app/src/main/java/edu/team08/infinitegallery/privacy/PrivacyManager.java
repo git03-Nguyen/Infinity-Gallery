@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -102,6 +105,14 @@ public class PrivacyManager {
         for (int i = 0; i < privacy_filename_list.size(); i++) {
             privacyList[i] = new File(privacyDirectory, privacy_filename_list.get(i));
         }
+
+        Arrays.sort(privacyList, new Comparator<File>() {
+            @Override
+            public int compare(File file1, File file2) {
+                // Compare based on the last modified date in descending order (newest first)
+                return Long.compare(file2.lastModified(), file1.lastModified());
+            }
+        });
 
         return privacyList;
     }

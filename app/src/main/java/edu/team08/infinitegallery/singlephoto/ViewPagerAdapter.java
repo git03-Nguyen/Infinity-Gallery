@@ -1,11 +1,15 @@
 package edu.team08.infinitegallery.singlephoto;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -13,6 +17,10 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -45,6 +53,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     public PhotoView getZoomViewImage(){ return zoomViewImage; }
+    
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -71,19 +80,25 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object){
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
         super.setPrimaryItem(container, position, object);
-        zoomViewImage = ((View)object).findViewById(R.id.photoView);
+        zoomViewImage = ((View) object).findViewById(R.id.photoView);
         zoomViewImage.setImageDrawable(getDrawable(photoFiles[position].getAbsolutePath()));
-    }
-
-    public void updateData(File[] newPhotoFiles) {
-        cache.clear();
-        this.photoFiles = newPhotoFiles;
-        notifyDataSetChanged();
     }
 
     public void rotate(int angle){
         zoomViewImage.setRotationBy(angle);
     }
+
+    private Bitmap decodeWebPFile(String filePath) {
+        try {
+            // Use BitmapFactory to decode the WebP file
+            InputStream inputStream = new FileInputStream(filePath);
+            return BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
