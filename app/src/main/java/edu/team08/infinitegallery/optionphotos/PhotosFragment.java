@@ -3,14 +3,12 @@ package edu.team08.infinitegallery.optionphotos;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -25,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -33,14 +30,11 @@ import android.widget.ViewSwitcher;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,14 +52,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.team08.infinitegallery.helpers.FileLastModifiedComparator;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
 import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.main.MainCallbacks;
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.settings.AppConfig;
 import edu.team08.infinitegallery.settings.SettingsActivity;
-import edu.team08.infinitegallery.optionphotos.PhotoFingerprint;
-import edu.team08.infinitegallery.singlephoto.SinglePhotoFragment;
 import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 
@@ -84,7 +77,7 @@ public class PhotosFragment extends Fragment {
     MaterialButton btnTurnOffSelectionMode;
     TextView txtNumberOfSelectedFiles;
     FrameLayout frameLayoutToolbar;
-    private Parcelable recylerViewState;
+    private Parcelable recyclerViewState;
     boolean firstTime;
   
     String[] permissions = {Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.CAMERA};
@@ -290,7 +283,7 @@ public class PhotosFragment extends Fragment {
             firstTime = false;
             photosRecView.scrollToPosition(photoFiles.size() - 1);
         } else {
-            photosRecView.getLayoutManager().onRestoreInstanceState(recylerViewState);
+            photosRecView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
         }
         ((MainActivity) context).changeStatusBar();
 
@@ -300,7 +293,7 @@ public class PhotosFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (photosRecView.getLayoutManager() != null) {
-            recylerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
+            recyclerViewState = photosRecView.getLayoutManager().onSaveInstanceState();
         }
         ((MainActivity) context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
@@ -327,6 +320,10 @@ public class PhotosFragment extends Fragment {
                 cursor.close();
             }
 
+        }
+
+        if (photoFiles != null) {
+            Collections.sort(photoFiles, new FileLastModifiedComparator());
         }
 
     }
@@ -446,6 +443,7 @@ public class PhotosFragment extends Fragment {
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             mediaScanIntent.setData(Uri.fromFile(imageFile));
             context.sendBroadcast(mediaScanIntent);
+
         }
         catch (Exception e) {
             e.printStackTrace();

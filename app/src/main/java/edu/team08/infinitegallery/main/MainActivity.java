@@ -2,7 +2,9 @@ package edu.team08.infinitegallery.main;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -320,6 +322,5 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
             default: break;
         }
     }
-
 
 }
