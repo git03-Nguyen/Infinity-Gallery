@@ -9,14 +9,6 @@
         android:icon="@drawable/ic_albums_add_24" />
 
     <item
-        android:id="@+id/menuAlbumsSortBy"
-        android:title="@string/sort_by" >
-        <menu
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </item>
-
-    <item
         android:id="@+id/menuAlbumsColumns"
         android:title="@string/columns" >
         <menu>

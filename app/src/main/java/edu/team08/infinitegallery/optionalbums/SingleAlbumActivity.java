@@ -457,6 +457,17 @@ public class SingleAlbumActivity extends AppCompatActivity implements MainCallba
                 this.setNumberOfSelectedFiles(selectionsCount);
                 break;
 
+            case "SELECTION MODE":
+                if (photosAdapter.getSelectionMode()) {
+                    this.toolbar.setVisibility(View.GONE);
+                    this.toolbarPhotosSelection.setVisibility(View.VISIBLE);
+                    String formattedText=getResources().getString(R.string.selected_photos,0);
+                    this.txtNumberOfSelected.setText(formattedText);
+                    this.bottomNavigationView.setVisibility(View.VISIBLE);
+                }
+                checkBoxAll.setChecked(false);
+                break;
+
             default: break;
         }
     }

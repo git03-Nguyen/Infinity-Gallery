@@ -583,7 +583,7 @@
     <string name="details">Chi tiết</string>
     <string name="recognize_card">Nhận dạng thẻ OCR</string>
     <string name="x_photos">x ảnh</string>
-    <string name="delete_album">Xoá album</string>
+    <string name="delete_album">Xoá</string>
     <string name="are_you_sure_to_delete_this_album_to_the_trash">Bạn có chắc chắn muốn xoá album này vào thùng rác?</string>
     <string name="sort_by_date">Theo ngày</string>
     <string name="sort_by_name">Theo tên</string>
