@@ -11,7 +11,6 @@ import android.widget.TextView;
 import edu.team08.infinitegallery.R;
 
 public class ProgressDialogBuilder {
-
     public static Dialog buildProgressDialog(Context context, String title, Runnable backgroundWork, Runnable onDismiss) {
         Dialog progressDialog = new Dialog(context);
         progressDialog.setContentView(R.layout.dialog_progress_bar);

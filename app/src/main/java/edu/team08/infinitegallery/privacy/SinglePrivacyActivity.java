@@ -36,7 +36,7 @@ public class SinglePrivacyActivity extends AppCompatActivity implements MainCall
 //        if (intent.hasExtra("photoPaths")) {
 //            this.privatePathList = intent.getStringArrayExtra("photoPaths");
 //        }
-        this.privatePathList = DataBridge.photos;
+        this.privatePathList = DataBridge.photoStrings;
         int currentPosition = 0;
         if (intent.hasExtra("currentPosition")) {
             currentPosition = intent.getIntExtra("currentPosition", 0);

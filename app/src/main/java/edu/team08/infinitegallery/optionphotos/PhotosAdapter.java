@@ -123,7 +123,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                     }
                     if (myIntent != null) {
 //                        myIntent.putExtra("photoPaths", photoPaths);
-                        DataBridge.photos = photoPaths;
+                        DataBridge.photoStrings = photoPaths;
                         myIntent.putExtra("currentPosition", position);
                         startActivity(context, myIntent, null);
                     }

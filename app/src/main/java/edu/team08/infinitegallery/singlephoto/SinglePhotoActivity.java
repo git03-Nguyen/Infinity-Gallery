@@ -97,7 +97,7 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
         setContentView(R.layout.activity_single_photo);
 
 
-        String[] tempPaths = DataBridge.photos;
+        String[] tempPaths = DataBridge.photoStrings;
         List<String> list = new ArrayList<String>();
         for(int i = 0; i < tempPaths.length; i++){
             File file = new File(tempPaths[i]);
@@ -106,8 +106,8 @@ public class SinglePhotoActivity extends AppCompatActivity implements MainCallba
             }
         }
 
-        DataBridge.photos = list.toArray(new String[0]);
-        photoPaths = DataBridge.photos;
+        DataBridge.photoStrings = list.toArray(new String[0]);
+        photoPaths = DataBridge.photoStrings;
 
         if(photoPaths.length == 0)
         {
