@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKey;
@@ -322,17 +323,52 @@ public class TrashBinManager {
     }
 
 
-    public void checkAndCleanTrashBin() {
+    public List<File> checkAndCleanTrashBin() {
         File[] trashFiles = getTrashFiles();
 
         int[] daysRemain = getDaysRemain(trashFiles);
+        ArrayList returnList = new ArrayList<File>();
 
         for (int i = 0; i < daysRemain.length; i++) {
-            if (daysRemain[i] < 0) {
+            if (daysRemain[i] < 0 || !trashFiles[i].exists()) {
                 permanentDelete(trashFiles[i]);
                 trashFiles[i] = null;
+            } else {
+                returnList.add(trashFiles[i]);
             }
         }
+        return returnList;
 
     }
+
+    public Bitmap decryptPhoto(File src) {
+
+        Bitmap myBitmap = null;
+        MasterKey mainKey = null;
+        try {
+            mainKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            EncryptedFile encryptedFile = new EncryptedFile.Builder(context,
+                    src,
+                    mainKey,
+                    EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+            ).build();
+
+            InputStream inputStream = encryptedFile.openFileInput();
+            // Convert InputStream to Bitmap
+            myBitmap = BitmapFactory.decodeStream(inputStream);
+
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
+        return myBitmap;
+    }
+
 }

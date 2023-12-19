@@ -78,7 +78,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> 
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
-                .load(trash)
+                .load(trashBinManager.decryptPhoto(trash))
                 .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
         holder.imageItem.setOnClickListener(new View.OnClickListener() {
@@ -119,11 +119,6 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> 
             holder.checkbox.setVisibility(View.GONE);
             holder.itemView.setBackgroundColor(Color.TRANSPARENT);
         }
-    }
-
-    private void addRemainingTime() {
-        RelativeLayout customLayout = new RelativeLayout(context);
-
     }
 
     @Override

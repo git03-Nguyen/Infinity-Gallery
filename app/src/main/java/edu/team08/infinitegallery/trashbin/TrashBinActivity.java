@@ -24,6 +24,7 @@ import edu.team08.infinitegallery.settings.SettingsActivity;
 public class TrashBinActivity extends AppCompatActivity {
     private int spanCount = 4;
     File[] trashFiles;
+    File[] trashPhotos;
     private TrashBinManager trashBinManager;
     TrashAdapter trashAdapter;
     RecyclerView photosRecView;
@@ -38,6 +39,7 @@ public class TrashBinActivity extends AppCompatActivity {
 
         trashBinManager = new TrashBinManager(this);
         trashFiles = null;
+        trashPhotos = null;
         photosRecView = findViewById(R.id.recViewTrash);
         viewSwitcher = findViewById(R.id.viewSwitcher);
     }
@@ -45,8 +47,7 @@ public class TrashBinActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        trashBinManager.checkAndCleanTrashBin();
-        trashFiles = trashBinManager.getTrashFiles();
+        trashFiles = trashBinManager.checkAndCleanTrashBin().toArray(new File[0]);
         if (trashFiles.length > 0) {
             if (photosRecView.getId() == viewSwitcher.getNextView().getId()) {
                 viewSwitcher.showNext();

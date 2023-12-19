@@ -25,10 +25,12 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import edu.team08.infinitegallery.R;
+import edu.team08.infinitegallery.trashbin.SingleTrashActivity;
+import edu.team08.infinitegallery.trashbin.TrashBinManager;
 
 public class ViewPagerAdapter extends PagerAdapter {
     static final int MAX_CACHE_SIZE = 16;
-    Context context;
+    static Context context;
     File[] photoFiles;
     LayoutInflater inflater;
     PhotoView zoomViewImage;
@@ -42,7 +44,11 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     static private Drawable getDrawable(String key){
         if(!cache.containsKey(key)){
-            cache.put(key, Drawable.createFromPath(key));
+            if (context instanceof SingleTrashActivity) {
+                cache.put(key, new BitmapDrawable(context.getResources(), new TrashBinManager(context).decryptPhoto(new File(key))));
+            } else {
+                cache.put(key, Drawable.createFromPath(key));
+            }
         }
 
         if(cache.size() >= MAX_CACHE_SIZE){
