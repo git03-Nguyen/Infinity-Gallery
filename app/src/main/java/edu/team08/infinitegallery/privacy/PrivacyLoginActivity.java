@@ -54,7 +54,7 @@ public class PrivacyLoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_login_form);
+        setContentView(R.layout.form_privacy_login);
 
         //set toolbar
         setSupportActionBar(findViewById(R.id.toolbarForPrivacyPassword));

@@ -54,7 +54,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarRLayout"
         app:layout_constraintVertical_bias="0.0"
-        app:photo_src="@drawable/blank_image" />
+        app:photo_src="@drawable/img_blank_image" />
 
     <ImageView
         android:id="@+id/imgUndo"
@@ -132,7 +132,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/row_editing_tools_item" />
+        tools:listitem="@layout/item_row_editing_tools" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFilterView"
@@ -144,7 +144,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/rvConstraintTools"
         app:layout_constraintStart_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rvConstraintTools"
-        tools:listitem="@layout/row_filter_view_item" />
+        tools:listitem="@layout/item_row_filter_view" />
 
     <TextView
         android:id="@+id/txtCurrentTool"

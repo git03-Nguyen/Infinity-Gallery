@@ -28,7 +28,7 @@ public class PrivacyLoginByPatternActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_login_pattern);
+        setContentView(R.layout.pattern_privacy_login);
 
         //set toolbar
         setSupportActionBar(findViewById(R.id.toolbarForPrivacyPattern));

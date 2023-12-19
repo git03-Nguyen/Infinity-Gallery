@@ -2,7 +2,6 @@ package edu.team08.infinitegallery.privacy;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,14 +17,11 @@ import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
 import com.andrognito.patternlockview.utils.PatternLockUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.ConfirmDialogBuilder;
 import edu.team08.infinitegallery.helpers.ProgressDialogBuilder;
-import edu.team08.infinitegallery.main.MainActivity;
 
 public class PrivacyChangePatternActivity extends AppCompatActivity {
     //Properties and attributes
@@ -39,7 +35,7 @@ public class PrivacyChangePatternActivity extends AppCompatActivity {
     //on- methods
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_login_pattern);
+        setContentView(R.layout.pattern_privacy_login);
 
         //set toolbar
         setSupportActionBar(findViewById(R.id.toolbarForPrivacyPattern));

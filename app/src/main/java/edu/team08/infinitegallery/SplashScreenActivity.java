@@ -2,15 +2,12 @@ package edu.team08.infinitegallery;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_MEDIA_IMAGES;
-import static android.Manifest.permission.SET_WALLPAPER;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -28,7 +25,7 @@ import android.widget.Toast;
 
 import edu.team08.infinitegallery.main.MainActivity;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
     private final int PERMISSIONS_REQUEST_CODE_1  = 1001;
     private final int PERMISSIONS_REQUEST_CODE_2 = 1002;
     @Override
@@ -51,7 +48,7 @@ public class SplashScreen extends AppCompatActivity {
         String networkPermission = ACCESS_NETWORK_STATE;
 
         String[] permissions = new String[] {readPermission, writePermission, internetPermission, networkPermission};
-        ActivityCompat.requestPermissions(SplashScreen.this, permissions, PERMISSIONS_REQUEST_CODE_1);
+        ActivityCompat.requestPermissions(SplashScreenActivity.this, permissions, PERMISSIONS_REQUEST_CODE_1);
 
     }
 
@@ -86,7 +83,7 @@ public class SplashScreen extends AppCompatActivity {
             boolean successful = grantResults.length > 0;
             if (successful) {
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(SplashScreen.this, R.string.permissions_denied, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreenActivity.this, R.string.permissions_denied, Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 successful = successful && (grantResults[0] == PackageManager.PERMISSION_GRANTED);
@@ -129,11 +126,11 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void startApplication() {
-        MediaScannerConnection.scanFile(SplashScreen.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
+        MediaScannerConnection.scanFile(SplashScreenActivity.this, new String[] { Environment.getExternalStorageDirectory().getAbsolutePath() }, new String[] {"image/*"}, new MediaScannerConnection.OnScanCompletedListener()  {
             public void onScanCompleted(String path, Uri uri) {
                 Log.i("ExternalStorage", "Scanned " + path + ":");
                 Log.i("ExternalStorage", "-> uri=" + uri);
-                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

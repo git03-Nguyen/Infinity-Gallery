@@ -7,7 +7,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/gradient_login_background"
+    android:background="@drawable/bg_gradient_login_background"
     tools:context=".privacy.PrivacyLoginByPatternActivity">
 
     <androidx.appcompat.widget.Toolbar

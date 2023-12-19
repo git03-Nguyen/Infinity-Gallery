@@ -50,7 +50,7 @@ public class PrivacySignupActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.privacy_modify_password_form);
+        setContentView(R.layout.form_privacy_modify_password);
 
         //set toolbar
         setSupportActionBar(findViewById(R.id.toolbarForPrivacyModifyingPassword));

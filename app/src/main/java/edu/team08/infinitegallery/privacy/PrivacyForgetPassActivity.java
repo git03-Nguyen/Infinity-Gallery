@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -55,7 +54,7 @@ public class PrivacyForgetPassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.privacy_forget_password_form);
 
-        setContentView(R.layout.privacy_modify_password_form);
+        setContentView(R.layout.form_privacy_modify_password);
         //set toolbar
 //        setSupportActionBar(findViewById(R.id.toolbarForPrivacyForgetPassword));
         setSupportActionBar(findViewById(R.id.toolbarForPrivacyModifyingPassword));
