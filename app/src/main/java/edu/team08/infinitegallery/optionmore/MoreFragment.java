@@ -44,17 +44,18 @@ public class MoreFragment extends Fragment {
     FavoriteManager favoriteManager;
     TextView favText, trashText;
 
-    public MoreFragment(Context context) {
-        this.context = context;
+    public MoreFragment() {
+        // required empty
     }
 
-    public static MoreFragment newInstance(Context context) {
-        return new MoreFragment(context);
+    public static MoreFragment newInstance() {
+        return new MoreFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.context = getActivity();
     }
 
     @Nullable

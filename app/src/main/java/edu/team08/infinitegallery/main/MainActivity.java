@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
         photosFragment = PhotosFragment.newInstance();
         albumsFragment = AlbumsFragment.newInstance();
         searchFragment = SearchFragment.newInstance(MainActivity.this);
-        moreFragment = MoreFragment.newInstance(MainActivity.this);
+        moreFragment = MoreFragment.newInstance();
         currentFragment = photosFragment;
         getSupportFragmentManager()
                 .beginTransaction()
