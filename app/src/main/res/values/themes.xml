@@ -15,7 +15,6 @@
         <!-- Status bar color. -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/gray_trans</item>
-
         <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
 
         <item name="colorTertiary">@color/gray</item>
@@ -72,9 +71,6 @@
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowLightStatusBar">false</item>
-
-
-
     </style>
 
 </resources>
