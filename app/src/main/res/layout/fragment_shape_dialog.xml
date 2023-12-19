@@ -131,6 +131,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shapeOpacity"
         tools:background="@android:color/black"
-        tools:listitem="@layout/color_picker_item_list" />
+        tools:listitem="@layout/list_item_color_picker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

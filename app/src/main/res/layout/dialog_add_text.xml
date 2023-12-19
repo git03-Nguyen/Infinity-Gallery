@@ -52,6 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:background="@android:color/black"
         tools:layout_height="wrap_content"
-        tools:listitem="@layout/color_picker_item_list" />
+        tools:listitem="@layout/list_item_color_picker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
