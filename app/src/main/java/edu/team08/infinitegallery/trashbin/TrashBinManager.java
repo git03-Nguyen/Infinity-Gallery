@@ -5,12 +5,20 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 
+import androidx.security.crypto.EncryptedFile;
+import androidx.security.crypto.MasterKey;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +71,70 @@ public class TrashBinManager {
             if (outChannel != null) outChannel.close();
         }
         src.delete();
+    }
+
+    private void encrypt(File src, File dst) throws GeneralSecurityException, IOException {
+        if (!dst.getParentFile().exists()) {
+            dst.getParentFile().mkdirs();
+        }
+
+        if (dst.exists()) {
+            // If the destination file already exists, rename it with a postfix
+            dst = getUniqueDestination(dst);
+        }
+
+        MasterKey mainKey = new MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build();
+
+        EncryptedFile encryptedFile = new EncryptedFile.Builder(context,
+                dst,
+                mainKey,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build();
+
+        InputStream inputStream = new FileInputStream(src);
+        OutputStream outputStream = encryptedFile.openFileOutput();
+        // Write data from source file to encrypted output stream
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outputStream.flush();
+        outputStream.close();
+
+    }
+
+    private void decrypt(final File src, File dst) throws GeneralSecurityException, IOException {
+        dst = getUniqueDestination(dst);
+
+        MasterKey mainKey = new MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build();
+
+        EncryptedFile encryptedFile = new EncryptedFile.Builder(context,
+                src,
+                mainKey,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build();
+
+        InputStream inputStream = encryptedFile.openFileInput();
+        OutputStream outputStream = new FileOutputStream(dst);
+
+        // Write data from encrypted source file to output stream
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+
+        inputStream.close();
+        outputStream.flush();
+        outputStream.close();
+
     }
 
     public void copyFile(File src, File dst) throws IOException {
@@ -146,7 +218,14 @@ public class TrashBinManager {
         values.put("DELETE_DATE", System.currentTimeMillis());
         db.insert(TRASH_BIN_TABLE_NAME, null, values);
 
-        moveFile(photo, trash);
+        //moveFile(photo, trash);
+        try {
+            encrypt(photo, trash);
+            photo.delete();
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void permanentDelete(File trash) {
@@ -185,7 +264,12 @@ public class TrashBinManager {
 
         if (originalPath != null) {
             File original = new File(originalPath);
-            moveFile(trash, original);
+            try {
+                decrypt(trash, original);
+                trash.delete();
+            } catch (GeneralSecurityException e) {
+                throw new RuntimeException(e);
+            }
         } else {}
 
         return originalPath;
