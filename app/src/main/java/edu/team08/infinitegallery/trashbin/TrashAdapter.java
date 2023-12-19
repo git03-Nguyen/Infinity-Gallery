@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -78,7 +77,7 @@ public class TrashAdapter extends RecyclerView.Adapter<TrashAdapter.ViewHolder> 
         // Set item to the ImageView using Glide library
         // holder.imageItem.setImageDrawable(Drawable.createFromPath(picturePath));
         Glide.with(context)
-                .load(trashBinManager.decryptPhoto(trash))
+                .load(trashBinManager.getTrashBitmap(trash))
                 .placeholder(R.drawable.img_image_placeholder)
                 .into(holder.imageItem);
         holder.imageItem.setOnClickListener(new View.OnClickListener() {

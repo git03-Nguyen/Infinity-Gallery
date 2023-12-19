@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -18,7 +17,6 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -45,7 +43,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     static private Drawable getDrawable(String key){
         if(!cache.containsKey(key)){
             if (context instanceof SingleTrashActivity) {
-                cache.put(key, new BitmapDrawable(context.getResources(), new TrashBinManager(context).decryptPhoto(new File(key))));
+                cache.put(key, new BitmapDrawable(context.getResources(), new TrashBinManager(context).getTrashBitmap(new File(key))));
             } else {
                 cache.put(key, Drawable.createFromPath(key));
             }
