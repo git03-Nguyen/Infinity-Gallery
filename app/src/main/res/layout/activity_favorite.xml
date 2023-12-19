@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:layout_marginTop="-100dp"
-                    android:src="@drawable/favorite_not_items"
+                    android:src="@drawable/img_favorites_empty"
                     android:alpha=".75" />
 
                 <TextView
