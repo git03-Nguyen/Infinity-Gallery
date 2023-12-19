@@ -37,7 +37,7 @@ public class SinglePhotoFragment extends Fragment {
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
 
-    public SinglePhotoFragment(){
+    public SinglePhotoFragment() {
         // Required empty public constructor
     }
 

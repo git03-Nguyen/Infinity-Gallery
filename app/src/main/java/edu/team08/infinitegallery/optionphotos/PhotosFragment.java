@@ -119,10 +119,6 @@ public class PhotosFragment extends Fragment {
 
     public PhotosFragment() {}
 
-    public PhotosFragment(Context context) {
-        this.context = context;
-    }
-
     public static PhotosFragment newInstance() {
         PhotosFragment fragment = new PhotosFragment();
         return fragment;
