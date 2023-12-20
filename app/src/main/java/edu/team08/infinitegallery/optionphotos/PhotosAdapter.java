@@ -40,7 +40,7 @@ import edu.team08.infinitegallery.trashbin.TrashBinActivity;
 
 public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
     private final Context context;
-    private SparseBooleanArray selectedItemsIds;
+    private SparseBooleanArray selectedItemsMap;
     private List<File> allPhotos;
     private final int spanCount;
     private boolean selectionMode;
@@ -71,7 +71,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         this.context = context;
         this.allPhotos = allPhotos;
 
-        selectedItemsIds = new SparseBooleanArray();
+        selectedItemsMap = new SparseBooleanArray();
         this.spanCount = spanCount;
         this.selectionMode = false;
         this.selectedAll = false;
@@ -180,10 +180,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         }
 
         if (selectedAll) {
-            selectedItemsIds.put(position, true);
+            selectedItemsMap.put(position, true);
         }
 
-        if(selectedItemsIds.get(position)) {
+        if(selectedItemsMap.get(position)) {
             holder.itemView.setBackgroundColor(0x993BF566);
             holder.checkbox.setVisibility(View.VISIBLE);
             holder.checkbox.setChecked(true);
@@ -216,10 +216,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     }
 
     public void toggleSelection(int position) {
-        if (selectedItemsIds.get(position)) {
-            selectedItemsIds.delete(position);
+        if (selectedItemsMap.get(position)) {
+            selectedItemsMap.delete(position);
         } else {
-            selectedItemsIds.put(position, true);
+            selectedItemsMap.put(position, true);
         }
         notifyItemChanged(position);
         ((MainCallbacks) context).onEmitMsgFromFragToMain("NUMBER OF SELECTIONS", String.valueOf(getSelectionsCount()));
@@ -227,32 +227,32 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
     @SuppressLint("NotifyDataSetChanged")
     public void selectAll() {
-        selectedItemsIds.clear();
+        selectedItemsMap.clear();
         selectedAll = true;
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void unSelectAll() {
-        selectedItemsIds.clear();
+        selectedItemsMap.clear();
         selectedAll = false;
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void removeAllSelections() {
-        selectedItemsIds.clear();
+        selectedItemsMap.clear();
         notifyDataSetChanged();
     }
 
     //Get total selected count
     public int getSelectionsCount() {
-        return selectedItemsIds.size();
+        return selectedItemsMap.size();
     }
 
     //Return all selected ids
     public SparseBooleanArray getSelectedIds() {
-        return selectedItemsIds;
+        return selectedItemsMap;
     }
 
 

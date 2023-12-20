@@ -144,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements MainCallbacks {
     public void changeStatusBar() {
         runOnUiThread(() -> {
             if (currentFragment instanceof PhotosFragment) {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
             } else {

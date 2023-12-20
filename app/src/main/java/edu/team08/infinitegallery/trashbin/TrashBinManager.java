@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import androidx.security.crypto.EncryptedFile;
 import androidx.security.crypto.MasterKey;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -341,7 +340,7 @@ public class TrashBinManager {
 
     }
 
-    public Bitmap decryptPhoto(File src) {
+    public Bitmap getTrashBitmap(File src) {
 
         Bitmap myBitmap = null;
         MasterKey mainKey = null;

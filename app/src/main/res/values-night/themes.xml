@@ -73,8 +73,6 @@
     <style name="Theme.MyTheme.AllPhotosTheme" parent="Theme.MyTheme">
         <item name="android:textColorSecondary">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>
-
-
     </style>
 
 </resources>
