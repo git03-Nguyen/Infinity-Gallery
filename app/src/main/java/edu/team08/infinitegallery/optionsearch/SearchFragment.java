@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 
 import edu.team08.infinitegallery.R;
 import edu.team08.infinitegallery.helpers.StringUtils;
+import edu.team08.infinitegallery.main.MainActivity;
 import edu.team08.infinitegallery.optionphotos.PhotosAdapter;
 import edu.team08.infinitegallery.singlephoto.FaceOnLiveService;
 import okhttp3.MediaType;
@@ -104,6 +105,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainActivity) context).changeStatusBar();
         executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
